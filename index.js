@@ -9,10 +9,11 @@ const pg = require('pg');
 const pgSession = require('connect-pg-simple')(session);
 const format = require('pg-format');
 const path = require('path');
-const http = require('http');
+const fs = require('fs');
+const https = require('https');
 
 const app = express();
-const port = 80;
+const port = 443;
 
 app.use(express.static(path.join(__dirname, 'assets'))); // Установка статического каталога для файлов HTML
 app.use(cookieParser());
@@ -1012,7 +1013,12 @@ async function checkAdminUser(userId) {
   }
 }
 
-const server = http.createServer(app);
+const options = {
+  key: fs.readFileSync('config/private.key'),
+  cert: fs.readFileSync('config/certificate.crt')
+};
+
+const server = https.createServer(options, app);
 
 server.listen(port, () => {
   console.log(`Сервер запущен на порту ${port}`);

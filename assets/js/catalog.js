@@ -52,8 +52,12 @@ $(document).ready(function () {
             method: 'GET',
             success: function (response) {
                 if (response.message != 'DUPLICATE') {
-                    $('#cart_length').text(parseInt($('#cart_length').text()) + 1);
-                    $('#cart_length_mobile').text(parseInt($('#cart_length_mobile').text()) + 1);
+                    if (parseInt($('#cart_length').text() != NaN)) {
+                        $('#cart_length').text(parseInt($('#cart_length').text()) + 1);
+                        $('#cart_length_mobile').text(parseInt($('#cart_length_mobile').text()) + 1);
+                    } else {
+                        $('#cart_length').text('1');
+                    }
                 }
                 const toast = new bootstrap.Toast($('#cart_toast'), { delay: 2000 });
                 toast.show();
