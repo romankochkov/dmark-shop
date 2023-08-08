@@ -1,0 +1,230 @@
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Накладна <%= order.id %>
+    </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&family=Roboto:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <style media="print">
+        div.print-content {
+            _width: 100% !important;
+        }
+    </style>
+
+    <style>
+        div.print-content {
+            width: 720px;
+        }
+
+        * {
+            font-family: 'Roboto', sans-serif;
+            text-align: left;
+            vertical-align: top;
+            color: #333
+        }
+
+        a {
+            color: #4764ae;
+        }
+
+        .consumer-info {
+            width: 100%;
+            font-size: 11px;
+            border-collapse: collapse;
+            margin: 0 0 25px 0;
+        }
+
+        .consumer-info__cell {
+            padding: 10px;
+            border: 1px solid #d0d2d3;
+        }
+
+        .consumer-info__sub-table td {
+            padding: 3px;
+        }
+
+        .consumer-info__sub-table td:first-child {
+            padding-left: 0;
+        }
+
+        .order-items {
+            border-collapse: collapse;
+            font-size: 11px;
+            width: 100%;
+        }
+
+        .order-items tr:not(:first-child) td {
+            border-top: 1px solid #d0d2d3;
+        }
+
+        .order-items td {
+            padding: 10px;
+        }
+
+        .order-items .order-items__img-cell {
+            padding: 10px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body link="#0000cc" bgcolor="white">
+    <div class="print-content">
+        <p style="float: left;font-size: 18px; font-weight: bold; margin-top: 0; margin-bottom: 0;">
+            Накладна №<%= order.id %>
+        </p>
+        <span style="float: right; font-size: 14px;">
+            <%= order.date %>
+        </span>
+        <div style="clear: both"></div>
+
+        <div style="margin:25px 0;">
+            <div style="padding:10px; border:1px solid #d0d2d3; border-width:1px 1px 0; font-size:11px;">
+                <p style="margin:0 0 10px;">
+                    <b>Продавець:</b>
+                </p>
+                <p style="margin:0 0 10px;">
+                    DM Deutsche Chemie
+                </p>
+                <p style="float:left; margin:0 40px 0 0; font-size:11px;">
+                    Адреса:
+                    Сокільники (Львівський район)
+                </p>
+                <p style="float:left; margin:0; white-space:nowrap; font-size:11px;">
+                    Телефон:
+                    +38 (067) 676-67-39
+                </p>
+                <div style="clear: both"></div>
+            </div>
+            <table class="consumer-info">
+                <tbody>
+                    <tr>
+                        <td class="consumer-info__cell" style="width: 150px;">
+                            <div style="margin-bottom: 10px; font-weight: bold">
+                                Замовник
+                            </div>
+                            <p>
+                                <%= order.first_name %>
+                                    <%= order.last_name %>
+                            </p>
+                            <p>
+                                +<%= order.phone_number %>
+                            </p>
+                        </td>
+                        <td class="consumer-info__cell">
+                            <div>
+                                <div style="margin-bottom: 10px; font-weight: bold">
+                                    Доставка
+                                </div>
+                                <table class="consumer-info__sub-table" style="font-size:11px">
+                                    <tbody>
+                                        <tr>
+                                            <td>Спосіб доставки:</td>
+                                            <td>
+                                                "Нова Пошта"
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Адреса доставки:</td>
+                                            <td>
+                                                <%= order.region %>, <%= order.address %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Коментар:</td>
+                                            <% if (order.comment) { %>
+                                                <td>
+                                                    <%= order.comment %>
+                                                </td>
+                                                <% } else { %>
+                                                    <td>
+                                                        Відсутній
+                                                    </td>
+                                                    <% } %>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <table class="order-items">
+            <tbody>
+                <tr>
+                    <td>Номер</td>
+                    <td colspan="5" style="text-align: right; font-size: 11px;">Cума</td>
+                </tr>
+
+                <% order.products.forEach((product, index)=> { %>
+                    <tr>
+                        <td width="20px">
+                            <%= index + 1 %>
+                        </td>
+                        <td class="order-items__img-cell">
+                            <img>
+                        </td>
+                        <td>
+                            <p style="display: block">
+                                <%= product.brand_original %>
+                                    <%= product.title_original %>
+                            </p>
+                            <p style="display: block">
+                                <%= product.brand_translation %>
+                                    <%= product.title_translation %>
+                            </p>
+                        </td>
+                        <td>
+                            <nobr style="font-size: 11px;">
+                                <%= product.price %> x <%= product.amount %> шт.
+                            </nobr>
+                        </td>
+                        <td style="text-align: right">
+                            <nobr>
+                                <b class="price-element">
+                                    <%= (parseFloat(product.price.replace(',', '.' )) *
+                                        product.amount).toFixed(2).replace('.', ',' ) %> ₴
+                                </b>
+                            </nobr>
+                        </td>
+                    </tr>
+                    <% }); %>
+
+                        <tr>
+                            <td style="font-size: 18px;" colspan="3">Разом:</td>
+                            <td id="price_total" style="text-align: right; font-size: 18px;" colspan="2">
+                                0 ₴
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        const priceElements = $(".price-element");
+        var totalPrice = 0;
+
+        priceElements.each(function () {
+            const priceText = ($(this).text().trim()).replace(' ₴', '').replace(',', '.');
+            const priceValue = parseFloat(priceText);
+
+            if (!isNaN(priceValue)) {
+                totalPrice += priceValue;
+                console.log(totalPrice);
+            }
+        });
+
+        $("#price_total").text(totalPrice.toFixed(0) + ' ₴');
+
+        window.print()
+    </script>
+</body>
+
+</html>

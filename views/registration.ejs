@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="uk">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DM Deutsche Chemie</title>
+  <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&family=Roboto:wght@100;300;400;500;700;900&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <style>
+    .container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -55%);
+    }
+
+    .card {
+      position: relative;
+      background: rgb(229, 233, 241);
+      border: 2px solid rgba(202, 202, 202, 0.2);
+      padding-top: 30px;
+      padding-left: 30px;
+      padding-right: 30px;
+      padding-bottom: 30px;
+    }
+
+    .card img {
+      width: 32%;
+      cursor: pointer;
+    }
+
+    .form-floating label {
+      color: rgb(82, 82, 96);
+      font-family: 'Roboto Condensed', sans-serif;
+      font-weight: 500;
+    }
+
+    .form-floating input {
+      color: rgb(0, 40, 120);
+      font-family: 'Roboto Condensed', sans-serif;
+    }
+
+    .form-floating input:focus {
+      box-shadow: 0 0 0 0.2rem rgb(0, 40, 120);
+      border: 0;
+    }
+
+    .form-check {
+      color: rgb(82, 82, 96);
+      font-family: 'Roboto Condensed', sans-serif;
+      margin-left: 6px;
+    }
+
+    .form-check label a {
+      color: rgb(0, 40, 120);
+    }
+    
+    .invalid-feedback {
+      font-family: 'Roboto', sans-serif;
+    }
+
+    .line {
+      width: 100%;
+      height: 0.12rem;
+      background-color: rgb(202, 202, 202);
+      border-radius: 40px;
+      margin-top: 11px;
+    }
+
+    .line-text {
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 15px;
+      color: rgb(107, 107, 107);
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+
+    .card .auth-button {
+      width: 100%;
+      background: #fff;
+      color: rgb(0, 40, 120);
+      border-radius: 50px;
+      border: 2px solid rgb(0, 40, 120);
+      font-family: 'Roboto', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      font-weight: 500;
+      padding-top: 10px;
+      padding-bottom: 11px;
+      transition: 0ms;
+    }
+
+    .card .auth-button:hover {
+      background: rgb(228, 228, 228);
+      border: 2px solid rgb(0, 56, 168);
+    }
+
+    .card .reg-button {
+      width: 100%;
+      background: rgb(0, 40, 120);
+      color: #fff;
+      border-radius: 50px;
+      border: 2px solid rgb(0, 40, 120);
+      font-family: 'Roboto', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      font-weight: 500;
+      padding-top: 10px;
+      padding-bottom: 11px;
+      transition: 0ms;
+    }
+
+    .card .reg-button:hover {
+      background: rgb(0, 56, 168);
+      color: #fff;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 40px;
+      background: rgb(245, 245, 245);
+      border-top: 1px solid rgb(229, 233, 241);
+    }
+
+    @media (max-width: 576px) {
+      .container {
+        position: relative;
+        transform: none;
+        left: 0;
+      }
+
+      .card {
+        border: 0;
+        border-radius: 0;
+        padding-top: 30px;
+        padding-left: 26px;
+        padding-right: 26px;
+        padding-bottom: 50px;
+      }
+
+      .form-check label {
+        font-size: 14px;
+      }
+
+      .footer {
+        position: relative;
+        height: 56px;
+      }
+    }
+  </style>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-1 col-md-2 col-lg-3 col-xl-4"></div>
+      <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-4 px-0 px-sm-4 px-md-4 px-lg-4 px-xl-4">
+        <div class="card">
+          <form id="form_reg" class="needs-validation" method="post" onsubmit="validateForm(event)" novalidate>
+            <div class="d-flex justify-content-center mb-5" onclick="window.open('/catalog/', '_self');">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/5/50/Dm_Logo.svg" alt="Logo">
+            </div>
+            <div class="row g-3 mb-3">
+              <div class="col-6">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="input_first_name" name="first_name" minlength="2" maxlength="50"
+                    placeholder="Ім'я" required>
+                  <label for="input_first_name">Ім'я</label>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="input_last_name" name="last_name" minlength="2" maxlength="50"
+                    placeholder="Прізвище" required>
+                  <label for="input_last_name">Прізвище</label>
+                </div>
+              </div>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="email" class="form-control" id="input_email" name="email" minlength="6" maxlength="50"
+                placeholder="name@example.com" required>
+              <label for="input_email">Електронна пошта</label>
+              <div id="email_error" class="invalid-feedback">
+                Вкажіть діючу адресу електронної пошти
+              </div> 
+            </div>
+            <div class="form-floating mb-3">
+              <input type="password" class="form-control" id="input_password" name="password" minlength="6"
+                maxlength="24" placeholder="Password" required>
+              <label for="input_password">Пароль</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="password" class="form-control" id="input_password_repeat" minlength="6"
+                maxlength="24" placeholder="Password" required>
+              <label for="input_password_repeat">Повтор пароля</label>
+              <div id="password_repeat_error" class="invalid-feedback">
+                Введені паролі не збігаються
+              </div>        
+            </div>
+            <div class="form-check mb-5">
+              <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked required>
+              <label class="form-check-label" for="flexCheckChecked">
+                Я погоджуюсь з <a href="">політикою конфіденційності</a><br>та <a href="">умовами використання</a> цього
+                вебсайту.
+              </label>
+            </div>
+            <div class="px-4">
+              <div class="d-flex justify-content-center">
+                <button type="submit" class="btn reg-button">Зареєструватись</button>
+              </div>
+              <div class="d-flex" style="margin-top: 14px; margin-bottom: 14px;">
+                <div class="d-inline-flex line"></div>
+                <div class="d-inline-flex line-text">Вже&nbsp;є&nbsp;обліковий&nbsp;запис?</div>
+                <div class="d-inline-flex line"></div>
+              </div>
+              <div class="d-flex justify-content-center">
+                <button class="btn auth-button" onclick="window.open('/authentication/', '_self');">Авторизація</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="col-sm-1 col-md-2 col-lg-3 col-xl-4"></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p class="text-center"
+      style="color: rgb(82, 82, 96); font-size: 13px; font-family: 'Roboto', sans-serif; padding-top: 9px;"> 2023-2024,
+      DM Deutsche Chemie™, ФОП (Горгут Тарас Степанович)</p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/js/registration.js"></script>
+
+
+</body>
+
+</html>

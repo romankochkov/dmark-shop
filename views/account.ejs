@@ -1,0 +1,868 @@
+<!doctype html>
+<html lang="uk">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DM Deutsche Chemie</title>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&family=Roboto:wght@100;300;400;500;700;900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <style>
+        .modal {
+            font-family: 'Roboto Condensed', sans-serif;
+        }
+
+        .modal-content {
+            border: 0;
+        }
+
+        .modal .form-control {
+            color: rgb(0, 40, 120);
+        }
+
+        .modal .form-floating {
+            color: rgb(82, 82, 96);
+        }
+
+        .modal .form-floating select:focus {
+            box-shadow: 0 0 0 0.2rem rgb(0, 40, 120);
+            border: 0;
+        }
+
+        .modal .form-floating input:focus {
+            box-shadow: 0 0 0 0.2rem rgb(0, 40, 120);
+            border: 0;
+        }
+
+        .modal .button-cancel {
+            width: 120px;
+            height: 38px;
+            border: 0;
+            border-radius: 30px;
+            font-size: 15px;
+            font-weight: 500;
+            font-family: 'Roboto', sans-serif;
+            padding-bottom: 7px;
+        }
+
+        .modal .button-submit {
+            width: 120px;
+            height: 38px;
+            background: rgb(0, 40, 120);
+            border: 0;
+            border-radius: 30px;
+            font-size: 15px;
+            font-weight: 500;
+            font-family: 'Roboto', sans-serif;
+            padding-bottom: 7px;
+        }
+
+        .under-nav {
+            height: 40px;
+            background: rgb(245, 245, 245);
+            border-bottom: 1px solid rgb(229, 233, 241);
+        }
+
+        nav {
+            border-bottom: 1px solid rgb(229, 233, 241);
+            margin-bottom: 30px;
+        }
+
+        nav .nav-fix {
+            border-bottom: 1px solid rgb(229, 233, 241);
+        }
+
+        .nav-fix .container {
+            padding-top: 25px;
+            padding-bottom: 28px;
+        }
+
+        .navbar-brand {
+            position: relative;
+            color: rgb(0, 40, 120);
+            font-size: 20px;
+            font-family: 'Roboto Condensed', sans-serif;
+            font-weight: 700;
+        }
+
+        .navbar-brand img {
+            height: 38px;
+        }
+
+        .form-control-fix {
+            color: rgb(0, 40, 120);
+            font-family: 'Roboto Condensed', sans-serif;
+            font-weight: 500;
+
+            padding-top: 4px;
+            padding-left: 20px;
+            padding-right: 50px;
+
+            border: 0;
+        }
+
+        .form-control-fix:focus {
+            box-shadow: 0 0 0 0.2rem rgb(0, 40, 120);
+            border: 0;
+        }
+
+        .btn-search-fix {
+            position: absolute;
+            right: 5px;
+
+            width: 50px;
+            height: 100%;
+        }
+
+        .btn-search-fix i {
+            position: absolute;
+            top: 48%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            font-size: 18px;
+            color: rgb(0, 40, 120);
+        }
+
+        .btn-panel-fix {
+            width: 30px;
+            height: 100%;
+            padding: 0;
+            margin-left: 12px;
+        }
+
+        .btn-panel-fix:focus {
+            border: 0;
+            box-shadow: 0;
+        }
+
+        .btn-panel-fix i {
+            font-size: 18px;
+            color: rgb(0, 40, 120);
+        }
+
+        .btn-panel-fix:hover #icon_favorites {
+            color: #FF0800;
+        }
+
+        .btn-panel-fix:hover #icon_user {
+            color: #3BB143;
+        }
+
+        .btn-panel-fix:hover #icon_cart {
+            color: #FF5E0E;
+        }
+
+        .nav-item {
+            color: rgb(0, 40, 120);
+            text-decoration: none;
+            font-size: 22px;
+            font-family: 'Roboto Condensed', sans-serif;
+            font-weight: 700;
+            border-bottom: 2px solid rgb(229, 233, 241);
+            cursor: pointer;
+        }
+
+        .nav-item i {
+            height: 100%;
+            font-size: 17px;
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        .col-panel-fix {
+            border: 3px solid transparent;
+            padding-top: 8px;
+            padding-bottom: 10px;
+        }
+
+        .col-panel-fix-active {
+            border: 3px solid rgb(0, 40, 120);
+        }
+
+        .link-panel-fix {
+            color: rgb(0, 40, 120);
+            text-decoration: none;
+            font-size: 17px;
+            font-family: 'Roboto Condensed', sans-serif;
+            font-weight: 700;
+        }
+
+        .link-panel-dropdown {
+            width: 110%;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            border: 1px solid rgb(240, 240, 240);
+            border-top: 0;
+            border-radius: 0 0 5px 5px;
+            text-align: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .link-panel-dropdown p {
+            font-family: 'Roboto Condensed', sans-serif;
+            font-size: 15px;
+            color: rgb(82, 82, 96);
+            border-top: 1px solid transparent;
+            border-bottom: 1px solid rgb(240, 240, 240);
+            padding-top: 4px;
+            padding-bottom: 8px;
+            margin: 0;
+        }
+
+        .link-panel-dropdown p a {
+            color: rgb(82, 82, 96);
+            text-decoration: none;
+        }
+
+        .card-title {
+            color: rgb(0, 40, 120);
+            font-size: 24px;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+            line-height: 30px;
+            margin-bottom: 0;
+        }
+
+        .card-button {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            background: rgb(0, 40, 120);
+            border-radius: 40px;
+            border: 0;
+            font-size: 15px;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
+            transition: 0s;
+        }
+
+        .card-button:hover {
+            background: rgb(0, 56, 168);
+            color: #fff;
+        }
+
+        .card-button i {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .exit-button {
+            width: 100%;
+            background: #dc143c;
+            border-radius: 30px;
+            border: 0;
+            font-size: 17px;
+            font-weight: 700;
+            font-family: 'Roboto Condensed', sans-serif;
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+
+        .exit-button:hover {
+            background: #ff1443;
+            color: #fff;
+        }
+
+        footer {
+            background: rgb(245, 245, 245);
+            border-top: 1px solid rgb(229, 233, 241);
+            border-bottom: 1px solid transparent;
+            margin-top: 30px;
+        }
+
+        footer p {
+            color: rgb(0, 40, 120);
+            font-size: 17px;
+            font-weight: 500;
+            font-family: 'Roboto', sans-serif;
+            margin-bottom: 14px;
+        }
+
+        footer a {
+            color: rgb(82, 82, 96);
+            font-size: 14px;
+            font-family: 'Roboto', sans-serif;
+            text-decoration: none;
+            margin-bottom: 14px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .copyright {
+            width: 100%;
+            height: 72px;
+            background: rgb(245, 245, 245);
+            border-top: 1px solid rgb(229, 233, 241);
+            padding-top: 17px;
+        }
+
+        .copyright p {
+            font-weight: 400;
+            font-size: 14px !important;
+        }
+
+        @media (max-width: 576px) {
+            .nav-fix .container {
+                padding-top: 15px;
+                padding-left: 16px;
+                padding-right: 16px;
+                padding-bottom: 16px;
+            }
+
+            .navbar-brand img {
+                height: 28px;
+                margin-top: -3px;
+                margin-left: 4px;
+            }
+
+            .card-title {
+                font-size: 18px;
+            }
+
+            footer a {
+                line-height: 35px;
+            }
+
+            .copyright p {
+                text-align: center;
+                font-size: 10px !important;
+            }
+        }
+    </style>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-4">
+        <div id="success_toast" class="toast align-items-center px-1" role="alert" aria-live="assertive"
+            aria-atomic="true"
+            style="width: 52px; background: #4BB543; border: 1px solid #4BB543; color: #fff; font-size: 18px;">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header px-4">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Новий товар</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body px-4 py-4">
+                    <form id="form_add_product" class="needs-validation" action="/account/product/add" method="post"
+                        onsubmit="validateForm(event)" novalidate>
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="floatingSelect" name="brand" required>
+                                <option selected>Denkmit</option>
+                                <option value="1">Balea</option>
+                                <option value="2">Alverde</option>
+                                <option value="3">Dontodent</option>
+                                <option value="2">Mivolis</option>
+                                <option value="3">Frosch</option>
+                                <option value="3">Profissimo</option>
+                                <option value="3">Babylove</option>
+                            </select>
+                            <label for="floatingSelect">Бренд</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInputValue" placeholder=""
+                                name="title_original" required>
+                            <label for="floatingInputValue">Назва</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInputValue" placeholder=""
+                                name="title_translation" required>
+                            <label for="floatingInputValue">Назва (переклад)</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInputValue" placeholder="" name="type"
+                                required>
+                            <label for="floatingInputValue">Категорія</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInputValue" placeholder=""
+                                name="pictures" required>
+                            <label for="floatingInputValue">Зображення</label>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="floatingInputValue" placeholder=""
+                                        name="volume" required>
+                                    <label for="floatingInputValue">Об'єм</label>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="form-floating mb-3">
+                                    <input type="number" class="form-control" id="floatingInputValue" placeholder="0"
+                                        name="weight" value="0" min="0" required>
+                                    <label for="floatingInputValue">Маса</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="floatingInputValue" placeholder=""
+                                        name="price" required>
+                                    <label for="floatingInputValue">Ціна</label>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="form-floating mb-3">
+                                    <input type="number" class="form-control" id="floatingInputValue" placeholder="35"
+                                        name="price_factor" value="35" required>
+                                    <label for="floatingInputValue">Коефіцієнт</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    <input type="number" class="form-control" id="floatingInputValue" placeholder="10"
+                                        name="amount" value="10" required>
+                                    <label for="floatingInputValue">Залишок</label>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    <input type="number" class="form-control" id="floatingInputValue" placeholder="0"
+                                        name="discount" value="0" min="0" max="100" required>
+                                    <label for="floatingInputValue">Знижка</label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer px-4 pt-0 pb-4">
+                    <div class="d-flex justify-content-between mt-4" style="width: 100%;">
+                        <button type="button" class="btn btn-secondary button-cancel"
+                            data-bs-dismiss="modal">Скасувати</button>
+                        <button type="button" class="btn btn-primary button-submit"
+                            onclick="$('#form_add_product').submit();">Додати</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="under-nav d-none d-lg-block">
+        <div class="container">
+            <p
+                style="color: rgb(0, 40, 120); font-family: 'Roboto Condensed', sans-serif; font-size: 0.95rem; font-weight: 500; text-align: right;padding-top: 7px;">
+                <i class="fa-solid fa-location-dot" style="font-size: 0.90rem;"></i>&nbsp;&nbsp;Львів,
+                Сокільники&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-phone"
+                    style="font-size: 1rem;"></i>&nbsp;&nbsp;+38 (067) 676-67-39
+            </p>
+        </div>
+    </div>
+
+    <nav>
+        <div class="nav-fix">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-4 col-sm-6 col-md-6 col-lg-3 col-xl-3">
+                        <a class="navbar-brand" href="/catalog/">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/5/50/Dm_Logo.svg" alt="Logo"
+                                class="d-inline-block align-text-top">
+                            <!--DM Deutsche Chemie-->
+                        </a>
+                    </div>
+
+                    <div class="col-8 col-sm-6 col-md-6 d-lg-none">
+                        <div style="height: 100%; position: relative; text-align: right;">
+                            <button type="button" class="btn btn-panel-fix">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                            <button type="button" class="btn btn-panel-fix" <% if (user) {
+                                %>onclick="window.open('/account/',
+                                '_self');"<% } else { %>onclick="window.open('/authentication/', '_self');"<% } %>>
+                                        <% if (user) { %><i class="fa-solid fa-user-check"></i>
+                                            <% } else { %><i class="fas fa-user"></i>
+                                                <% } %>
+                            </button>
+                            <button <% if (user) { %>style="margin-left: 5px;"<% } %> type="button" class="btn
+                                    btn-panel-fix"
+                                    onclick="window.open('/cart/', '_self');">
+                                    <i class="fas fa-shopping-cart"></i>
+                            </button>
+                            <button type="button" class="btn btn-panel-fix" data-bs-toggle="offcanvas"
+                                data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar"
+                                aria-label="Toggle navigation">
+                                <i class="fa-solid fa-bars"></i>
+                            </button>
+
+                            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
+                                aria-labelledby="offcanvasNavbarLabel">
+                                <div class="offcanvas-header">
+                                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="offcanvas-body">
+                                    <ul class="navbar-nav justify-content-end flex-grow-1 text-start">
+                                        <li class="nav-item py-2 px-3 d-flex justify-content-between"
+                                            onclick="window.open('/catalog/denkmit/', '_self');"
+                                            style="border-top: 2px solid rgb(229, 233, 241);">
+                                            <a class="nav-link d-inline-flex">Denkmit</a>
+                                            <i class="fa-solid fa-angle-right d-inline-flex"></i>
+                                        </li>
+                                        <li class="nav-item py-2 px-3 d-flex justify-content-between"
+                                            onclick="window.open('/catalog/balea/', '_self');">
+                                            <a class="nav-link d-inline-flex">Balea</a>
+                                            <i class="fa-solid fa-angle-right d-inline-flex"></i>
+                                        </li>
+                                        <li class="nav-item py-2 px-3 d-flex justify-content-between"
+                                            onclick="window.open('/catalog/alverde/', '_self');">
+                                            <a class="nav-link d-inline-flex">Alverde</a>
+                                            <i class="fa-solid fa-angle-right d-inline-flex"></i>
+                                        </li>
+                                        <li class="nav-item py-2 px-3 d-flex justify-content-between"
+                                            onclick="window.open('/catalog/dontodent/', '_self');">
+                                            <a class="nav-link d-inline-flex">Dontodent</a>
+                                            <i class="fa-solid fa-angle-right d-inline-flex"></i>
+                                        </li>
+                                        <li class="nav-item py-2 px-3 d-flex justify-content-between"
+                                            onclick="window.open('/catalog/mivolis/', '_self');">
+                                            <a class="nav-link d-inline-flex">Mivolis</a>
+                                            <i class="fa-solid fa-angle-right d-inline-flex"></i>
+                                        </li>
+                                        <li class="nav-item py-2 px-3 d-flex justify-content-between"
+                                            onclick="window.open('/catalog/frosch/', '_self');">
+                                            <a class="nav-link d-inline-flex">Frosch</a>
+                                            <i class="fa-solid fa-angle-right d-inline-flex"></i>
+                                        </li>
+                                        <li class="nav-item py-2 px-3 d-flex justify-content-between"
+                                            onclick="window.open('/catalog/profissimo/', '_self');">
+                                            <a class="nav-link d-inline-flex">Profissimo</a>
+                                            <i class="fa-solid fa-angle-right d-inline-flex"></i>
+                                        </li>
+                                        <li class="nav-item py-2 px-3 d-flex justify-content-between"
+                                            onclick="window.open('/catalog/babylove/', '_self');">
+                                            <a class="nav-link d-inline-flex">Babylove</a>
+                                            <i class="fa-solid fa-angle-right d-inline-flex"></i>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-lg-6 col-xl-6 mt-3 mt-sm-3 mt-md-3 mt-lg-0 mt-xl-0">
+                        <form class="d-flex" role="search" style="position: relative;" method="get">
+                            <input class="form-control form-control-fix" type="search" placeholder="Пошук"
+                                aria-label="Search" name="search"
+                                style="height: 44px; border-radius: 44px; background: rgb(229, 233, 241);"
+                                value="<% if (typeof search !== 'undefined') { %><%= search %><% } %>">
+                            <button type="submit" class="btn btn-search-fix">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="d-none d-lg-block col-md-3 col-lg-3 col-xl-3">
+                        <div style="height: 100%; position: relative; text-align: right;">
+                            <button type="button" class="btn btn-panel-fix"
+                                onclick="window.open('/account/favorites/', '_self');">
+                                <i id="icon_favorites" class="fas fa-heart"></i>
+                            </button>
+                            <button type="button" class="btn btn-panel-fix" <% if (user) {
+                                %>onclick="window.open('/account/',
+                                '_self');"<% } else { %>onclick="window.open('/authentication/', '_self');"<% } %>>
+                                        <% if (user) { %><i id="icon_user" class="fa-solid fa-user-check"></i>
+                                            <% } else { %><i id="icon_user" class="fas fa-user"></i>
+                                                <% } %>
+                            </button>
+                            <button <% if (user) { %>style="margin-left: 5px;"<% } %> type="button" class="btn
+                                    btn-panel-fix"
+                                    onclick="location.href='/cart/';">
+                                    <i id="icon_cart" class="fas fa-shopping-cart"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="container text-center d-none d-lg-block">
+            <div class="row">
+                <div class="col col-panel-fix <% if (url === '/catalog/newest/') { %>col-panel-fix-active<% } %> py-2">
+                    <a class="link-panel-fix" href="/catalog/newest/">Новинки <i class="fa-solid fa-gifts"
+                            style="font-size: 15px; color: #3BB143;"></i></a>
+                </div>
+
+                <div class="col col-panel-fix <% if (url === '/catalog/popular/') { %>col-panel-fix-active<% } %> py-2">
+                    <a class="link-panel-fix" href="/catalog/popular/">Популярне <i class="fa-solid fa-fire"
+                            style="font-size: 15px; color: #FF5E0E;"></i></a>
+                </div>
+
+                <div id="link_denkmit"
+                    class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/denkmit/') { %>col-panel-fix-active<% } %> py-2"
+                    style="position: relative; z-index: 99999;">
+                    <a class="link-panel-fix" href="/catalog/denkmit/">&nbsp;Denkmit™</a>
+                    <div class="link-panel-dropdown" id="dropdown_denkmit"
+                        style="top: 156px; left: 50%; display: none;">
+                        <p><a href="">Засоби для кухні</a></p>
+                        <p><a href="">Засоби для прання</a></p>
+                        <p><a href="">Засоби для туалету</a></p>
+                        <p><a href="">Засоби для прибирання</a></p>
+                        <p><a href="">Освіжувачі повітря</a></p>
+                        <p style="border-bottom: 1px solid transparent;"><a href="">Інше</a></p>
+                    </div>
+                </div>
+
+                <div
+                    class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/balea/') { %>col-panel-fix-active<% } %> py-2">
+                    <a class="link-panel-fix" href="/catalog/balea/">&nbsp;Balea™</a>
+                </div>
+
+                <div
+                    class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/alverde/') { %>col-panel-fix-active<% } %> py-2">
+                    <a class="link-panel-fix" href="/catalog/alverde/">&nbsp;Alverde™</a>
+                </div>
+
+                <div
+                    class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/dontodent/') { %>col-panel-fix-active<% } %> py-2">
+                    <a class="link-panel-fix" href="/catalog/dontodent/">&nbsp;Dontodent™</a>
+                </div>
+
+                <div
+                    class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/mivolis/') { %>col-panel-fix-active<% } %> py-2">
+                    <a class="link-panel-fix" href="/catalog/mivolis/">&nbsp;Mivolis™</a>
+                </div>
+
+                <div
+                    class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/frosch/') { %>col-panel-fix-active<% } %> py-2">
+                    <a class="link-panel-fix" href="/catalog/frosch/">&nbsp;Frosch™</a>
+                </div>
+
+                <div
+                    class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/profissimo/') { %>col-panel-fix-active<% } %> py-2">
+                    <a class="link-panel-fix" href="/catalog/profissimo/">&nbsp;Profissimo™</a>
+                </div>
+
+                <div
+                    class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/babylove/') { %>col-panel-fix-active<% } %> py-2">
+                    <a class="link-panel-fix" href="/catalog/babylove/">&nbsp;Babylove™</a>
+                </div>
+            </div>
+        </div>
+
+    </nav>
+
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-12 col-sm-12 col-md-12 col-lg-8 col-xl-8">
+
+                <div
+                    style="width: 100%; height: 4px; background: rgb(245, 245, 245); border-radius: 20px; margin-bottom: 20px;">
+                </div>
+
+                <div class="d-flex justify-content-between p-3 p-sm-3 p-md-3 p-lg-4 p-xl-4"
+                    style="background: rgb(229, 233, 241); border-radius: 6px;">
+                    <div class="align-self-center">
+                        <p class="card-title">Список замовлень</p>
+                    </div>
+                    <div>
+                        <a class="btn btn-primary card-button" href="orders">
+                            <i class="fa-solid fa-list-ul" style="font-size: 16px;"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div
+                    style="width: 100%; height: 4px; background: rgb(245, 245, 245); border-radius: 20px; margin-top: 20px; margin-bottom: 20px;">
+                </div>
+
+                <div class="d-flex justify-content-between p-3 p-sm-3 p-md-3 p-lg-4 p-xl-4"
+                    style="background: rgb(229, 233, 241); border-radius: 6px;">
+                    <div class="align-self-center">
+                        <p class="card-title">Додати товар</p>
+                    </div>
+                    <div>
+                        <a class="btn btn-primary card-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <i class="fa-solid fa-plus" style="font-size: 16px;"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div
+                    style="width: 100%; height: 4px; background: rgb(245, 245, 245); border-radius: 20px; margin-top: 20px; margin-bottom: 20px;">
+                </div>
+
+                <div class="d-flex justify-content-between p-3 p-sm-3 p-md-3 p-lg-4 p-xl-4"
+                    style="background: rgb(229, 233, 241); border-radius: 6px;">
+                    <div class="align-self-center">
+                        <p class="card-title">Редактор товару</p>
+                    </div>
+                    <div>
+                        <a class="btn btn-primary card-button" href="/account/editor">
+                            <i class="fa-solid fa-pen" style="font-size: 14px;"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div
+                    style="width: 100%; height: 4px; background: rgb(245, 245, 245); border-radius: 20px; margin-top: 20px;">
+                </div>
+
+                <div class="row g-0 mt-4">
+                    <div class="col-2 col-sm-2 d-md-none"></div>
+                    <div class="col-8 col-sm-8 col-md-3 col-lg-2">
+                        <button class="btn btn-primary exit-button"
+                            onclick="window.open('/logout', '_self');">ВИХІД</button>
+                    </div>
+                    <div class="d-none d-md-block col-md-9 col-lg-10"></div>
+                </div>
+            </div>
+            <div class="col-2"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="d-none d-md-block">
+                <div class="d-flex justify-content-between py-5">
+                    <div class="d-inline-flex">
+                        <div class="d-flex flex-column">
+                            <p>Інформація</p>
+                            <a href="">Графік роботи</a>
+                            <a href="">Умови використання</a>
+                            <a style="margin-bottom: 0;" href="">Політика конфіденційності</a>
+                        </div>
+                    </div>
+
+                    <div class="d-inline-flex">
+                        <div class="d-flex flex-column">
+                            <p>Категорії</p>
+                            <a href="">Новинки та акції</a>
+                            <a href="">Популярні товари</a>
+                            <a style="margin-bottom: 0;" href="">Товари інших брендів</a>
+                        </div>
+                    </div>
+
+                    <div class="d-inline-flex">
+                        <div class="d-flex flex-column">
+                            <p>Покупцю</p>
+                            <a href="">Способи оплати</a>
+                            <a href="">Способи доставки</a>
+                            <a style="margin-bottom: 0;" href="">Обмін та повернення</a>
+                        </div>
+                    </div>
+
+                    <div class="d-inline-flex">
+                        <div class="d-flex flex-column">
+                            <p>Додатково</p>
+                            <a href="">Партнерські програми</a>
+                            <a href="">Наша сторінка на Prom.ua</a>
+                            <a href="">Наш прайс у форматі Excel</a>
+                        </div>
+                    </div>
+
+                    <div class="d-inline-flex">
+                        <div class="d-flex flex-column">
+                            <p>Контакти</p>
+                            <a>+38 (067) 676-67-39</a>
+                            <a>+38 (093) 608-62-87</a>
+                            <a>dm.deutschechemie@gmail.com</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-block d-md-none">
+                <div class="row pt-3 px-1">
+                    <div class="col-6 mb-4">
+                        <p>Категорії</p>
+                        <a href="">Новинки та акції</a><br>
+                        <a href="">Популярні товари</a><br>
+                        <a style="margin-bottom: 0;" href="">Товари інших брендів</a>
+                    </div>
+
+                    <div class="col-6 mb-4">
+                        <p>Покупцю</p>
+                        <a href="">Способи оплати</a><br>
+                        <a href="">Способи доставки</a><br>
+                        <a style="margin-bottom: 0;" href="">Обмін та повернення</a>
+                    </div>
+
+                    <div class="col-6 mb-4">
+                        <p>Інформація</p>
+                        <a href="">Графік роботи</a><br>
+                        <a href="">Умови використання</a><br>
+                        <a style="margin-bottom: 0;" href="">Політика конфіденційності</a>
+                    </div>
+
+                    <div class="col-6 mb-4">
+                        <p>Додатково</p>
+                        <a href="">Партнерські програми</a>
+                        <a href="">Наша сторінка на Prom.ua</a>
+                        <a href="">Наш прайс у форматі Excel</a>
+                    </div>
+
+                    <div class="col-12 pt-3 mb-3 text-center" style="border-top: 1px solid rgb(229, 233, 241);">
+                        <p>Контакти</p>
+                        <a href="tel:380676766739">+38 (067) 676-67-39</a><br>
+                        <a href="tel:380936086287">+38 (093) 608-62-87</a><br>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="copyright">
+            <div class="container">
+                <p
+                    style="color: rgb(82, 82, 96); font-size: 13px; font-family: 'Roboto', sans-serif; padding-top: 9px;">
+                    2023-2024,
+                    DM Deutsche Chemie, ФОП (Горгут Тарас Степанович)</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/account.js"></script>
+
+
+</body>
+
+</html>
