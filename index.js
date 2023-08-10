@@ -640,6 +640,8 @@ app.post('/account/product/add', express.urlencoded({ extended: false }), async 
     brand_translation = 'Денкміт';
   } else if (brand === 'Balea') {
     brand_translation = 'Балеа';
+  } else if (brand === 'Profissimo') {
+    brand_translation = 'Профісімо';
   } else {
     return res.sendStatus(400);
   }
