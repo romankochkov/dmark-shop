@@ -52,11 +52,12 @@ $(document).ready(function () {
             method: 'GET',
             success: function (response) {
                 if (response.message != 'DUPLICATE') {
-                    if (parseInt($('#cart_length').text() != NaN)) {
+                    if (($('#cart_length').text().trim()) === '') {
+                        $('#cart_length').text('1');
+                        $('#cart_length_mobile').text('1');
+                    } else {
                         $('#cart_length').text(parseInt($('#cart_length').text()) + 1);
                         $('#cart_length_mobile').text(parseInt($('#cart_length_mobile').text()) + 1);
-                    } else {
-                        $('#cart_length').text('1');
                     }
                 }
                 const toast = new bootstrap.Toast($('#cart_toast'), { delay: 2000 });
