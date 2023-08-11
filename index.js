@@ -185,7 +185,7 @@ app.get('/account/favorites', (req, res) => {
       return row;
     });
 
-    res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows });
+    res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
   });
 });
 
@@ -648,7 +648,7 @@ app.post('/account/product/add', express.urlencoded({ extended: false }), async 
 
   pictures = JSON.stringify(pictures.split("|"));
 
-  pool.query(`INSERT INTO products (brand_original, brand_translation, "type", title_original, title_translation, description, pictures, volume, price, price_factor, amount, weight, exists, discount) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`, [brand, brand_translation, type, title_original, title_translation, '', pictures, volume, price, price_factor, amount, weight, 1, discount], (err) => {
+  pool.query(`INSERT INTO products (brand_original, brand_translation, "type", title_original, title_translation, description, pictures, volume, price, price_factor, amount, weight, exists, discount) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`, [brand, brand_translation, type, title_original, title_translation, '', pictures, volume, price.replace(',', '.'), price_factor, amount, weight, 1, discount], (err) => {
     if (err) {
       console.error(err);
       return res.status(500).send('Internal Server Error');
@@ -853,6 +853,81 @@ app.get('/catalog/balea', (req, res) => {
       res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
     })
     .catch(err => {
+      return res.status(500).send('Internal Server Error');
+    });
+});
+
+app.get('/catalog/balea/hair', (req, res) => {
+  if (!req.originalUrl.endsWith('/')) {
+    return res.redirect(req.originalUrl + '/');
+  }
+
+  getDataDB('Balea', 'hair', query = (req.query.search) ? req.query.search.replace('/', '') : null)
+    .then(rows => {
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+    })
+    .catch(err => {
+      console.log(err);
+      return res.status(500).send('Internal Server Error');
+    });
+});
+
+app.get('/catalog/balea/skin', (req, res) => {
+  if (!req.originalUrl.endsWith('/')) {
+    return res.redirect(req.originalUrl + '/');
+  }
+
+  getDataDB('Balea', 'skin', query = (req.query.search) ? req.query.search.replace('/', '') : null)
+    .then(rows => {
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+    })
+    .catch(err => {
+      console.log(err);
+      return res.status(500).send('Internal Server Error');
+    });
+});
+
+app.get('/catalog/balea/body', (req, res) => {
+  if (!req.originalUrl.endsWith('/')) {
+    return res.redirect(req.originalUrl + '/');
+  }
+
+  getDataDB('Balea', 'body', query = (req.query.search) ? req.query.search.replace('/', '') : null)
+    .then(rows => {
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+    })
+    .catch(err => {
+      console.log(err);
+      return res.status(500).send('Internal Server Error');
+    });
+});
+
+app.get('/catalog/balea/shave', (req, res) => {
+  if (!req.originalUrl.endsWith('/')) {
+    return res.redirect(req.originalUrl + '/');
+  }
+
+  getDataDB('Balea', 'shave', query = (req.query.search) ? req.query.search.replace('/', '') : null)
+    .then(rows => {
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+    })
+    .catch(err => {
+      console.log(err);
+      return res.status(500).send('Internal Server Error');
+    });
+});
+
+app.get('/catalog/balea/hygiene', (req, res) => {
+  if (!req.originalUrl.endsWith('/')) {
+    return res.redirect(req.originalUrl + '/');
+  }
+
+  getDataDB('Balea', 'hygiene', query = (req.query.search) ? req.query.search.replace('/', '') : null)
+    .then(rows => {
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+    })
+    .catch(err => {
+      console.log(err);
       return res.status(500).send('Internal Server Error');
     });
 });

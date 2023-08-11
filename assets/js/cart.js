@@ -4,6 +4,36 @@ document.addEventListener("DOMContentLoaded", function (event) {
     if ($('#input_region').val() !== '') $('#input_region').trigger('input');
 });
 
+$('#link_denkmit').mouseenter(function () {
+    $('#nav_overlay').css('display', 'block');
+    $('#dropdown_denkmit').css('display', 'block');
+});
+
+$('#link_denkmit').mouseleave(function () {
+    $('#nav_overlay').css('display', 'none');
+    $('#dropdown_denkmit').css('display', 'none');
+});
+
+$('#link_balea').mouseenter(function () {
+    $('#nav_overlay').css('display', 'block');
+    $('#dropdown_balea').css('display', 'block');
+});
+
+$('#link_balea').mouseleave(function () {
+    $('#nav_overlay').css('display', 'none');
+    $('#dropdown_balea').css('display', 'none');
+});
+
+function changeIconSidebar(element) {
+    if ($(element).hasClass('fa-chevron-down')) {
+        $(element).removeClass('fa-chevron-down');
+        $(element).addClass('fa-chevron-up');
+    } else {
+        $(element).removeClass('fa-chevron-up');
+        $(element).addClass('fa-chevron-down');
+    }
+}
+
 $('#input_region').on('input', function(event) {
     const value = event.target.value;
     if (value === '') {
@@ -88,6 +118,15 @@ $('#select_branch').on('change', function () {
 });
 
 $('#select_branch_type').on('change', function () {
+    if ($('#select_branch_type').val() == 'Адресна доставка') {
+        $('#form_select_branch').attr('hidden', 'true');
+        $('#form_input_branch').removeAttr('hidden');
+        return;
+    } else {
+        $('#form_select_branch').removeAttr('hidden');
+        $('#form_input_branch').attr('hidden', 'true');
+    }
+
     if ($('#select_region').val() == 'Виберіть регіон') {
         return;
     }

@@ -623,8 +623,19 @@
 
                     <li class="nav-item py-2 px-3 d-flex justify-content-between">
                       <a class="nav-link d-inline-flex" href="/catalog/balea/">Balea</a>
-                      <i class="fa-solid fa-angle-right d-inline-flex"></i>
+                      <i class="fa-solid fa-chevron-down" data-bs-toggle="collapse" href="#collapse_sidebar_balea"
+                        role="button" aria-expanded="false" aria-controls="collapse_sidebar_balea"
+                        onclick="changeIconSidebar(this);"></i>
                     </li>
+
+                    <div class="collapse px-3 py-2" id="collapse_sidebar_balea">
+                      <p style="margin-top: 10px;"><a href="/catalog/balea/hair/">Засоби для волосся</a></p>
+                      <p><a href="/catalog/balea/skin/">Засоби для шкіри</a></p>
+                      <p><a href="/catalog/balea/body/">Засоби для тіла</a></p>
+                      <p><a href="/catalog/balea/shave/">Засоби для гоління</a></p>
+                      <p style="margin-bottom: 10px;"><a href="/catalog/balea/hygiene/">Засоби для гігієни</a></p>
+                    </div>
+
                     <li class="nav-item py-2 px-3 d-flex justify-content-between">
                       <a class="nav-link d-inline-flex" href="/catalog/alverde/">Alverde</a>
                       <i class="fa-solid fa-angle-right d-inline-flex"></i>
@@ -723,9 +734,17 @@
           </div>
         </div>
 
-        <div
-          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/balea/') { %>col-panel-fix-active<% } %> py-2">
+        <div id="link_balea"
+          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/balea/') { %>col-panel-fix-active<% } %> py-2"
+          style="position: relative; z-index: 99999;">
           <a class="link-panel-fix" href="/catalog/balea/">&nbsp;Balea™</a>
+          <div class="link-panel-dropdown" id="dropdown_balea" style="top: 137.5px; left: 50%; display: none;">
+            <p><a href="/catalog/balea/hair/">Засоби для волосся</a></p>
+            <p><a href="/catalog/balea/skin/">Засоби для шкіри</a></p>
+            <p><a href="/catalog/balea/body/">Засоби для тіла</a></p>
+            <p><a href="/catalog/balea/shave/">Засоби для гоління</a></p>
+            <p style="border-bottom: 1px solid transparent;"><a href="/catalog/balea/hygiene/">Засоби для гігієни</a></p>
+          </div>
         </div>
 
         <div
