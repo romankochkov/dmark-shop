@@ -82,7 +82,7 @@ function totalValue() {
 
             var priceP = document.createElement("p");
             priceP.classList.add("text-end");
-            priceP.innerHTML = element_price.toString().replace('.', ',') + ' €<br><span style="color: rgba(82, 82, 96, 0.7);">' + Math.ceil(element_price * 42) + ' ₴</span>';
+            priceP.innerHTML = Math.ceil(element_price * 42) + ' ₴<br><span style="color: rgba(82, 82, 96, 0.7);">' + element_price.toString().replace('.', ',') + ' €</span>';
 
             col1.appendChild(labelP);
             col2.appendChild(priceP);
@@ -95,7 +95,7 @@ function totalValue() {
             console.log("Label:", label, "Цена:", text);
         }
 
-        $('#price_total_' + id).html('<span style="color: rgba(82, 82, 96, 0.7); font-weight: 500;">' + Math.ceil(sum * 42) + ' ₴ │</span> ' + sum.toFixed(2).replace('.', ',') + ' €');
+        $('#price_total_' + id).html('<span style="color: rgba(82, 82, 96, 0.7); font-weight: 500;">' + sum.toFixed(2).replace('.', ',') + ' € │</span> ' + Math.ceil(sum * 42) + ' ₴');
     }
 }
 

@@ -121,10 +121,23 @@ $('#select_branch_type').on('change', function () {
     if ($('#select_branch_type').val() == 'Адресна доставка') {
         $('#form_select_branch').attr('hidden', 'true');
         $('#form_input_branch').removeAttr('hidden');
+
+        $('#select_branch').removeAttr('name');
+        $('#input_branch').attr('name', 'address');
+
+        $('#select_branch').removeAttr('required');
+        $('#input_branch').attr('required', 'true');
+
         return;
     } else {
         $('#form_select_branch').removeAttr('hidden');
         $('#form_input_branch').attr('hidden', 'true');
+
+        $('#select_branch').attr('name', 'address');
+        $('#input_branch').removeAttr('name');
+
+        $('#select_branch').attr('required', 'true');
+        $('#input_branch').removeAttr('required');
     }
 
     if ($('#select_region').val() == 'Виберіть регіон') {
@@ -293,7 +306,7 @@ function totalValue() {
 
         var priceP = document.createElement("p");
         priceP.classList.add("text-end");
-        priceP.innerHTML = text.replace('.', ',') + ' €<br><span style="color: rgba(82, 82, 96, 0.7);">' + Math.ceil(text * 42) + ' ₴</span>';
+        priceP.innerHTML = Math.ceil(text * 42) + ' ₴<br><span style="color: rgba(82, 82, 96, 0.7);">' + text.replace('.', ',') + ' €</span>';
 
         col1.appendChild(labelP);
         col2.appendChild(priceP);
@@ -306,7 +319,7 @@ function totalValue() {
         console.log("Label:", label, "Цена:", text);
     }
 
-    $('#price_total').html('<span style="color: rgba(82, 82, 96, 0.7); font-weight: 500;">' + Math.ceil(sum * 42) + ' ₴ │</span> ' + sum.toFixed(2).replace('.', ',') + ' €');
+    $('#price_total').html('<span style="color: rgba(82, 82, 96, 0.7); font-weight: 500;">' + sum.toFixed(2).replace('.', ',') + ' € │</span> ' + Math.ceil(sum * 42) + ' ₴');
 
     if (sum < 80) {
         document.getElementById('submit_card').classList.add("d-none");
