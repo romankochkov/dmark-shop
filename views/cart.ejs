@@ -876,11 +876,11 @@
                               <%= item.title_original %>, <%= item.volume %>
                             </h5>
                             <div class="d-flex">
-                              <p class="card-title card-price-fix" style="width: 50%; margin-bottom: 0;"><i class="fa-solid fa-caret-left"
-                                  style="cursor: pointer;" onclick="decreaseValue('<%= item.id %>')"></i> <span
-                                  id="cart_count_<%= item.id %>" style="user-select: none;">1</span> <i
-                                  class="fa-solid fa-caret-right" style="cursor: pointer;"
-                                  onclick="increaseValue('<%= item.id %>')"></i></p>
+                              <p class="card-title card-price-fix" style="width: 50%; margin-bottom: 0;"><i
+                                  class="fa-solid fa-caret-left" style="cursor: pointer;"
+                                  onclick="decreaseValue('<%= item.id %>')"></i> <span id="cart_count_<%= item.id %>"
+                                  style="user-select: none;">1</span> <i class="fa-solid fa-caret-right"
+                                  style="cursor: pointer;" onclick="increaseValue('<%= item.id %>')"></i></p>
                               <p id="cart_price_<%= item.id %>"
                                 class="card-title card-price-fix d-flex justify-content-end price-element"
                                 style="width: 50%; margin-bottom: 0;"
@@ -1180,6 +1180,74 @@
     crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="/js/cart.js"></script>
+  <script>
+    function totalValue() {
+      var elements = document.getElementsByClassName("price-element");
+
+      var euro_coefficient = '<%= euro %>';
+      var sum = 0;
+
+      var cardTotal = document.getElementById("card-total");
+      cardTotal.innerHTML = ""; // Очищаем содержимое card-total
+
+      for (var i = 0; i < elements.length; i++) {
+        var text = elements[i].innerText.replace(',', '.').slice(0, -2);
+        var numbers = text.match(/[\d.]+/g);
+
+        if (numbers !== null) {
+          for (var j = 0; j < numbers.length; j++) {
+            sum += parseFloat(numbers[j]);
+          }
+        }
+
+        var label = elements[i].getAttribute('label');
+        var count = elements[i].getAttribute('count');
+
+        var row = document.createElement("div");
+        row.classList.add("row");
+        row.classList.add("px-1");
+        if (i !== (elements.length - 1)) {
+          row.classList.add("card-total-item");
+        } else {
+          row.classList.add("card-total-item-last");
+        }
+
+        var col1 = document.createElement("div");
+        col1.classList.add("col-9");
+
+        var col2 = document.createElement("div");
+        col2.classList.add("col-3");
+
+        var labelP = document.createElement("p");
+        labelP.classList.add("text-start");
+        labelP.textContent = label + " (" + count + " шт.)";
+
+        var priceP = document.createElement("p");
+        priceP.classList.add("text-end");
+        priceP.innerHTML = Math.ceil(text * euro_coefficient) + ' ₴<br><span style="color: rgba(82, 82, 96, 0.7);">' + text.replace('.', ',') + ' €</span>';
+
+        col1.appendChild(labelP);
+        col2.appendChild(priceP);
+
+        row.appendChild(col1);
+        row.appendChild(col2);
+
+        cardTotal.appendChild(row);
+
+        console.log("Label:", label, "Цена:", text);
+      }
+
+      $('#price_total').html('<span style="color: rgba(82, 82, 96, 0.7); font-weight: 500;">' + sum.toFixed(2).replace('.', ',') + ' € │</span> ' + Math.ceil(sum * euro_coefficient) + ' ₴');
+
+      if (sum < 80) {
+        document.getElementById('submit_card').classList.add("d-none");
+        document.getElementById('submit_card_error').classList.remove("d-none");
+      } else {
+        document.getElementById('submit_card').classList.remove("d-none");
+        document.getElementById('submit_card_error').classList.add("d-none");
+      }
+    }
+  </script>
 
 
 </body>

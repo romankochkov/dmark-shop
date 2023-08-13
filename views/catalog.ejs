@@ -799,7 +799,7 @@
                   src="https://media.dm-static.com/images/v1599975276/products/pim/eyecatcher_dmbrand_de/dmbrand_de.svg"
                   class="card-img-brand-fix">
 
-                <% if (url==='/account/favorites/' ) { %>
+                <% if (url === '/account/favorites/') { %>
                   <button type="button" class="btn card-btn-favorite-fix del-from-favorites"
                     data-item-id="<%= item.id %>">
                     <i class="fa-solid fa-heart"></i>
@@ -815,8 +815,8 @@
                       <img src="<%= item.pictures[0] %>" class="card-img-top">
               </div>
 
-              <button type="button" class="btn card-btn-cart-fix add-to-cart" data-item-id="<%= item.id %>">
-                <i class="fas fa-shopping-cart"></i>
+              <button type="button" class="btn card-btn-cart-fix <% if ( item.exists === 1 ) { %>add-to-cart<% } %>" data-item-id="<%= item.id %>">
+                <% if ( item.exists === 1 ) { %><i class="fas fa-shopping-cart"></i><% } else if ( item.exists === 0 ) { %><i class="fa-solid fa-square-xmark" style="font-size: 18px;"></i><% } else { %><i class="fa-solid fa-triangle-exclamation" style="top: 48%; font-size: 18px;"></i><% } %>
               </button>
 
               <div class="card-body card-body-fix">

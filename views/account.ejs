@@ -272,6 +272,36 @@
             display: none;
         }
 
+        .form-euro input {
+            color: rgb(0, 40, 120);
+            font-family: 'Roboto Condensed', sans-serif;
+        }
+
+        .button-euro {
+            position: absolute;
+            top: 48%;
+            right: 0%;
+            transform: translate(0%, -50%);
+            width: 36px;
+            height: 36px;
+            background: rgb(0, 40, 120);
+            border-radius: 8px;
+            color: #fff;
+        }
+
+        .button-euro:hover {
+            background: rgb(0, 56, 168);
+            color: #fff;
+        }
+
+        .button-euro i {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+        }
+
         .card-title {
             color: rgb(0, 40, 120);
             font-size: 24px;
@@ -491,17 +521,17 @@
                         <div class="row g-3">
                             <div class="col-6">
                                 <div class="form-floating">
-                                    <input type="number" class="form-control" id="floatingInputValue" placeholder="10"
+                                    <input type="number" class="form-control" id="input_amount" placeholder="10"
                                         name="amount" value="10" required>
-                                    <label for="floatingInputValue">Залишок</label>
+                                    <label for="input_amount">Залишок</label>
                                 </div>
                             </div>
 
                             <div class="col-6">
                                 <div class="form-floating">
-                                    <input type="number" class="form-control" id="floatingInputValue" placeholder="0"
-                                        name="discount" value="0" min="0" max="100" required>
-                                    <label for="floatingInputValue">Знижка</label>
+                                    <input type="number" class="form-control" id="input_case" placeholder="0"
+                                        name="box" value="10" min="1" required>
+                                    <label for="input_case">Кількість в ящику</label>
                                 </div>
                             </div>
                         </div>
@@ -771,6 +801,26 @@
             <div class="col-2"></div>
             <div class="col-12 col-sm-12 col-md-12 col-lg-8 col-xl-8">
 
+                <div class="row g-0 mb-4">
+                    <div class="col-3 col-sm-3 d-md-none"></div>
+                    <div class="d-none d-md-block col-md-8 col-lg-9"></div>
+                    <div class="col-6 col-sm-6 col-md-4 col-lg-3">
+                        <form method="post" action="euro">
+                            <div class="d-flex justify-content-between">
+                                <div class="form-floating form-euro">
+                                    <input type="number" class="form-control" id="input_euro" placeholder="40" min="1"
+                                        step="0.05" value="<%= euro %>" name="euro">
+                                    <label for="input_euro">Курс EUR</label>
+                                </div>
+                                <div style="position: relative; width: 50px; height: 58px;">
+                                    <button type="submit" class="btn button-euro"><i
+                                            class="fa-solid fa-check"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
                 <div
                     style="width: 100%; height: 4px; background: rgb(245, 245, 245); border-radius: 20px; margin-bottom: 20px;">
                 </div>
@@ -825,11 +875,11 @@
 
                 <div class="row g-0 mt-4">
                     <div class="col-2 col-sm-2 d-md-none"></div>
+                    <div class="d-none d-md-block col-md-9 col-lg-10"></div>
                     <div class="col-8 col-sm-8 col-md-3 col-lg-2">
                         <button class="btn btn-primary exit-button"
                             onclick="window.open('/logout', '_self');">ВИХІД</button>
                     </div>
-                    <div class="d-none d-md-block col-md-9 col-lg-10"></div>
                 </div>
             </div>
             <div class="col-2"></div>

@@ -1,4 +1,5 @@
 const dotenv = require('dotenv').config();
+const ini = require('ini');
 const express = require('express');
 const axios = require('axios');
 const session = require('express-session');
@@ -47,7 +48,8 @@ app.use(
   })
 );
 
-const euro_coefficient = process.env.EURO_COEFFICIENT;
+const config_ini = ini.parse(fs.readFileSync('exchange.ini', 'utf-8'));
+let euro_coefficient = parseFloat(config_ini.EURO_COEFFICIENT).toFixed(2);
 
 app.get('/favicon.ico', (req, res) => {
   const faviconPath = path.join(__dirname, 'assets', 'img', 'favicon.ico');
@@ -146,7 +148,7 @@ app.get('/account', async (req, res) => {
       const isAdmin = await checkAdminUser(req.session.userId);
 
       if (isAdmin) {
-        res.render('account', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl });
+        res.render('account', { user: (req.session.isAuthenticated) ? true : false, euro: euro_coefficient.replace('.', ','), url: req.originalUrl });
       } else {
         res.send('Добро пожаловать на защищенную страницу!');
       }
@@ -166,6 +168,28 @@ app.get('/logout', (req, res) => {
     }
     res.redirect('/catalog');
   });
+});
+
+app.post('/account/euro', async (req, res) => {
+  if (!req.session.isAuthenticated) return res.redirect('/authentication');
+
+  try {
+    const isAdmin = await checkAdminUser(req.session.userId);
+
+    if (!isAdmin) {
+      return res.send('У вас немає прав для доступу до цієї сторінки!');
+    }
+  } catch (error) {
+    return res.status(500).send('Сталася помилка під час перевірки прав адміністратора.');
+  }
+
+  var { euro } = req.body;
+  euro_coefficient = parseFloat(euro).toFixed(2);
+
+  config_ini.EURO_COEFFICIENT = euro_coefficient;
+  fs.writeFileSync('exchange.ini', ini.stringify(config_ini), 'utf-8');
+
+  res.redirect('/account');
 });
 
 app.get('/account/favorites', (req, res) => {
@@ -280,7 +304,7 @@ app.get('/cart', (req, res) => {
           return row;
         });
 
-        res.render('cart', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, cart: rows });
+        res.render('cart', { user: (req.session.isAuthenticated) ? true : false, euro: euro_coefficient, url: req.originalUrl, cart: rows });
       });
     } else {
       res.render('cart', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, cart: [] });
@@ -394,7 +418,7 @@ app.get('/cart/add', (req, res) => {
   if (req.cookies.cart) {
     // Если корзина уже существует, добавляем товар в нее (если его там еще нет)
     const cart = JSON.parse(req.cookies.cart);
-    
+
     // Проверяем, есть ли уже такой товар в корзине
     if (!cart.items.includes(itemId)) {
       cart.items.push(itemId);
@@ -491,7 +515,7 @@ app.get('/account/orders', async (req, res) => {
       allOrders.push(fullOrder);
     }
 
-    res.render('orders.ejs', { user: req.session.isAuthenticated, url: req.originalUrl, orders: allOrders });
+    res.render('orders.ejs', { user: req.session.isAuthenticated, euro: euro_coefficient, url: req.originalUrl, orders: allOrders });
   } catch (err) {
     console.error(err);
     res.sendStatus(500);
@@ -633,7 +657,7 @@ app.post('/account/product/add', express.urlencoded({ extended: false }), async 
     return res.status(500).send('Сталася помилка під час перевірки прав адміністратора.');
   }
 
-  var { brand, title_original, title_translation, type, pictures, volume, weight, price, price_factor, amount, discount } = req.body;
+  var { brand, title_original, title_translation, type, pictures, volume, weight, price, price_factor, amount, box } = req.body;
 
   var brand_translation = null;
   if (brand === 'Denkmit') {
@@ -648,7 +672,7 @@ app.post('/account/product/add', express.urlencoded({ extended: false }), async 
 
   pictures = JSON.stringify(pictures.split("|"));
 
-  pool.query(`INSERT INTO products (brand_original, brand_translation, "type", title_original, title_translation, description, pictures, volume, price, price_factor, amount, weight, exists, discount) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`, [brand, brand_translation, type, title_original, title_translation, '', pictures, volume, price.replace(',', '.'), price_factor, amount, weight, 1, discount], (err) => {
+  pool.query(`INSERT INTO products (brand_original, brand_translation, "type", title_original, title_translation, description, pictures, volume, price, price_factor, amount, weight, exists, "case", discount) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`, [brand, brand_translation, type, title_original, title_translation, '', pictures, volume, price.replace(',', '.'), price_factor, amount, weight, 1, box, 0], (err) => {
     if (err) {
       console.error(err);
       return res.status(500).send('Internal Server Error');
@@ -679,7 +703,7 @@ app.get('/catalog', (req, res) => {
         return row;
       });
 
-      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, search: req.query.search.replace('/', ''), data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null});
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, search: req.query.search.replace('/', ''), data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
     });
   } else {
     // Если параметр "GET" не указан, выводим все записи

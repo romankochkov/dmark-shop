@@ -1053,8 +1053,75 @@
         crossorigin="anonymous"></script>
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
       <script src="/js/orders.js"></script>
+      <script>
+        function totalValue() {
+          const orders = document.getElementsByClassName('card-total');
+          var euro_coefficient = '<%= euro %>';
 
+          for (let a = 0; a < orders.length; a++) {
+            var id = (orders[a]).getAttribute('pointer');
+            console.log(id);
+
+            var elements = document.getElementsByClassName("price-element-" + id);
+
+            var sum = 0;
+
+            var cardTotal = document.getElementById("card_total_" + id);
+            cardTotal.innerHTML = ""; // Очищаем содержимое card-total
+
+            for (var i = 0; i < elements.length; i++) {
+
+              var label = elements[i].getAttribute('label');
+              var count = elements[i].getAttribute('count');
+
+              var text = elements[i].innerText.replace(',', '.').slice(0, -2);
+              var numbers = text.match(/[\d.]+/g);
+
+              if (numbers !== null) {
+                for (var j = 0; j < numbers.length; j++) {
+                  sum += parseFloat(numbers[j]) * count;
+                }
+              }
+              var element_price = (parseFloat(text) * count).toFixed(2);
+
+              var row = document.createElement("div");
+              row.classList.add("row");
+              row.classList.add("px-1");
+              if (i !== (elements.length - 1)) {
+                row.classList.add("card-total-item");
+              } else {
+                row.classList.add("card-total-item-last");
+              }
+
+              var col1 = document.createElement("div");
+              col1.classList.add("col-9");
+
+              var col2 = document.createElement("div");
+              col2.classList.add("col-3");
+
+              var labelP = document.createElement("p");
+              labelP.classList.add("text-start");
+              labelP.innerHTML = label + ' <span style="white-space: nowrap;">(' + count + ' шт.)</span>';
+
+              var priceP = document.createElement("p");
+              priceP.classList.add("text-end");
+              priceP.innerHTML = Math.ceil(element_price * euro_coefficient) + ' ₴<br><span style="color: rgba(82, 82, 96, 0.7);">' + element_price.toString().replace('.', ',') + ' €</span>';
+
+              col1.appendChild(labelP);
+              col2.appendChild(priceP);
+
+              row.appendChild(col1);
+              row.appendChild(col2);
+
+              cardTotal.appendChild(row);
+
+              console.log("Label:", label, "Цена:", text);
+            }
+
+            $('#price_total_' + id).html('<span style="color: rgba(82, 82, 96, 0.7); font-weight: 500;">' + sum.toFixed(2).replace('.', ',') + ' € │</span> ' + Math.ceil(sum * euro_coefficient) + ' ₴');
+          }
+        }
+      </script>
 
 </body>
-
 </html>
