@@ -307,10 +307,10 @@ app.get('/cart', (req, res) => {
         res.render('cart', { user: (req.session.isAuthenticated) ? true : false, euro: euro_coefficient, url: req.originalUrl, cart: rows });
       });
     } else {
-      res.render('cart', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, cart: [] });
+      res.render('cart', { user: (req.session.isAuthenticated) ? true : false, euro: euro_coefficient, url: req.originalUrl, cart: [] });
     }
   } else {
-    res.render('cart', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, cart: [] });
+    res.render('cart', { user: (req.session.isAuthenticated) ? true : false, euro: euro_coefficient, url: req.originalUrl, cart: [] });
   }
 });
 
@@ -664,6 +664,8 @@ app.post('/account/product/add', express.urlencoded({ extended: false }), async 
     brand_translation = 'Денкміт';
   } else if (brand === 'Balea') {
     brand_translation = 'Балеа';
+  } else if (brand === 'Mivolis') {
+    brand_translation = 'Міволіс';
   } else if (brand === 'Profissimo') {
     brand_translation = 'Профісімо';
   } else {
