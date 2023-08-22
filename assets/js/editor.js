@@ -5,10 +5,11 @@ $(document).ready(function () {
         var itemId = $(this).data('item-id');
         var exists = $('#select_exists_' + itemId).children("option:selected").val();
         var amount = $('#input_amount_' + itemId).val();
+        var box = $('#input_box_' + itemId).val();
 
         if (exists == '1') {
             $.ajax({
-                url: '/account/editor/save?id=' + itemId + '&exists=' + exists + '&amount=' + amount,
+                url: '/account/editor/save?id=' + itemId + '&exists=' + exists + '&amount=' + amount + '&box=' + box,
                 method: 'GET',
                 success: function (response) {
                     const toast = new bootstrap.Toast($('#success_toast'), { delay: 2000 });
@@ -37,8 +38,10 @@ $(document).ready(function () {
         console.log($(this).val());
         if ($(this).val() == '1') {
             $('#input_amount_' + $(this).data('item-id')).parents(".form-floating").removeClass('d-none');
+            $('#input_box_' + $(this).data('item-id')).parents(".form-floating").removeClass('d-none');
         } else {
             $('#input_amount_' + $(this).data('item-id')).parents(".form-floating").addClass('d-none');
+            $('#input_box_' + $(this).data('item-id')).parents(".form-floating").addClass('d-none');
         }
     });
 

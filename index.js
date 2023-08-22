@@ -12,6 +12,7 @@ const format = require('pg-format');
 const path = require('path');
 const fs = require('fs');
 const https = require('https');
+const { type } = require('os');
 
 const app = express();
 const port = 443;
@@ -632,6 +633,8 @@ app.get('/account/editor/save', async (req, res) => {
 
     if (req.query.amount) {
       await pool.query(`UPDATE products SET exists = $1, amount = $2 WHERE id = $3`, [req.query.exists, req.query.amount, req.query.id]);
+    } if (req.query.box) {
+      await pool.query(`UPDATE products SET "case" = $1 WHERE id = $2`, [req.query.box, req.query.id]);
     } else {
       await pool.query(`UPDATE products SET exists = $1 WHERE id = $2`, [req.query.exists, req.query.id]);
     }
@@ -688,11 +691,9 @@ app.get('/catalog', (req, res) => {
   if (!req.originalUrl.endsWith('/')) return res.redirect(req.originalUrl + '/');
 
   if (req.query.search) {
-    const filter_1 = `%${req.query.search.replace('/', '')}%`;
-    const filter_2 = `%${req.query.search.toLowerCase().replace('/', '')}%`;
-    const filter_3 = `%${(req.query.search.toLowerCase().replace('/', '')).charAt(0).toUpperCase() + (req.query.search.toLowerCase().replace('/', '')).slice(1)}%`;
+    const filter = `%${req.query.search.toLowerCase().replace('/', '')}%`;
 
-    pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE LOWER(title_original) LIKE $1 OR LOWER(title_translation) LIKE $2 OR LOWER(title_translation) LIKE $3 ORDER BY CASE WHEN exists = 1 THEN 1 WHEN exists = 2 THEN 2 WHEN exists = 0 THEN 3 END LIMIT 90`, [filter_1, filter_2, filter_3], (err, result) => {
+    pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE LOWER(title_original) LIKE $1 OR LOWER(title_translation) LIKE $2 ORDER BY CASE WHEN exists = 1 THEN 1 WHEN exists = 2 THEN 2 WHEN exists = 0 THEN 3 END LIMIT 90`, [filter, filter], (err, result) => {
       if (err) {
         console.error(err);
         return res.status(500).send('Internal Server Error');
@@ -769,7 +770,7 @@ app.get('/catalog/denkmit', (req, res) => {
     return res.redirect(req.originalUrl + '/');
   }
 
-  getDataDB('Denkmit', query = (req.query.search) ? req.query.search.replace('/', '') : null)
+  getDataDB('Denkmit', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
       res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
     })
@@ -874,7 +875,7 @@ app.get('/catalog/balea', (req, res) => {
     return res.redirect(req.originalUrl + '/');
   }
 
-  getDataDB('Balea', query = (req.query.search) ? req.query.search.replace('/', '') : null)
+  getDataDB('Balea', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
       res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
     })
@@ -963,7 +964,7 @@ app.get('/catalog/alverde', (req, res) => {
     return res.redirect(req.originalUrl + '/');
   }
 
-  getDataDB('Alverde', query = (req.query.search) ? req.query.search.replace('/', '') : null)
+  getDataDB('Alverde', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
       res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
     })
@@ -977,7 +978,7 @@ app.get('/catalog/dontodent', (req, res) => {
     return res.redirect(req.originalUrl + '/');
   }
 
-  getDataDB('Dontodent', query = (req.query.search) ? req.query.search.replace('/', '') : null)
+  getDataDB('Dontodent', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
       res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
     })
@@ -991,7 +992,7 @@ app.get('/catalog/mivolis', (req, res) => {
     return res.redirect(req.originalUrl + '/');
   }
 
-  getDataDB('Mivolis', query = (req.query.search) ? req.query.search.replace('/', '') : null)
+  getDataDB('Mivolis', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
       res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
     })
@@ -1005,7 +1006,7 @@ app.get('/catalog/frosch', (req, res) => {
     return res.redirect(req.originalUrl + '/');
   }
 
-  getDataDB('Frosch', query = (req.query.search) ? req.query.search.replace('/', '') : null)
+  getDataDB('Frosch', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
       res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
     })
@@ -1019,7 +1020,7 @@ app.get('/catalog/profissimo', (req, res) => {
     return res.redirect(req.originalUrl + '/');
   }
 
-  getDataDB('Profissimo', query = (req.query.search) ? req.query.search.replace('/', '') : null)
+  getDataDB('Profissimo', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
       res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
     })
@@ -1033,7 +1034,7 @@ app.get('/catalog/babylove', (req, res) => {
     return res.redirect(req.originalUrl + '/');
   }
 
-  getDataDB('Babylove', query = (req.query.search) ? req.query.search.replace('/', '') : null)
+  getDataDB('Babylove', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
       res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
     })
@@ -1046,11 +1047,9 @@ async function getDataDB(filter, type = null, query = null) {
   try {
     if (query != null) {
       if (type != null) {
-        const filter_1 = '%' + query.toLowerCase().replace('/', '') + '%';
-        const filter_2 = '%' + (query.toLowerCase().replace('/', '')).charAt(0).toUpperCase() + (query.toLowerCase().replace('/', '')).slice(1) + '%';
-        const filter_3 = '%' + query.toLowerCase().replace('/', '') + '%';
+        const filter_query = '%' + query.toLowerCase().replace('/', '') + '%';
 
-        const result = await pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE brand_original LIKE $1 AND type = $2 AND (LOWER(title_original) LIKE $3 OR LOWER(title_translation) LIKE $4 OR LOWER(title_translation) LIKE $5) ORDER BY CASE WHEN exists = 1 THEN 1 WHEN exists = 2 THEN 2 WHEN exists = 0 THEN 3 END`, [filter + '%', type, filter_1, filter_2, filter_3]);
+        const result = await pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE brand_original LIKE $1 AND type = $2 AND (LOWER(title_original) LIKE $3 OR LOWER(title_translation) LIKE $4) ORDER BY CASE WHEN exists = 1 THEN 1 WHEN exists = 2 THEN 2 WHEN exists = 0 THEN 3 END`, [filter + '%', type, filter_query, filter_query]);
 
         let rows = result.rows;
         rows = rows.map((row) => {
@@ -1061,11 +1060,9 @@ async function getDataDB(filter, type = null, query = null) {
 
         return rows;
       } else {
-        const filter_1 = '%' + query.toLowerCase().replace('/', '') + '%';
-        const filter_2 = '%' + (query.toLowerCase().replace('/', '')).charAt(0).toUpperCase() + (query.toLowerCase().replace('/', '')).slice(1) + '%';
-        const filter_3 = '%' + query.toLowerCase().replace('/', '') + '%';
+        const filter_query = '%' + query.toLowerCase().replace('/', '') + '%';
 
-        const result = await pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE brand_original LIKE $1 AND (LOWER(title_original) LIKE $2 OR LOWER(title_translation) LIKE $3 OR LOWER(title_translation) LIKE $4) ORDER BY CASE WHEN exists = 1 THEN 1 WHEN exists = 2 THEN 2 WHEN exists = 0 THEN 3 END`, [filter + '%', filter_1, filter_2, filter_3]);
+        const result = await pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE brand_original LIKE $1 AND (LOWER(title_original) LIKE $2 OR LOWER(title_translation) LIKE $3) ORDER BY CASE WHEN exists = 1 THEN 1 WHEN exists = 2 THEN 2 WHEN exists = 0 THEN 3 END`, [filter + '%', filter_query, filter_query]);
 
         let rows = result.rows;
         rows = rows.map((row) => {

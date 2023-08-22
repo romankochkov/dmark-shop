@@ -729,10 +729,21 @@
                   <label for="select_exists">Наявність</label>
                 </div>
 
-                <div class="form-floating <% if (item.exists === 0 || item.exists === 2) { %>d-none<% } %>" style="margin-top: 15px;">
-                  <input type="number" class="form-control" id="input_amount_<%= item.id %>" placeholder="10" name="amount" min="0"
-                    value="<%= item.amount %>" required>
-                  <label for="floatingInputValue">Залишок</label>
+                <div class="row g-2">
+                  <div class="col-6">
+                    <div class="form-floating <% if (item.exists === 0 || item.exists === 2) { %>d-none<% } %>" style="margin-top: 8px;">
+                      <input type="number" class="form-control" id="input_amount_<%= item.id %>" placeholder="10" name="amount" min="0"
+                        value="<%= item.amount %>" required>
+                      <label for="floatingInputValue">Залишок</label>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-floating <% if (item.exists === 0 || item.exists === 2) { %>d-none<% } %>" style="margin-top: 8px;">
+                      <input type="number" class="form-control" id="input_box_<%= item.id %>" placeholder="10" name="box" min="1"
+                        value="<%= item.case %>" required>
+                      <label for="floatingInputValue">Ящик</label>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
