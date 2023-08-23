@@ -3,13 +3,15 @@ $(document).ready(function () {
         event.preventDefault();
 
         var itemId = $(this).data('item-id');
+        var price = $('#input_price_' + itemId).val();
+        var price_factor = $('#input_price_factor_' + itemId).val();
         var exists = $('#select_exists_' + itemId).children("option:selected").val();
         var amount = $('#input_amount_' + itemId).val();
         var box = $('#input_box_' + itemId).val();
 
         if (exists == '1') {
             $.ajax({
-                url: '/account/editor/save?id=' + itemId + '&exists=' + exists + '&amount=' + amount + '&box=' + box,
+                url: '/account/editor/save?id=' + itemId + '&price=' + price + '&price_factor=' + price_factor + '&exists=' + exists + '&amount=' + amount + '&box=' + box,
                 method: 'GET',
                 success: function (response) {
                     const toast = new bootstrap.Toast($('#success_toast'), { delay: 2000 });

@@ -627,11 +627,13 @@ app.get('/account/editor/save', async (req, res) => {
   }
 
   try {
-    if (!req.query.exists || !req.query.id) {
+    if (!req.query.id) {
       return res.status(400);
     }
 
-    if (req.query.amount) {
+    if (req.query.price && req.query.price_factor) {
+      await pool.query(`UPDATE products SET price = $1, price_factor = $2 WHERE id = $3`, [parseFloat((req.query.price).replace(',', '.')).toFixed(2), req.query.price_factor, req.query.id]);
+    } if (req.query.amount) {
       await pool.query(`UPDATE products SET exists = $1, amount = $2 WHERE id = $3`, [req.query.exists, req.query.amount, req.query.id]);
     } if (req.query.box) {
       await pool.query(`UPDATE products SET "case" = $1 WHERE id = $2`, [req.query.box, req.query.id]);
