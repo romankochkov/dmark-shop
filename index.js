@@ -669,10 +669,18 @@ app.post('/account/product/add', express.urlencoded({ extended: false }), async 
     brand_translation = 'Денкміт';
   } else if (brand === 'Balea') {
     brand_translation = 'Балеа';
+  } else if (brand === 'Alverde') {
+    brand_translation = 'Альверде';
+  } else if (brand === 'Dontodent') {
+    brand_translation = 'Донтодент';
   } else if (brand === 'Mivolis') {
     brand_translation = 'Міволіс';
+  } else if (brand === 'Frosch') {
+    brand_translation = 'Фрош';
   } else if (brand === 'Profissimo') {
     brand_translation = 'Профісімо';
+  } else if (brand === 'Babylove') {
+    brand_translation = 'Бейбілав';
   } else {
     return res.sendStatus(400);
   }
