@@ -1131,6 +1131,6 @@ const options = {
 const server = https.createServer(options, app);
 
 server.listen(port, () => {
-  console.log(`Сервер запущен на порту ${port}`);
+  console.log(`[${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}] > The server is running on port ${port}`.toUpperCase());
 });
 
