@@ -149,7 +149,7 @@ app.get('/account', async (req, res) => {
       const isAdmin = await checkAdminUser(req.session.userId);
 
       if (isAdmin) {
-        res.render('account', { user: (req.session.isAuthenticated) ? true : false, euro: euro_coefficient.replace('.', ','), url: req.originalUrl });
+        res.render('account', { user: (req.session.isAuthenticated) ? true : false, euro: euro_coefficient, url: req.originalUrl });
       } else {
         res.send('Добро пожаловать на защищенную страницу!');
       }
