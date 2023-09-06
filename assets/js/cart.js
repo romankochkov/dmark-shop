@@ -264,6 +264,25 @@ function decreaseValue(id) {
     totalValue();
 }
 
+function increaseCase(id, box) {
+    var element_count = document.getElementById('cart_count_' + id);
+    var element_price = document.getElementById('cart_price_' + id);
+    var element_price_hidden = document.getElementById('cart_price_' + id + '_hidden');
+    var element_amount_hidden = document.getElementById('cart_amount_' + id + '_hidden');
+
+    var count = parseInt(element_count.innerText);
+    var price = parseFloat((element_price_hidden.innerText).replace(',', '.'));
+    count += parseInt(box);
+
+    // Обновление содержимого элемента с новым значением
+    element_count.innerText = count;
+    element_amount_hidden.value = count;
+    element_price.innerText = (((price * count).toFixed(2)).toString()).replace('.', ',') + ' €';
+    element_price.setAttribute("count", count);
+
+    totalValue();
+}
+
 function validateForm(event) {
     'use strict';
 

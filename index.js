@@ -613,7 +613,7 @@ app.get('/account/editor', async (req, res) => {
   });
 });
 
-app.get('/account/editor/save', async (req, res) => {
+app.post('/account/editor/save', async (req, res) => {
   if (!req.session.isAuthenticated) return res.status(500);
 
   try {
@@ -626,19 +626,23 @@ app.get('/account/editor/save', async (req, res) => {
     return res.status(500).send('Сталася помилка під час перевірки прав адміністратора.');
   }
 
+  var { id, price, price_factor, amount, box, description, exists } = req.body;
+
   try {
-    if (!req.query.id) {
+    if (!id) {
       return res.status(400);
     }
 
-    if (req.query.price && req.query.price_factor) {
-      await pool.query(`UPDATE products SET price = $1, price_factor = $2 WHERE id = $3`, [parseFloat((req.query.price).replace(',', '.')).toFixed(2), req.query.price_factor, req.query.id]);
-    } if (req.query.amount) {
-      await pool.query(`UPDATE products SET exists = $1, amount = $2 WHERE id = $3`, [req.query.exists, req.query.amount, req.query.id]);
-    } if (req.query.box) {
-      await pool.query(`UPDATE products SET "case" = $1 WHERE id = $2`, [req.query.box, req.query.id]);
+    if (price && price_factor) {
+      await pool.query(`UPDATE products SET price = $1, price_factor = $2 WHERE id = $3`, [parseFloat((price).replace(',', '.')).toFixed(2), price_factor, id]);
+    } if (amount) {
+      await pool.query(`UPDATE products SET exists = $1, amount = $2 WHERE id = $3`, [exists, amount, id]);
+    } if (box) {
+      await pool.query(`UPDATE products SET "case" = $1 WHERE id = $2`, [box, id]);
+    } if (description) {
+      await pool.query(`UPDATE products SET description = $1 WHERE id = $2`, [description, id]);
     } else {
-      await pool.query(`UPDATE products SET exists = $1 WHERE id = $2`, [req.query.exists, req.query.id]);
+      await pool.query(`UPDATE products SET exists = $1 WHERE id = $2`, [exists, id]);
     }
 
     res.status(201).json({ message: 'SUCCESS' });
@@ -662,7 +666,7 @@ app.post('/account/product/add', express.urlencoded({ extended: false }), async 
     return res.status(500).send('Сталася помилка під час перевірки прав адміністратора.');
   }
 
-  var { brand, title_original, title_translation, type, pictures, volume, weight, price, price_factor, amount, box } = req.body;
+  var { brand, title_original, title_translation, type, pictures, description, volume, weight, price, price_factor, amount, box } = req.body;
 
   var brand_translation = null;
   if (brand === 'Denkmit') {
@@ -687,13 +691,33 @@ app.post('/account/product/add', express.urlencoded({ extended: false }), async 
 
   pictures = JSON.stringify(pictures.split("|"));
 
-  pool.query(`INSERT INTO products (brand_original, brand_translation, "type", title_original, title_translation, description, pictures, volume, price, price_factor, amount, weight, exists, "case", discount) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`, [brand, brand_translation, type, title_original, title_translation, '', pictures, volume, price.replace(',', '.'), price_factor, amount, weight, 1, box, 0], (err) => {
+  pool.query(`INSERT INTO products (brand_original, brand_translation, "type", title_original, title_translation, description, pictures, volume, price, price_factor, amount, weight, exists, "case", discount) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`, [brand, brand_translation, type, title_original, title_translation, description, pictures, volume, price.replace(',', '.'), price_factor, amount, weight, 1, box, 0], (err) => {
     if (err) {
       console.error(err);
       return res.status(500).send('Internal Server Error');
     }
 
     res.redirect('/account?status=success');
+  });
+});
+
+app.get('/catalog/product/:id', (req, res) => {
+  if (!req.originalUrl.endsWith('/')) return res.redirect(req.originalUrl + '/');
+
+  pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE id = $1 LIMIT 1`, [req.params.id], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Internal Server Error');
+    }
+
+    let rows = result.rows;
+    rows = rows.map((row) => {
+      row.pictures = JSON.parse(row.pictures);
+      row.price_total = ((parseFloat(row.price_total) * euro_coefficient).toFixed(2)).replace('.', ',');
+      return row;
+    });
+
+    res.render('product', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
   });
 });
 

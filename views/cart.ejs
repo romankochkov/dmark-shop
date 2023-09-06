@@ -875,15 +875,16 @@
                             <h5 class="card-title card-title-fix" style="height: 70px;">
                               <%= item.title_original %>, <%= item.volume %>
                             </h5>
+                            <p class="card-case">Кількість в ящику: <%= item.case %> шт.</p>
                             <div class="d-flex">
-                              <p class="card-title card-price-fix" style="width: 50%; margin-bottom: 0;"><i
-                                  class="fa-solid fa-caret-left" style="cursor: pointer;"
+                              <p class="card-title card-price-fix" style="width: 70%; margin-bottom: 0; user-select: none;"><i
+                                  class="fa-solid fa-caret-left" style="color: #fff; background: rgb(0, 40, 120); border: 1.5px solid rgb(0, 40, 120); border-radius: 5px; padding-left: 6px; padding-right: 6px; padding-bottom: 2px; cursor: pointer;"
                                   onclick="decreaseValue('<%= item.id %>')"></i> <span id="cart_count_<%= item.id %>"
                                   style="user-select: none;">1</span> <i class="fa-solid fa-caret-right"
-                                  style="cursor: pointer;" onclick="increaseValue('<%= item.id %>')"></i></p>
+                                  style="color: #fff; background: rgb(0, 40, 120); border: 1.5px solid rgb(0, 40, 120); border-radius: 5px; padding-left: 6px; padding-right: 6px; padding-bottom: 2px; margin-right: 6px; cursor: pointer;" onclick="increaseValue('<%= item.id %>')"></i><span style="color: #fff; background: #999999; border-radius: 5px; padding-left: 5px; padding-right: 5px; cursor: pointer;" onclick="increaseCase('<%= item.id %>', '<%= item.case %>')">+<%= item.case %></span></p>
                               <p id="cart_price_<%= item.id %>"
                                 class="card-title card-price-fix d-flex justify-content-end price-element"
-                                style="width: 50%; margin-bottom: 0;"
+                                style="width: 30%; margin-bottom: 0;"
                                 label="<%= item.brand_original %> <%= item.title_original %>, <%= item.volume %>"
                                 count="1">
                                 <%= item.price_total %>&nbsp;€
@@ -896,7 +897,6 @@
                               <input id="cart_amount_<%= item.id %>_hidden" style="display: none;" type="number"
                                 name="amount" value="1" required>
                             </div>
-                            <p class="card-case">Кількість в ящику: <%= item.case %> шт.</p>
                           </div>
                         </div>
                       </div>
@@ -1170,7 +1170,7 @@
       <div class="container">
         <p style="color: rgb(82, 82, 96); font-size: 13px; font-family: 'Roboto', sans-serif; padding-top: 9px;">
           2023-2024,
-          DM Deutsche Chemie, ФОП (Горгут Тарас Степанович)</p>
+          DM Deutsche Chemie, ФОП (Горгут Т. С.)</p>
       </div>
     </div>
   </footer>

@@ -397,6 +397,11 @@
       border: 0;
     }
 
+    .form-floating textarea:focus {
+      box-shadow: 0 0 0 0.2rem rgb(0, 40, 120);
+      border: 0;
+    }
+
     .footer-review {
       border-bottom: 1px solid rgb(229, 233, 241);
     }
@@ -745,6 +750,10 @@
                       <%= item.volume %>
                     </span>
                 </h5>
+                <div class="form-floating">
+                  <textarea class="form-control" placeholder="Опис" id="input_description_<%= item.id %>" name="description" required><%= item.description %></textarea>
+                  <label for="floatingTextarea">Опис</label>
+                </div>
                 <div class="row g-2">
                   <div class="col-6">
                     <div class="form-floating"
@@ -932,7 +941,7 @@
       <div class="container">
         <p style="color: rgb(82, 82, 96); font-size: 13px; font-family: 'Roboto', sans-serif; padding-top: 9px;">
           2023-2024,
-          DM Deutsche Chemie, ФОП (Горгут Тарас Степанович)</p>
+          DM Deutsche Chemie, ФОП (Горгут Т. С.)</p>
       </div>
     </div>
   </footer>

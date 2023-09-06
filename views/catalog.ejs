@@ -89,14 +89,22 @@
       height: 100%;
     }
 
+    .btn-search-fix:focus {
+      box-shadow: none;
+      border: 0;
+    }
+
     .btn-search-fix i {
       position: absolute;
       top: 48%;
       left: 50%;
       transform: translate(-50%, -50%);
-
       font-size: 18px;
       color: rgb(0, 40, 120);
+    }
+
+    .btn-search-fix:focus i {
+      color: #3BB143;
     }
 
     .btn-panel-fix {
@@ -368,6 +376,22 @@
       font-family: 'Roboto Condensed', sans-serif;
       font-weight: 500;
       margin-bottom: 0;
+    }
+
+    .modal {
+      font-family: 'Roboto Condensed', sans-serif;
+    }
+
+    .modal p {
+      margin-bottom: 20px;
+    }
+
+    .modal i {
+      font-size: 15px;
+    }
+
+    .modal-content {
+      border: 0;
     }
 
     .footer-review {
@@ -747,7 +771,8 @@
             <p><a href="/catalog/balea/skin/">Засоби для шкіри</a></p>
             <p><a href="/catalog/balea/body/">Засоби для тіла</a></p>
             <p><a href="/catalog/balea/shave/">Засоби для гоління</a></p>
-            <p style="border-bottom: 1px solid transparent;"><a href="/catalog/balea/hygiene/">Засоби для гігієни</a></p>
+            <p style="border-bottom: 1px solid transparent;"><a href="/catalog/balea/hygiene/">Засоби для гігієни</a>
+            </p>
           </div>
         </div>
 
@@ -795,11 +820,12 @@
           <div class="col-6 col-sm-6 col-md-3 col-lg-3 col-xl-2 p-1 col-fix">
             <div class="card card-fix">
               <div class="text-center card-img">
+                <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0;" onclick="window.open('/catalog/product/<%= item.id %>', '_self');"></div>
                 <img
                   src="https://media.dm-static.com/images/v1599975276/products/pim/eyecatcher_dmbrand_de/dmbrand_de.svg"
                   class="card-img-brand-fix">
 
-                <% if (url === '/account/favorites/') { %>
+                <% if (url==='/account/favorites/' ) { %>
                   <button type="button" class="btn card-btn-favorite-fix del-from-favorites"
                     data-item-id="<%= item.id %>">
                     <i class="fa-solid fa-heart"></i>
@@ -815,8 +841,12 @@
                       <img src="<%= item.pictures[0] %>" class="card-img-top">
               </div>
 
-              <button type="button" class="btn card-btn-cart-fix <% if ( item.exists === 1 ) { %>add-to-cart<% } %>" data-item-id="<%= item.id %>">
-                <% if ( item.exists === 1 ) { %><i class="fas fa-shopping-cart"></i><% } else if ( item.exists === 0 ) { %><i class="fa-solid fa-square-xmark" style="font-size: 18px;"></i><% } else { %><i class="fa-solid fa-triangle-exclamation" style="top: 48%; font-size: 18px;"></i><% } %>
+              <button type="button" class="btn card-btn-cart-fix <% if ( item.exists === 1 ) { %>add-to-cart<% } %>"
+                data-item-id="<%= item.id %>">
+                <% if ( item.exists===1 ) { %><i class="fas fa-shopping-cart"></i>
+                  <% } else if ( item.exists===0 ) { %><i class="fa-solid fa-square-xmark" style="font-size: 18px;"></i>
+                    <% } else { %><i class="fa-solid fa-triangle-exclamation" style="top: 48%; font-size: 18px;"></i>
+                      <% } %>
               </button>
 
               <div class="card-body card-body-fix">
@@ -864,6 +894,146 @@
     </div>
   </div>
 
+  <div class="modal fade" id="payment" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header px-4">
+          <h1 class="modal-title fs-5" id="paymentModalLabel">Способи доставки</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4 py-4">
+          <div class="row g-0 px-4" style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
+            <div class="col-12">
+              <p style="color: rgb(0, 40, 120); margin-bottom: 10px;">
+                -&nbsp;&nbsp;
+                <i class="fa-solid fa-credit-card"></i>
+                &nbsp;&nbsp;Оплата за реквізитами
+              <p style="font-size: 15px; color: rgb(82, 82, 96); margin-left: 10px; margin-bottom: 0px;">Вказаний вид
+                оплати передбачає повну плату за товар перед його відправленням средвами інтернет-банкінгу. Переказ
+                відбувається на ФОП-рахунок за наданими реквізитами.</p>
+              </p>
+              <p style="color: rgb(0, 40, 120); margin-top: 30px; margin-bottom: 10px;">
+                -&nbsp;&nbsp;
+                <i class="fa-solid fa-money-bills"></i>
+                &nbsp;&nbsp;Оплата готівкою
+              <p style="font-size: 15px; color: rgb(82, 82, 96); margin-left: 10px; margin-bottom: -10px;">Цей вид
+                оплати здійснюється при самовивезенні товару зі складу та оплаті готівкою за фактом вчинення правочину.
+              </p>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="delivery" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header px-4">
+          <h1 class="modal-title fs-5" id="deliveryModalLabel">Способи доставки</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4 py-4">
+          <div class="row g-0 px-4" style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
+            <div class="col-12">
+              <p style="color: rgb(0, 40, 120); margin-bottom: 10px;">
+                -&nbsp;&nbsp;
+                <img width="20" height="20"
+                  src="https://uaprom-static.c.evo.dev/image/cabinet_mobileapp/delivery/nova_poshta-hca41cde541c00d7655d6774a77ad4480d.png">
+                &nbsp;&nbsp;Нова Пошта
+              </p>
+              <p style="color: rgb(0, 40, 120); margin-top: 20px; margin-bottom: 30px;">
+                -&nbsp;&nbsp;
+                <img width="20" height="20" src="https://www.svgrepo.com/show/351962/dolly.svg">
+                &nbsp;&nbsp;Самовивіз
+              </p>
+              <p style="font-size: 15px; color: rgb(82, 82, 96); margin-bottom: 7px;">Перелік способів доставки може
+                змінюватись без повідомлення користувачів сайту. Докладніше про умови і способи доставки дізнавайтесь по
+                телефону.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="refund" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header px-4">
+          <h1 class="modal-title fs-5" id="refundModalLabel">Обмін та повернення</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4 py-4">
+          <div class="row g-0 px-5" style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
+            <div class="col-12">
+              <p style="color: rgb(82, 82, 96); margin-bottom: 10px;">Компанія здійснює повернення відповідно до Закону
+                <a href="https://zakon.rada.gov.ua/laws/show/1023-12" target="_blank">«Про захист прав
+                  споживачів»</a><br>
+                Статтею 9 чинного Закону України <a href="https://zakon.rada.gov.ua/laws/show/1023-12"
+                  target="_blank">«Про захист прав споживачів»</a> передбачено право споживача обміняти непродовольчий
+                товар належної якості на аналогічний, якщо куплений товар не підійшов за формою, габаритами, фасоном,
+                кольором, розміром або з інших причин не може бути використаний за призначенням, якщо даний товар не
+                використовувався і якщо збережено його товарний вигляд, споживчі властивості, пломби, ярлики та
+                розрахунковий документ, виданий продавцем разом з товаром.<br><br>
+                Продавець не має права відмовити в обміні (поверненні) товару, що не включений до переліку, якщо він
+                відповідає всім вимогам, передбаченим ст. 9 Закону (збережений товарний вигляд, ярлики, пломби, є
+                розрахунковий документ і т. ін.).<br><br>
+                <b>Виключення</b><br>
+                Кабінетом Міністрів України затверджено перелік товарів належної якості, що не підлягають обміну або
+                поверненню (Постанова КМУ від 19 березня 1994 № 172).<br><br>
+                З актуальним вичерпним Переліком можна ознайомитися за <a
+                  href="https://zakon.rada.gov.ua/laws/show/172-94-%D0%BF" target="_blank">посиланням</a>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="schedule" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header px-4">
+          <h1 class="modal-title fs-5" id="scheduleModalLabel">Графік роботи</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4 py-4">
+          <div class="row">
+            <div class="col-6 g-0" style="border-right: 1px solid #dee2e6;">
+              <div class="d-flex justify-content-center">
+                <div class="d-flex align-items-start flex-column" style="color: rgb(82, 82, 96);">
+                  <p>Понеділок</p>
+                  <p>Вівторок</p>
+                  <p>Середа</p>
+                  <p>Четвер</p>
+                  <p>П'ятниця</p>
+                  <p>Субота</p>
+                  <p style="margin-bottom: 10px;">Неділя</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 g-0">
+              <div class="d-flex justify-content-center">
+                <div class="d-flex align-items-start flex-column" style="color: rgb(0, 40, 120);">
+                  <p><i class="fa-regular fa-clock"></i>&nbsp;&nbsp;з 09:00 по 18:00</p>
+                  <p><i class="fa-regular fa-clock"></i>&nbsp;&nbsp;з 09:00 по 18:00</p>
+                  <p><i class="fa-regular fa-clock"></i>&nbsp;&nbsp;з 09:00 по 18:00</p>
+                  <p><i class="fa-regular fa-clock"></i>&nbsp;&nbsp;з 09:00 по 18:00</p>
+                  <p><i class="fa-regular fa-clock"></i>&nbsp;&nbsp;з 09:00 по 18:00</p>
+                  <p>Вихідний</p>
+                  <p style="margin-bottom: 10px;">Вихідний</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <footer>
     <div class="container">
       <div class="footer-review d-flex align-items-center py-4">
@@ -883,36 +1053,39 @@
           <div class="d-inline-flex">
             <div class="d-flex flex-column">
               <p>Інформація</p>
-              <a href="">Графік роботи</a>
-              <a href="">Умови використання</a>
-              <a style="margin-bottom: 0;" href="">Політика конфіденційності</a>
+              <a data-bs-toggle="modal" data-bs-target="#schedule" href="#schedule">Графік роботи</a><br>
+              <a href="/info/terms/">Умови використання</a><br>
+              <a style="margin-bottom: 0;" href="/info/policy/">Політика конфіденційності</a>
             </div>
           </div>
 
           <div class="d-inline-flex">
             <div class="d-flex flex-column">
               <p>Категорії</p>
-              <a href="">Новинки та акції</a>
-              <a href="">Популярні товари</a>
-              <a style="margin-bottom: 0;" href="">Товари інших брендів</a>
+              <a href="/catalog/newest/">Новинки та акції</a>
+              <a href="/catalog/popular/">Популярні товари</a>
+              <a style="margin-bottom: 0;" href="/catalog/other/">Товари інших брендів</a>
             </div>
           </div>
 
           <div class="d-inline-flex">
             <div class="d-flex flex-column">
               <p>Покупцю</p>
-              <a href="">Способи оплати</a>
-              <a href="">Способи доставки</a>
-              <a style="margin-bottom: 0;" href="">Обмін та повернення</a>
+              <a data-bs-toggle="modal" data-bs-target="#payment" href="#payment">Способи оплати</a>
+              <a data-bs-toggle="modal" data-bs-target="#delivery" href="#delivery">Способи доставки</a>
+              <a style="margin-bottom: 0;" data-bs-toggle="modal" data-bs-target="#refund" href="#refund">Обмін та
+                повернення</a>
             </div>
           </div>
 
           <div class="d-inline-flex">
             <div class="d-flex flex-column">
               <p>Додатково</p>
-              <a href="">Партнерські програми</a>
-              <a href="">Наша сторінка на Prom.ua</a>
-              <a href="">Наш прайс у форматі Excel</a>
+              <a href="/info/partners/">Партнерські програми</a>
+              <a href="https://lviv.prom.ua/c3757257-deutsche-chemie.html">Наша сторінка на Prom.ua</a>
+              <a
+                href="https://docs.google.com/spreadsheets/d/185Di7O7DBnpfkO-SR58t5DoJpewBSjnRbuDp93RmsyI/edit?usp=sharing">Наш
+                прайс у форматі Excel</a>
             </div>
           </div>
 
@@ -931,29 +1104,30 @@
         <div class="row pt-3 px-1">
           <div class="col-6 mb-4">
             <p>Категорії</p>
-            <a href="">Новинки та акції</a><br>
-            <a href="">Популярні товари</a><br>
-            <a style="margin-bottom: 0;" href="">Товари інших брендів</a>
+            <a href="/catalog/newest/">Новинки та акції</a><br>
+            <a href="/catalog/popular/">Популярні товари</a><br>
+            <a style="margin-bottom: 0;" href="/catalog/other/">Товари інших брендів</a>
           </div>
 
           <div class="col-6 mb-4">
             <p>Покупцю</p>
-            <a href="">Способи оплати</a><br>
-            <a href="">Способи доставки</a><br>
-            <a style="margin-bottom: 0;" href="">Обмін та повернення</a>
+            <a data-bs-toggle="modal" data-bs-target="#payment" href="#payment">Способи оплати</a><br>
+            <a data-bs-toggle="modal" data-bs-target="#delivery" href="#delivery">Способи доставки</a><br>
+            <a style="margin-bottom: 0;" data-bs-toggle="modal" data-bs-target="#refund" href="#refund">Обмін та
+              повернення</a>
           </div>
 
           <div class="col-6 mb-4">
             <p>Інформація</p>
-            <a href="">Графік роботи</a><br>
-            <a href="">Умови використання</a><br>
-            <a style="margin-bottom: 0;" href="">Політика конфіденційності</a>
+            <a data-bs-toggle="modal" data-bs-target="#schedule" href="#schedule">Графік роботи</a><br>
+            <a href="/info/terms/">Умови використання</a><br>
+            <a style="margin-bottom: 0;" href="/info/policy/">Політика конфіденційності</a>
           </div>
 
           <div class="col-6 mb-4">
             <p>Додатково</p>
-            <a href="">Партнерські програми</a>
-            <a href="https://lviv.prom.ua/c3757257-deutsche-chemie.html">Наша сторінка на Prom.ua</a>
+            <a href="/info/partners/">Партнерські програми</a>
+            <a href="https://lviv.prom.ua/c3757257-deutsche-chemie.html">Наша сторінка на Prom.ua</a><br>
             <a href="https://docs.google.com/spreadsheets/d/185Di7O7DBnpfkO-SR58t5DoJpewBSjnRbuDp93RmsyI/edit?usp=sharing">Наш прайс у форматі Excel</a>
           </div>
 
@@ -971,7 +1145,7 @@
       <div class="container">
         <p style="color: rgb(82, 82, 96); font-size: 13px; font-family: 'Roboto', sans-serif; padding-top: 9px;">
           2023-2024,
-          DM Deutsche Chemie, ФОП (Горгут Тарас Степанович)</p>
+          DM Deutsche Chemie, ФОП (Горгут Т. С.)</p>
       </div>
     </div>
   </footer>
