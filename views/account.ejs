@@ -73,7 +73,7 @@
             height: 40px;
             background: rgb(245, 245, 245);
             border-bottom: 1px solid rgb(229, 233, 241);
-            z-index: 1000;
+            z-index: 999;
         }
 
         nav {
@@ -81,7 +81,7 @@
             background: #fff;
             border-bottom: 1px solid rgb(229, 233, 241);
             margin-bottom: 30px;
-            z-index: 1000;
+            z-index: 999;
         }
 
         nav .nav-fix {
@@ -184,6 +184,7 @@
         .nav-item i {
             height: 100%;
             font-size: 17px;
+            padding-left: 15px;
             margin-top: auto;
             margin-bottom: auto;
         }
@@ -268,13 +269,18 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.1);
-            z-index: 9999;
+            z-index: 998;
             display: none;
         }
 
         .form-euro input {
             color: rgb(0, 40, 120);
             font-family: 'Roboto Condensed', sans-serif;
+        }
+
+        .form-euro input:focus {
+            box-shadow: none;
+            border: 3px solid rgb(0, 40, 120);
         }
 
         .button-euro {
@@ -727,13 +733,11 @@
         <div class="container text-center d-none d-lg-block">
             <div class="row">
                 <div class="col col-panel-fix <% if (url === '/catalog/newest/') { %>col-panel-fix-active<% } %> py-2">
-                    <a class="link-panel-fix" href="/catalog/newest/">Новинки <i class="fa-solid fa-gifts"
-                            style="font-size: 15px; color: #3BB143;"></i></a>
+                    <a class="link-panel-fix" href="/catalog/newest/">Новинки</a>
                 </div>
 
                 <div class="col col-panel-fix <% if (url === '/catalog/popular/') { %>col-panel-fix-active<% } %> py-2">
-                    <a class="link-panel-fix" href="/catalog/popular/">Популярне <i class="fa-solid fa-fire"
-                            style="font-size: 15px; color: #FF5E0E;"></i></a>
+                    <a class="link-panel-fix" href="/catalog/popular/">Популярне</a>
                 </div>
 
                 <div id="link_denkmit"

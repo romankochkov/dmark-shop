@@ -140,6 +140,7 @@
     .nav-item i {
       height: 100%;
       font-size: 17px;
+      padding-left: 15px;
       margin-top: auto;
       margin-bottom: auto;
     }
@@ -215,7 +216,7 @@
 
     .construction-line {
       position: relative;
-      height: 12px;
+      height: 8px;
     }
 
     .construction-line:before,
@@ -223,15 +224,15 @@
       content: '';
       position: absolute;
       display: block;
-      height: 12px;
+      height: 8px;
       width: 100%;
       background: #fdcd00;
       background: repeating-linear-gradient(
         -45deg,
-        #fdcd00,
-        #fdcd00 12px,
-        black 10px,
-        black 23px
+        rgba(253, 205, 0, 0.05),
+        rgba(253, 205, 0, 0.05) 12px,
+        rgba(0, 0, 0, 0.05) 10px,
+        rgba(0, 0, 0, 0.05) 23px
       );
       -webkit-backface-visibility: hidden;
       backface-visibility: hidden;
@@ -395,6 +396,11 @@
     .form-floating input:focus {
       box-shadow: 0 0 0 0.2rem rgb(0, 40, 120);
       border: 0;
+    }
+
+    .form-floating textarea {
+      font-size: 13.5px;
+      font-family: 'Roboto', sans-serif;
     }
 
     .form-floating textarea:focus {
@@ -655,13 +661,11 @@
     <div class="container text-center d-none d-lg-block">
       <div class="row">
         <div class="col col-panel-fix <% if (url === '/catalog/newest/') { %>col-panel-fix-active<% } %> py-2">
-          <a class="link-panel-fix" href="/catalog/newest/">Новинки <i class="fa-solid fa-gifts"
-              style="font-size: 15px; color: #3BB143;"></i></a>
+          <a class="link-panel-fix" href="/catalog/newest/">Новинки</a>
         </div>
 
         <div class="col col-panel-fix <% if (url === '/catalog/popular/') { %>col-panel-fix-active<% } %> py-2">
-          <a class="link-panel-fix" href="/catalog/popular/">Популярне <i class="fa-solid fa-fire"
-              style="font-size: 15px; color: #FF5E0E;"></i></a>
+          <a class="link-panel-fix" href="/catalog/popular/">Популярне</a>
         </div>
 
         <div id="link_denkmit"

@@ -596,21 +596,42 @@ app.get('/account/editor', async (req, res) => {
     return res.status(500).send('Сталася помилка під час перевірки прав адміністратора.');
   }
 
-  pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products`, (err, result) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send('Internal Server Error');
-    }
+  if (req.query.search) {
+    const filter = `%${req.query.search.toLowerCase().replace('/', '')}%`;
 
-    let rows = result.rows;
-    rows = rows.map((row) => {
-      row.pictures = JSON.parse(row.pictures);
-      row.price_total = ((parseFloat(row.price_total) * euro_coefficient).toFixed(2)).replace('.', ',');
-      return row;
+    pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE LOWER(title_original) LIKE $1 OR LOWER(title_translation) LIKE $2`, [filter, filter], (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('Internal Server Error');
+      }
+  
+      let rows = result.rows;
+      rows = rows.map((row) => {
+        row.pictures = JSON.parse(row.pictures);
+        row.price_total = ((parseFloat(row.price_total) * euro_coefficient).toFixed(2)).replace('.', ',');
+        return row;
+      });
+  
+      res.render('editor', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows });
     });
 
-    res.render('editor', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows });
-  });
+  } else {
+    pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products`, (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('Internal Server Error');
+      }
+  
+      let rows = result.rows;
+      rows = rows.map((row) => {
+        row.pictures = JSON.parse(row.pictures);
+        row.price_total = ((parseFloat(row.price_total) * euro_coefficient).toFixed(2)).replace('.', ',');
+        return row;
+      });
+  
+      res.render('editor', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows });
+    });
+  }  
 });
 
 app.post('/account/editor/save', async (req, res) => {
