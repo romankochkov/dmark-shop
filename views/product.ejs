@@ -371,6 +371,7 @@
             font-size: 1.7rem;
             font-family: 'Roboto Condensed', sans-serif;
             font-weight: 700;
+            padding-top: 2px;
             margin-bottom: 0;
         }
 
@@ -427,6 +428,26 @@
             margin-bottom: 0;
         }
 
+        .button-cart {
+            background: rgb(0, 40, 120);
+            border-radius: 50px;
+            border: 0;
+            color: #fff;
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            padding-top: 10px;
+            padding-left: 50px;
+            padding-right: 50px;
+            padding-bottom: 12px;
+            transition: 0ms;
+        }
+
+        .button-cart:hover {
+            background: rgb(0, 56, 168);
+            color: #fff;
+        }
+
         .modal {
             font-family: 'Roboto Condensed', sans-serif;
         }
@@ -463,6 +484,11 @@
         .footer-review p a:hover {
             color: #FF0800 !important;
             cursor: pointer;
+        }
+
+        .footer-review p a i {
+            margin-top: 10px;
+            margin-bottom: 10px;
         }
 
         footer {
@@ -561,6 +587,17 @@
             <div class="d-flex">
                 <div class="toast-body">
                     Дякуємо за відгук&nbsp;&nbsp;<i class="fa-solid fa-hand-peace"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-4">
+        <div id="cart_toast" class="toast align-items-center px-1" role="alert" aria-live="assertive" aria-atomic="true"
+            style="width: 273px; background: rgb(0, 40, 120); color: #fff; font-size: 15px;">
+            <div class="d-flex">
+                <div class="toast-body">
+                    Товар успішно доданий до кошика&nbsp;&nbsp;<i class="fa-solid fa-circle-check"></i>
                 </div>
             </div>
         </div>
@@ -878,9 +915,12 @@
                     <pre class="card-description"><%= item.description %></pre>
                     <div
                         style="box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25); border-radius: 8px; padding: 15px; margin-top: 25px;">
-                        <p class="card-price">
-                            <%= item.price_total %> ₴
-                        </p>
+                        <div class="d-flex justify-content-between">
+                            <p class="card-price">
+                                <%= item.price_total %> ₴
+                            </p>
+                            <button class="btn button-cart add-to-cart" data-item-id="<%= item.id %>">В кошик</button>
+                        </div>
                     </div>
                 </div>
                 <% }) %>
@@ -1046,7 +1086,7 @@
     <footer>
         <div class="container">
             <div class="footer-review d-flex align-items-center py-4">
-                <div class="d-inline-flex text">Будь ласка, оцініть наш вебсайт&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;—</div>
+                <div class="d-inline-flex text mx-1 mx-sm-1 mx-md-1 mx-lg-0">Будь ласка, оцініть наш вебсайт&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;—</div>
                 <div class="d-inline-flex">
                     <p style="margin-bottom: 0;">
                         <a onclick="addReview(1);"><i class="fa-regular fa-face-tired"></i></a>

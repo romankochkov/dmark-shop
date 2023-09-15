@@ -523,9 +523,124 @@ app.get('/account/orders', async (req, res) => {
   }
 });
 
+app.get('/account/orders/:id', async (req, res) => {
+  if (!req.session.isAuthenticated) return res.redirect('/authentication');
+  if (!req.originalUrl.endsWith('/')) return res.redirect(req.originalUrl + '/');
+
+  try {
+    const isAdmin = await checkAdminUser(req.session.userId);
+
+    if (!isAdmin) {
+      return res.send('У вас немає прав для доступу до цієї сторінки!');
+    }
+  } catch (error) {
+    return res.status(500).send('Произошла ошибка при проверке прав администратора');
+  }
+
+  try {
+    const orders = await pool.query('SELECT * FROM orders WHERE id = $1 LIMIT 1', [req.params.id]);
+
+    let rows = orders.rows;
+    rows = rows.map((row) => {
+      if (row.date) {
+        row.date = new Date(row.date).toLocaleDateString('uk-UA', { day: 'numeric', month: 'long' }) + " (" + new Date(row.date).toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' }) + ")";
+        return row;
+      }
+    });
+
+    const allOrders = [];
+
+    for (const order of orders.rows) {
+      const products = order.products;
+      const orderProducts = [];
+
+      for (const product of products) {
+        const { id, amount } = product;
+        const itemRow = await pool.query(
+          'SELECT id, brand_original, title_original, pictures, volume, price, price_factor, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE id = $1',
+          [id]
+        );
+
+        if (itemRow.rows.length > 0) {
+          const itemData = itemRow.rows[0];
+          const productData = {
+            id,
+            amount,
+            brand_original: itemData.brand_original,
+            title_original: itemData.title_original,
+            pictures: JSON.parse(itemData.pictures),
+            volume: itemData.volume,
+            price: (parseFloat(itemData.price_total)).toFixed(2).replace('.', ',')
+          };
+          orderProducts.push(productData);
+        }
+      }
+
+      const fullOrder = {
+        ...order,
+        products: orderProducts
+      };
+
+      allOrders.push(fullOrder);
+    }
+
+    res.render('order.ejs', { user: req.session.isAuthenticated, euro: euro_coefficient, url: req.originalUrl, orders: allOrders });
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+});
+
+app.post('/account/orders/:id', express.urlencoded({ extended: false }), async (req, res) => {
+  if (!req.body) return res.sendStatus(400);
+
+  try {
+    const isAdmin = await checkAdminUser(req.session.userId);
+
+    if (!isAdmin) {
+      return res.send('У вас немає прав для доступу до цієї сторінки!');
+    }
+  } catch (error) {
+    return res.status(500).send('Сталася помилка під час перевірки прав адміністратора.');
+  }
+
+  const { products, amount } = req.body;
+  const data = [];
+
+  for (let i = 0; i < products.length; i++) {
+    const product = {
+      id: products[i],
+      amount: amount[i]
+    };
+    data.push(product);
+  }
+
+  const jsonData = JSON.stringify(data);
+
+  pool.query(`UPDATE orders SET products = $1 WHERE id = $2`, [jsonData, req.params.id], (err) => {
+    if (err) {
+      console.error(req.body);
+      console.error(err);
+      res.sendStatus(500);
+    } else {
+      res.redirect('/account/orders/' + req.params.id);
+    }
+  });
+});
+
 app.get('/account/orders/:id/pdf', async (req, res) => {
   if (!req.session.isAuthenticated) return res.redirect('/authentication');
   if (!req.originalUrl.endsWith('/')) return res.redirect(req.originalUrl + '/');
+
+  try {
+    const isAdmin = await checkAdminUser(req.session.userId);
+
+    if (!isAdmin) {
+      return res.send('У вас немає прав для доступу до цієї сторінки!');
+    }
+  } catch (error) {
+    return res.status(500).send('Сталася помилка під час перевірки прав адміністратора.');
+  }
 
   try {
     const orderRow = await pool.query('SELECT * FROM orders WHERE id = $1', [req.params.id]);
@@ -647,7 +762,7 @@ app.post('/account/editor/save', async (req, res) => {
     return res.status(500).send('Сталася помилка під час перевірки прав адміністратора.');
   }
 
-  var { id, price, price_factor, amount, box, description, exists } = req.body;
+  var { id, price, price_factor, amount, box, description, exists, visibility } = req.body;
 
   try {
     if (!id) {
@@ -662,6 +777,8 @@ app.post('/account/editor/save', async (req, res) => {
       await pool.query(`UPDATE products SET "case" = $1 WHERE id = $2`, [box, id]);
     } if (description) {
       await pool.query(`UPDATE products SET description = $1 WHERE id = $2`, [description, id]);
+    } if (visibility) {
+      await pool.query(`UPDATE products SET visibility = $1 WHERE id = $2`, [visibility, id]);
     } else {
       await pool.query(`UPDATE products SET exists = $1 WHERE id = $2`, [exists, id]);
     }
@@ -748,7 +865,7 @@ app.get('/catalog', (req, res) => {
   if (req.query.search) {
     const filter = `%${req.query.search.toLowerCase().replace('/', '')}%`;
 
-    pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE LOWER(title_original) LIKE $1 OR LOWER(title_translation) LIKE $2 ORDER BY CASE WHEN exists = 1 THEN 1 WHEN exists = 2 THEN 2 WHEN exists = 0 THEN 3 END LIMIT 90`, [filter, filter], (err, result) => {
+    pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE (LOWER(title_original) LIKE $1 OR LOWER(title_translation) LIKE $2) AND visibility = true ORDER BY CASE WHEN exists = 1 THEN 1 WHEN exists = 2 THEN 2 WHEN exists = 0 THEN 3 END LIMIT 90`, [filter, filter], (err, result) => {
       if (err) {
         console.error(err);
         return res.status(500).send('Internal Server Error');
@@ -765,7 +882,7 @@ app.get('/catalog', (req, res) => {
     });
   } else {
     // Если параметр "GET" не указан, выводим все записи
-    pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products ORDER BY CASE WHEN exists = 1 THEN 1 WHEN exists = 2 THEN 2 WHEN exists = 0 THEN 3 END LIMIT 90`, (err, result) => {
+    pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE visibility = true ORDER BY CASE WHEN exists = 1 THEN 1 WHEN exists = 2 THEN 2 WHEN exists = 0 THEN 3 END LIMIT 90`, (err, result) => {
       if (err) {
         console.error(err);
         return res.status(500).send('Internal Server Error');
@@ -786,7 +903,7 @@ app.get('/catalog', (req, res) => {
 app.get('/catalog/newest', (req, res) => {
   if (!req.originalUrl.endsWith('/')) return res.redirect(req.originalUrl + '/');
 
-  pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products ORDER BY id DESC LIMIT 30`, (err, result) => {
+  pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE visibility = true ORDER BY id DESC LIMIT 30`, (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).send('Internal Server Error');
@@ -1104,7 +1221,7 @@ async function getDataDB(filter, type = null, query = null) {
       if (type != null) {
         const filter_query = '%' + query.toLowerCase().replace('/', '') + '%';
 
-        const result = await pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE brand_original LIKE $1 AND type = $2 AND (LOWER(title_original) LIKE $3 OR LOWER(title_translation) LIKE $4) ORDER BY CASE WHEN exists = 1 THEN 1 WHEN exists = 2 THEN 2 WHEN exists = 0 THEN 3 END`, [filter + '%', type, filter_query, filter_query]);
+        const result = await pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE brand_original LIKE $1 AND type = $2 AND (LOWER(title_original) LIKE $3 OR LOWER(title_translation) LIKE $4) AND visibility = true ORDER BY CASE WHEN exists = 1 THEN 1 WHEN exists = 2 THEN 2 WHEN exists = 0 THEN 3 END`, [filter + '%', type, filter_query, filter_query]);
 
         let rows = result.rows;
         rows = rows.map((row) => {
@@ -1117,7 +1234,7 @@ async function getDataDB(filter, type = null, query = null) {
       } else {
         const filter_query = '%' + query.toLowerCase().replace('/', '') + '%';
 
-        const result = await pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE brand_original LIKE $1 AND (LOWER(title_original) LIKE $2 OR LOWER(title_translation) LIKE $3) ORDER BY CASE WHEN exists = 1 THEN 1 WHEN exists = 2 THEN 2 WHEN exists = 0 THEN 3 END`, [filter + '%', filter_query, filter_query]);
+        const result = await pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE brand_original LIKE $1 AND (LOWER(title_original) LIKE $2 OR LOWER(title_translation) LIKE $3) AND visibility = true ORDER BY CASE WHEN exists = 1 THEN 1 WHEN exists = 2 THEN 2 WHEN exists = 0 THEN 3 END`, [filter + '%', filter_query, filter_query]);
 
         let rows = result.rows;
         rows = rows.map((row) => {
@@ -1130,7 +1247,7 @@ async function getDataDB(filter, type = null, query = null) {
       }
     } else {
       if (type != null) {
-        const result = await pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE brand_original LIKE $1 AND type = $2 ORDER BY CASE WHEN exists = 1 THEN 1 WHEN exists = 2 THEN 2 WHEN exists = 0 THEN 3 END`, [filter + '%', type]);
+        const result = await pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE brand_original LIKE $1 AND type = $2 AND visibility = true ORDER BY CASE WHEN exists = 1 THEN 1 WHEN exists = 2 THEN 2 WHEN exists = 0 THEN 3 END`, [filter + '%', type]);
 
         let rows = result.rows;
         rows = rows.map((row) => {
@@ -1141,7 +1258,7 @@ async function getDataDB(filter, type = null, query = null) {
 
         return rows;
       } else {
-        const result = await pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE brand_original LIKE $1 ORDER BY CASE WHEN exists = 1 THEN 1 WHEN exists = 2 THEN 2 WHEN exists = 0 THEN 3 END`, [filter + '%']);
+        const result = await pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE brand_original LIKE $1 AND visibility = true ORDER BY CASE WHEN exists = 1 THEN 1 WHEN exists = 2 THEN 2 WHEN exists = 0 THEN 3 END`, [filter + '%']);
 
         let rows = result.rows;
         rows = rows.map((row) => {

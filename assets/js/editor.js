@@ -9,11 +9,12 @@ $(document).ready(function () {
         var exists = $('#select_exists_' + itemId).children("option:selected").val();
         var amount = $('#input_amount_' + itemId).val();
         var box = $('#input_box_' + itemId).val();
+        var visibility = $('#input_visibility_' + itemId).val();
 
         $.ajax({
             url: '/account/editor/save',
             method: 'POST',
-            data: JSON.stringify({ id: itemId, description: description, price: price, price_factor: price_factor, exists: exists, amount: amount, box: box }),
+            data: JSON.stringify({ id: itemId, description: description, price: price, price_factor: price_factor, exists: exists, amount: amount, box: box, visibility: visibility }),
             contentType: 'application/json',
             success: function (response) {
                 const toast = new bootstrap.Toast($('#success_toast'), { delay: 2000 });
@@ -36,6 +37,28 @@ $(document).ready(function () {
         }
     });
 
+    $(document).on('click', '.add-to-hidden', function (event) {
+        event.preventDefault();
+    
+        var itemId = $(this).data('item-id');
+        $('#input_visibility_' + itemId).val(0);
+
+        $(this).removeClass('add-to-hidden');
+        $(this).addClass('del-from-hidden');
+        $(this).html('<i class="fa-solid fa-eye-slash"></i>');
+    });
+    
+    $(document).on('click', '.del-from-hidden', function (event) {
+        event.preventDefault();
+    
+        var itemId = $(this).data('item-id');
+        $('#input_visibility_' + itemId).val(1);
+
+        $(this).removeClass('del-from-hidden');
+        $(this).addClass('add-to-hidden');
+        $(this).html('<i class="fa-solid fa-eye"></i>');
+    });
+    
     $('#link_denkmit').mouseenter(function () {
         $('#nav_overlay').css('display', 'block');
         $('#dropdown_denkmit').css('display', 'block');

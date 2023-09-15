@@ -180,6 +180,12 @@
       text-decoration: none;
     }
 
+    .order-box {
+      background: rgb(229, 233, 241);
+      border-radius: 6px;
+      position: relative;
+    }
+
     .order-date {
       font-size: 16px;
       font-weight: 500;
@@ -207,6 +213,7 @@
       font-size: 15px;
       font-family: 'Roboto', sans-serif;
       font-weight: 500;
+      margin-right: 5px;
       transition: 0s;
     }
 
@@ -219,6 +226,33 @@
       position: absolute;
       top: 49.5%;
       left: 55%;
+      transform: translate(-50%, -50%);
+    }
+
+    .order-edit {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      background: rgb(0, 40, 120);
+      border-radius: 40px;
+      border: 0;
+      font-size: 15px;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 500;
+      margin-right: 5px;
+      transition: 0s;
+    }
+
+    .order-edit:hover {
+      background: rgb(0, 56, 168);
+      color: #fff;
+    }
+
+    .order-edit i {
+      position: absolute;
+      top: 49%;
+      left: 57%;
+
       transform: translate(-50%, -50%);
     }
 
@@ -239,6 +273,27 @@
     .order-button:hover {
       background: rgb(0, 56, 168);
       color: #fff;
+    }
+
+    .status-box {
+      background: rgb(229, 233, 241);
+      border-radius: 6px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 15px;
+      color: rgb(82, 82, 96);
+      padding-top: 10px;
+      padding-left: 16px;
+      padding-right: 16px;
+      padding-bottom: 8px;
+    }
+
+    .status-box .form-check-input {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .status-box .form-check-input:focus {
+      border: 0;
     }
 
     .card-cart {
@@ -428,6 +483,7 @@
     }
 
     .form-floating label {
+      font-family: 'Roboto Condensed', sans-serif;
       color: rgb(82, 82, 96);
       font-weight: 500;
     }
@@ -438,6 +494,7 @@
 
     .form-floating select {
       color: rgb(0, 40, 120);
+      font-family: 'Roboto', sans-serif;
     }
 
     .form-floating select:focus {
@@ -525,7 +582,7 @@
 
       .order-title {
         height: 24px;
-        font-size: 18px;
+        font-size: 17px;
         margin-top: -5px;
         margin-bottom: 0;
       }
@@ -694,13 +751,11 @@
     <div class="container text-center d-none d-lg-block">
       <div class="row">
         <div class="col col-panel-fix <% if (url === '/catalog/newest/') { %>col-panel-fix-active<% } %> py-2">
-          <a class="link-panel-fix" href="/catalog/newest/">Новинки <i class="fa-solid fa-gifts"
-              style="font-size: 15px; color: #3BB143;"></i></a>
+          <a class="link-panel-fix" href="/catalog/newest/">Новинки</a>
         </div>
 
         <div class="col col-panel-fix <% if (url === '/catalog/popular/') { %>col-panel-fix-active<% } %> py-2">
-          <a class="link-panel-fix" href="/catalog/popular/">Популярне <i class="fa-solid fa-fire"
-              style="font-size: 15px; color: #FF5E0E;"></i></a>
+          <a class="link-panel-fix" href="/catalog/popular/">Популярне</a>
         </div>
 
         <div id="link_denkmit"
@@ -760,7 +815,7 @@
 
 
   <% orders.forEach((order, index)=> { %>
-    <div class="container">
+    <div class="container" onmouseenter="$('#status_box_<%= order.id %>').css('visibility', 'visible');" onmouseleave="$('#status_box_<%= order.id %>').css('visibility', 'hidden');">
       <div class="row">
         <div class="col-2"></div>
         <div class="col-12 col-sm-12 col-md-12 col-lg-8 col-xl-8">
@@ -771,8 +826,22 @@
             </div>
             <% } %>
 
-              <div class="d-flex justify-content-between p-3 p-sm-3 p-md-3 p-lg-4 p-xl-4"
-                style="background: rgb(229, 233, 241); border-radius: 6px;">
+              <div class="d-flex justify-content-between p-3 p-sm-3 p-md-3 p-lg-4 p-xl-4 order-box"
+              <% if (order.status == 0) { %>style="border-left: 6px solid #86868A;"<% } %>>
+                <div id="status_box_<%= order.id %>" class="status-box d-none d-sm-none d-md-none d-lg-block" style="position: absolute; top: 50%; left: -95px; transform: translate(-50%, -50%); visibility: hidden;">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="exampleRadios" value="option1" checked>
+                    <label class="form-check-label">
+                      Виконано
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="exampleRadios" value="option2">
+                    <label class="form-check-label">
+                      Скасовано
+                    </label>
+                  </div> 
+                </div>
                 <div>
                   <p class="order-date">
                     <%= order.date %>
@@ -781,8 +850,11 @@
                   </p>
                 </div>
                 <div>
-                  <a class="btn btn-primary order-print mx-2 d-none d-md-inline-block" href="<%= order.id %>/pdf/">
+                  <a class="btn btn-primary order-print d-none d-md-inline-block" href="<%= order.id %>/pdf/">
                     <i class="fa-solid fa-file-pdf" style="font-size: 16px;"></i>
+                  </a>
+                  <a class="btn btn-primary order-edit d-none d-md-inline-block" href="<%= order.id %>">
+                    <i class="fa-solid fa-file-pen" style="font-size: 16px;"></i>
                   </a>
                   <a id="open_<%= order.id %>" class="btn btn-primary order-button" data-bs-toggle="collapse"
                     href="#collapse_<%= order.id %>" role="button" aria-expanded="false"
