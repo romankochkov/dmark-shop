@@ -1,2 +1,1 @@
-Website:
-https://dm.lviv.ua/
+Website: https://dm.lviv.ua/
