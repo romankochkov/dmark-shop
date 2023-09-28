@@ -64,9 +64,7 @@ function decreaseValue(id) {
     var count = parseInt(element_count.innerText);
     var price = parseFloat((element_price_hidden.innerText).replace(',', '.'));
 
-    if (count == 1) {
-        return
-    }
+    if (count == 1) return;
 
     var count = parseInt(element_count.innerText);
     var price = parseFloat((element_price_hidden.innerText).replace(',', '.'));

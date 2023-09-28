@@ -876,14 +876,14 @@
                             </h5>
                             <p class="card-case">Кількість в ящику: <%= item.case %> шт.</p>
                             <div class="d-flex">
-                              <p class="card-title card-price-fix" style="width: 70%; margin-bottom: 0; user-select: none;"><i
+                              <p class="card-title card-price-fix" style="width: 100%; margin-bottom: 0; user-select: none;"><i
                                   class="fa-solid fa-caret-left" style="color: #fff; background: rgb(0, 40, 120); border: 1.5px solid rgb(0, 40, 120); border-radius: 5px; padding-left: 6px; padding-right: 6px; padding-bottom: 2px; margin-right: 2px; cursor: pointer;"
                                   onclick="decreaseValue('<%= item.id %>')"></i> <span id="cart_count_<%= item.id %>"
                                   style="user-select: none;">1</span> <i class="fa-solid fa-caret-right"
                                   style="color: #fff; background: rgb(0, 40, 120); border: 1.5px solid rgb(0, 40, 120); border-radius: 5px; padding-left: 6px; padding-right: 6px; padding-bottom: 2px; margin-left: 2px; margin-right: 8px; cursor: pointer;" onclick="increaseValue('<%= item.id %>')"></i><span style="color: #fff; background: #999999; border-radius: 5px; padding-left: 7px; padding-right: 7px; cursor: pointer;" onclick="increaseCase('<%= item.id %>', '<%= item.case %>')">+<%= item.case %></span></p>
                               <p id="cart_price_<%= item.id %>"
                                 class="card-title card-price-fix d-flex justify-content-end price-element"
-                                style="width: 30%; margin-bottom: 0;"
+                                style="width: 0%; margin-bottom: 0; opacity: 0; z-index: -1;"
                                 label="<%= item.brand_original %> <%= item.title_original %>, <%= item.volume %>"
                                 count="1">
                                 <%= item.price_total %>&nbsp;€

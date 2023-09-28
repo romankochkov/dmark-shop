@@ -470,7 +470,7 @@ app.get('/account/orders', async (req, res) => {
   }
 
   try {
-    const orders = await pool.query('SELECT * FROM orders ORDER BY id DESC');
+    const orders = await pool.query('SELECT * FROM orders ORDER BY id DESC LIMIT 20');
 
     let rows = orders.rows;
     rows = rows.map((row) => {
