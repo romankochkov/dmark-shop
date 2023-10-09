@@ -823,6 +823,10 @@ app.post('/account/product/add', express.urlencoded({ extended: false }), async 
     brand_translation = 'Профісімо';
   } else if (brand === 'Babylove') {
     brand_translation = 'Бейбілав';
+  } else if (brand === 'Visiomax') {
+    brand_translation = 'Візіомакс';
+  } else if (brand === 'Deluxe') {
+    brand_translation = 'Делюкс';
   } else {
     return res.sendStatus(400);
   }
@@ -1213,6 +1217,26 @@ app.get('/catalog/babylove', (req, res) => {
     .catch(err => {
       return res.status(500).send('Internal Server Error');
     });
+});
+
+app.get('/catalog/other', (req, res) => {
+  if (!req.originalUrl.endsWith('/')) return res.redirect(req.originalUrl + '/');
+
+  pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE visibility = true AND brand_original != 'Denkmit' AND brand_original != 'Balea' AND brand_original != 'Balea MEN' AND brand_original != 'Balea MED' AND brand_original != 'Alverde' AND brand_original != 'Dontodent' AND brand_original != 'Mivolis' AND brand_original != 'Frosch' AND brand_original != 'Profissimo' AND brand_original != 'Babylove' ORDER BY id DESC`, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Internal Server Error');
+    }
+
+    let rows = result.rows;
+    rows = rows.map((row) => {
+      row.pictures = JSON.parse(row.pictures);
+      row.price_total = ((parseFloat(row.price_total) * euro_coefficient).toFixed(2)).replace('.', ',');
+      return row;
+    });
+
+    res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+  });
 });
 
 async function getDataDB(filter, type = null, query = null) {
