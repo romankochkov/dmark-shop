@@ -11,6 +11,7 @@ const pgSession = require('connect-pg-simple')(session);
 const format = require('pg-format');
 const path = require('path');
 const fs = require('fs');
+const uuid = require('uuid');
 const https = require('https');
 const { type } = require('os');
 
@@ -1237,6 +1238,16 @@ app.get('/catalog/other', (req, res) => {
 
     res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
   });
+});
+
+app.get('/media/:uuid', (req, res) => {
+  const imagePath = path.join(__dirname, '/media/', `${req.params.uuid}`);
+
+  if (fs.existsSync(imagePath)) {
+    res.sendFile(imagePath);
+  } else {
+    res.status(404);
+  }
 });
 
 async function getDataDB(filter, type = null, query = null) {
