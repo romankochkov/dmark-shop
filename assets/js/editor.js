@@ -3,6 +3,7 @@ $(document).ready(function () {
         event.preventDefault();
 
         var itemId = $(this).data('item-id');
+        var pictures = $('#input_pictures_' + itemId).val();
         var description = $('#input_description_' + itemId).val();
         var price = $('#input_price_' + itemId).val();
         var price_factor = $('#input_price_factor_' + itemId).val();
@@ -14,7 +15,7 @@ $(document).ready(function () {
         $.ajax({
             url: '/account/editor/save',
             method: 'POST',
-            data: JSON.stringify({ id: itemId, description: description, price: price, price_factor: price_factor, exists: exists, amount: amount, box: box, visibility: visibility }),
+            data: JSON.stringify({ id: itemId, pictures: pictures, description: description, price: price, price_factor: price_factor, exists: exists, amount: amount, box: box, visibility: visibility }),
             contentType: 'application/json',
             success: function (response) {
                 const toast = new bootstrap.Toast($('#success_toast'), { delay: 2000 });
@@ -57,16 +58,6 @@ $(document).ready(function () {
         $(this).removeClass('del-from-hidden');
         $(this).addClass('add-to-hidden');
         $(this).html('<i class="fa-solid fa-eye"></i>');
-    });
-    
-    $('#link_denkmit').mouseenter(function () {
-        $('#nav_overlay').css('display', 'block');
-        $('#dropdown_denkmit').css('display', 'block');
-    });
-
-    $('#link_denkmit').mouseleave(function () {
-        $('#nav_overlay').css('display', 'none');
-        $('#dropdown_denkmit').css('display', 'none');
     });
 });
 

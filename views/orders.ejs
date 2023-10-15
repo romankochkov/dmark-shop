@@ -744,22 +744,9 @@
           <a class="link-panel-fix" href="/catalog/newest/">Новинки</a>
         </div>
 
-        <div class="col col-panel-fix <% if (url === '/catalog/popular/') { %>col-panel-fix-active<% } %> py-2">
-          <a class="link-panel-fix" href="/catalog/popular/">Популярне</a>
-        </div>
-
         <div id="link_denkmit"
-          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/denkmit/') { %>col-panel-fix-active<% } %> py-2"
-          style="position: relative; z-index: 99999;">
+          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/denkmit/') { %>col-panel-fix-active<% } %> py-2">
           <a class="link-panel-fix" href="/catalog/denkmit/">&nbsp;Denkmit™</a>
-          <div class="link-panel-dropdown" id="dropdown_denkmit" style="top: 156px; left: 50%; display: none;">
-            <p><a href="">Засоби для кухні</a></p>
-            <p><a href="">Засоби для прання</a></p>
-            <p><a href="">Засоби для туалету</a></p>
-            <p><a href="">Засоби для прибирання</a></p>
-            <p><a href="">Освіжувачі повітря</a></p>
-            <p style="border-bottom: 1px solid transparent;"><a href="">Інше</a></p>
-          </div>
         </div>
 
         <div
@@ -796,6 +783,10 @@
           class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/babylove/') { %>col-panel-fix-active<% } %> py-2">
           <a class="link-panel-fix" href="/catalog/babylove/">&nbsp;Babylove™</a>
         </div>
+
+        <div class="col col-panel-fix <% if (url === '/catalog/other/') { %>col-panel-fix-active<% } %> py-2">
+          <a class="link-panel-fix" href="/catalog/other/">Інше</a>
+        </div>
       </div>
     </div>
 
@@ -805,7 +796,8 @@
 
 
   <% orders.forEach((order, index)=> { %>
-    <div class="container" onmouseenter="$('#status_box_<%= order.id %>').css('visibility', 'visible');" onmouseleave="$('#status_box_<%= order.id %>').css('visibility', 'hidden');">
+    <div class="container" onmouseenter="$('#status_box_<%= order.id %>').css('visibility', 'visible');"
+      onmouseleave="$('#status_box_<%= order.id %>').css('visibility', 'hidden');">
       <div class="row">
         <div class="col-2"></div>
         <div class="col-12 col-sm-12 col-md-12 col-lg-8 col-xl-8">
@@ -816,43 +808,48 @@
             </div>
             <% } %>
 
-              <div class="d-flex justify-content-between p-3 p-sm-3 p-md-3 p-lg-4 p-xl-4 order-box"
-              <% if (order.status == 0) { %>style="border-left: 6px solid #86868A;"<% } %>>
-                <div id="status_box_<%= order.id %>" class="status-box d-none d-sm-none d-md-none d-lg-block" style="position: absolute; top: 50%; left: -95px; transform: translate(-50%, -50%); visibility: hidden;">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="exampleRadios" value="option1" checked>
-                    <label class="form-check-label">
-                      Виконано
-                    </label>
+              <div class="d-flex justify-content-between p-3 p-sm-3 p-md-3 p-lg-4 p-xl-4 order-box" 
+              <% if (order.status==0) { %>style="border-left: 6px solid #86868A;"<% } else if (order.status==1) { %>style="border-left: 6px solid #4BB543;"<% } else { %>style="border-left: 6px solid #CC0000;"<% } %>>
+                  <div id="status_box_<%= order.id %>" class="status-box d-none d-sm-none d-md-none d-lg-block"
+                    style="position: absolute; top: 50%; left: -95px; transform: translate(-50%, -50%); visibility: hidden;">
+                    <form method="post" action="/account/orders/<%= order.id %>/status">
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status" value="1" onclick="$(this).parent().parent().submit();">
+                        <label class="form-check-label">
+                          Виконано
+                        </label>
+                      </div>
+                    </form>
+                    <form method="post" action="/account/orders/<%= order.id %>/status">
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status" onclick="$(this).parent().parent().submit();" value="2">
+                        <label class="form-check-label">
+                          Скасовано
+                        </label>
+                      </div>
+                    </form>
                   </div>
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="exampleRadios" value="option2">
-                    <label class="form-check-label">
-                      Скасовано
-                    </label>
-                  </div> 
-                </div>
-                <div>
-                  <p class="order-date">
-                    <%= order.date %>
-                  </p>
-                  <p class="order-title">ЗАМОВЛЕННЯ №<%= order.id %>
-                  </p>
-                </div>
-                <div>
-                  <a class="btn btn-primary order-print d-none d-md-inline-block" href="<%= order.id %>/pdf/">
-                    <i class="fa-solid fa-file-pdf" style="font-size: 16px;"></i>
-                  </a>
-                  <a class="btn btn-primary order-edit d-none d-md-inline-block" href="<%= order.id %>">
-                    <i class="fa-solid fa-file-pen" style="font-size: 16px;"></i>
-                  </a>
-                  <a id="open_<%= order.id %>" class="btn btn-primary order-button" data-bs-toggle="collapse"
-                    href="#collapse_<%= order.id %>" role="button" aria-expanded="false"
-                    onclick="changeIcon('<%= order.id %>')">
-                    &nbsp;&nbsp;Відкрити&nbsp;&nbsp;<i id="open_icon_<%= order.id %>" class="fa-solid fa-caret-down"
-                      style="font-size: 14px;" type="down"></i>&nbsp;
-                  </a>
-                </div>
+                  <div>
+                    <p class="order-date">
+                      <%= order.date %>
+                    </p>
+                    <p class="order-title">ЗАМОВЛЕННЯ №<%= order.id %>
+                    </p>
+                  </div>
+                  <div>
+                    <a class="btn btn-primary order-print d-none d-md-inline-block" href="<%= order.id %>/pdf/">
+                      <i class="fa-solid fa-file-pdf" style="font-size: 16px;"></i>
+                    </a>
+                    <a class="btn btn-primary order-edit d-none d-md-inline-block" href="<%= order.id %>">
+                      <i class="fa-solid fa-file-pen" style="font-size: 16px;"></i>
+                    </a>
+                    <a id="open_<%= order.id %>" class="btn btn-primary order-button" data-bs-toggle="collapse"
+                      href="#collapse_<%= order.id %>" role="button" aria-expanded="false"
+                      onclick="changeIcon('<%= order.id %>')">
+                      &nbsp;&nbsp;Відкрити&nbsp;&nbsp;<i id="open_icon_<%= order.id %>" class="fa-solid fa-caret-down"
+                        style="font-size: 14px;" type="down"></i>&nbsp;
+                    </a>
+                  </div>
               </div>
         </div>
         <div class="col-2"></div>
@@ -1188,4 +1185,5 @@
       </script>
 
 </body>
+
 </html>

@@ -787,10 +787,6 @@
                     <a class="link-panel-fix" href="/catalog/newest/">Новинки</a>
                 </div>
 
-                <div class="col col-panel-fix <% if (url === '/catalog/popular/') { %>col-panel-fix-active<% } %> py-2">
-                    <a class="link-panel-fix" href="/catalog/">Популярне</a>
-                </div>
-
                 <div id="link_denkmit"
                     class="col-6 col-sm-3 col-lg col-panel-fix <% if (url.includes('/catalog/denkmit/')) { %>col-panel-fix-active<% } %> py-2"
                     style="position: relative; z-index: 99999;">
@@ -850,6 +846,10 @@
                 <div
                     class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/babylove/') { %>col-panel-fix-active<% } %> py-2">
                     <a class="link-panel-fix" href="/catalog/babylove/">&nbsp;Babylove™</a>
+                </div>
+
+                <div class="col col-panel-fix <% if (url === '/catalog/other/') { %>col-panel-fix-active<% } %> py-2">
+                    <a class="link-panel-fix" href="/catalog/other/">Інше</a>
                 </div>
             </div>
         </div>
@@ -1086,7 +1086,8 @@
     <footer>
         <div class="container">
             <div class="footer-review d-flex align-items-center py-4">
-                <div class="d-inline-flex text mx-1 mx-sm-1 mx-md-1 mx-lg-0">Будь ласка, оцініть наш вебсайт&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;—</div>
+                <div class="d-inline-flex text mx-1 mx-sm-1 mx-md-1 mx-lg-0">Будь ласка, оцініть наш
+                    вебсайт&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;—</div>
                 <div class="d-inline-flex">
                     <p style="margin-bottom: 0;">
                         <a onclick="addReview(1);"><i class="fa-regular fa-face-tired"></i></a>

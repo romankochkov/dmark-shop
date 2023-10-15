@@ -629,6 +629,33 @@ app.post('/account/orders/:id', express.urlencoded({ extended: false }), async (
   });
 });
 
+app.post('/account/orders/:id/status', async (req, res) => {
+  if (!req.session.isAuthenticated) return res.status(500);
+
+  try {
+    const isAdmin = await checkAdminUser(req.session.userId);
+
+    if (!isAdmin) {
+      return res.send('У вас немає прав для доступу до цієї сторінки!');
+    }
+  } catch (error) {
+    return res.status(500).send('Сталася помилка під час перевірки прав адміністратора.');
+  }
+
+  var { status } = req.body;
+
+  try {
+    if (status) {
+      await pool.query(`UPDATE orders SET status = $1 WHERE id = $2`, [status, req.params.id]);
+    }
+
+    res.redirect('/account/orders');
+  } catch (err) {
+    console.error('Internal Server Error', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 app.get('/account/orders/:id/pdf', async (req, res) => {
   if (!req.session.isAuthenticated) return res.redirect('/authentication');
   if (!req.originalUrl.endsWith('/')) return res.redirect(req.originalUrl + '/');
@@ -720,14 +747,14 @@ app.get('/account/editor', async (req, res) => {
         console.error(err);
         return res.status(500).send('Internal Server Error');
       }
-  
+
       let rows = result.rows;
       rows = rows.map((row) => {
         row.pictures = JSON.parse(row.pictures);
         row.price_total = ((parseFloat(row.price_total) * euro_coefficient).toFixed(2)).replace('.', ',');
         return row;
       });
-  
+
       res.render('editor', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows });
     });
 
@@ -737,17 +764,17 @@ app.get('/account/editor', async (req, res) => {
         console.error(err);
         return res.status(500).send('Internal Server Error');
       }
-  
+
       let rows = result.rows;
       rows = rows.map((row) => {
         row.pictures = JSON.parse(row.pictures);
         row.price_total = ((parseFloat(row.price_total) * euro_coefficient).toFixed(2)).replace('.', ',');
         return row;
       });
-  
+
       res.render('editor', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows });
     });
-  }  
+  }
 });
 
 app.post('/account/editor/save', async (req, res) => {
@@ -763,7 +790,7 @@ app.post('/account/editor/save', async (req, res) => {
     return res.status(500).send('Сталася помилка під час перевірки прав адміністратора.');
   }
 
-  var { id, price, price_factor, amount, box, description, exists, visibility } = req.body;
+  var { id, price, price_factor, amount, box, pictures, description, exists, visibility } = req.body;
 
   try {
     if (!id) {
@@ -780,6 +807,14 @@ app.post('/account/editor/save', async (req, res) => {
       await pool.query(`UPDATE products SET description = $1 WHERE id = $2`, [description, id]);
     } if (visibility) {
       await pool.query(`UPDATE products SET visibility = $1 WHERE id = $2`, [visibility, id]);
+    } if (pictures) {
+      const resultArray = pictures.split(',https');
+      for (let i = 1; i < resultArray.length; i++) {
+        resultArray[i] = 'https' + resultArray[i];
+      }
+      pictures = JSON.stringify(resultArray);
+
+      await pool.query(`UPDATE products SET pictures = $1 WHERE id = $2`, [pictures, id]);
     } else {
       await pool.query(`UPDATE products SET exists = $1 WHERE id = $2`, [exists, id]);
     }

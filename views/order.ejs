@@ -757,10 +757,6 @@
                     <a class="link-panel-fix" href="/catalog/newest/">Новинки</a>
                 </div>
 
-                <div class="col col-panel-fix <% if (url === '/catalog/popular/') { %>col-panel-fix-active<% } %> py-2">
-                    <a class="link-panel-fix" href="/catalog/popular/">Популярне</a>
-                </div>
-
                 <div id="link_denkmit"
                     class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/denkmit/') { %>col-panel-fix-active<% } %> py-2"
                     style="position: relative; z-index: 99999;">
@@ -809,6 +805,10 @@
                 <div
                     class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/babylove/') { %>col-panel-fix-active<% } %> py-2">
                     <a class="link-panel-fix" href="/catalog/babylove/">&nbsp;Babylove™</a>
+                </div>
+
+                <div class="col col-panel-fix <% if (url === '/catalog/other/') { %>col-panel-fix-active<% } %> py-2">
+                    <a class="link-panel-fix" href="/catalog/other/">Інше</a>
                 </div>
             </div>
         </div>
@@ -939,7 +939,8 @@
                             <div class="row g-3">
                                 <% for (const product of order.products) { %>
 
-                                    <div id="card_<%= product.id %>" class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                    <div id="card_<%= product.id %>"
+                                        class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                         <div class="card" style="height: 199px; border: 0; overflow: hidden;">
                                             <div class="row g-0">
                                                 <div class="col-5 col-md-4 text-center"

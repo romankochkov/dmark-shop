@@ -30,7 +30,7 @@
       height: 40px;
       background: rgb(245, 245, 245);
       border-bottom: 1px solid rgb(229, 233, 241);
-      z-index: 99999;
+      z-index: 999;
     }
 
     nav {
@@ -38,7 +38,7 @@
       background: #fff;
       border-bottom: 1px solid rgb(229, 233, 241);
       margin-bottom: 30px;
-      z-index: 99999;
+      z-index: 999;
     }
 
     nav .nav-fix {
@@ -522,6 +522,29 @@
     </div>
   </div>
 
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header px-4">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Зображення</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4 py-4">
+          <div id="modal_pictures">
+
+          </div>
+        </div>
+        <div class="modal-footer px-4 pt-0 pb-4">
+          <div class="d-flex justify-content-between mt-4" style="width: 100%;">
+            <button type="button" class="btn btn-secondary button-cancel" data-bs-dismiss="modal">Скасувати</button>
+            <button id="button_pictures" type="button" class="btn btn-primary button-submit" data-bs-dismiss="modal" aria-label="Close"
+              onclick="savePictures();">Застосувати</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="under-nav d-none d-lg-block">
     <div class="container">
       <p
@@ -666,22 +689,9 @@
           <a class="link-panel-fix" href="/catalog/newest/">Новинки</a>
         </div>
 
-        <div class="col col-panel-fix <% if (url === '/catalog/popular/') { %>col-panel-fix-active<% } %> py-2">
-          <a class="link-panel-fix" href="/catalog/popular/">Популярне</a>
-        </div>
-
-        <div id="link_denkmit"
-          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/denkmit/') { %>col-panel-fix-active<% } %> py-2"
-          style="position: relative; z-index: 99999;">
+        <div
+          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/denkmit/') { %>col-panel-fix-active<% } %> py-2">
           <a class="link-panel-fix" href="/catalog/denkmit/">&nbsp;Denkmit™</a>
-          <div class="link-panel-dropdown" id="dropdown_denkmit" style="top: 156px; left: 50%; display: none;">
-            <p><a href="/catalog/denkmit/kitchen/">Засоби для кухні</a></p>
-            <p><a href="/catalog/denkmit/washing/">Засоби для прання</a></p>
-            <p><a href="/catalog/denkmit/wc/">Засоби для туалету</a></p>
-            <p><a href="/catalog/denkmit/cleaning/">Засоби для прибирання</a></p>
-            <p><a href="/catalog/denkmit/fresh/">Освіжувачі повітря</a></p>
-            <p style="border-bottom: 1px solid transparent;"><a href="/catalog/denkmit/other/">Інше</a></p>
-          </div>
         </div>
 
         <div
@@ -718,6 +728,10 @@
           class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/babylove/') { %>col-panel-fix-active<% } %> py-2">
           <a class="link-panel-fix" href="/catalog/babylove/">&nbsp;Babylove™</a>
         </div>
+
+        <div class="col col-panel-fix <% if (url === '/catalog/other/') { %>col-panel-fix-active<% } %> py-2">
+          <a class="link-panel-fix" href="/catalog/other/">Інше</a>
+        </div>
       </div>
     </div>
     <div class="construction-line"></div>
@@ -737,7 +751,7 @@
                   src="https://media.dm-static.com/images/v1599975276/products/pim/eyecatcher_dmbrand_de/dmbrand_de.svg"
                   class="card-img-brand-fix">
 
-                <% if (item.visibility == true) { %>
+                <% if (item.visibility==true) { %>
                   <button type="button" class="btn card-btn-hidden add-to-hidden" data-item-id="<%= item.id %>">
                     <i class="fa-solid fa-eye"></i>
                   </button>
@@ -749,7 +763,11 @@
                     <input id="input_visibility_<%= item.id %>" type="number" value="0" style="display: none;" readonly>
                     <% } %>
 
-                      <img src="<%= item.pictures[0] %>" class="card-img-top">
+                      <img src="<%= item.pictures[0] %>" class="card-img-top"
+                        onclick="changePictures('<%= item.id %>');" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal">
+                      <input id="input_pictures_<%= item.id %>" value="<%= item.pictures %>" style="display: none;"
+                        required>
               </div>
 
               <button type="button" class="btn card-btn-cart-fix save-product" data-item-id="<%= item.id %>">
@@ -968,8 +986,35 @@
     crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="/js/editor.js"></script>
+  <script>
+    function changePictures(id) {
+      $('#modal_pictures').html('');
+      const resultArray = $('#input_pictures_' + id).val().split(',https');
 
+      for (let i = 1; i < resultArray.length; i++) {
+        resultArray[i] = 'https' + resultArray[i];
+      }
 
+      for (let i = 0; i < resultArray.length; i++) {
+        if (i == (resultArray.length - 1)) {
+          $('#modal_pictures').append('<div class="form-floating"><input type="text" class="form-control picture-item" placeholder="" value="' + resultArray[i] + '" required><label>Зображення №' + (i + 1) + '</label></div>');
+        } else {
+          $('#modal_pictures').append('<div class="form-floating mb-3"><input type="text" class="form-control picture-item" placeholder="" value="' + resultArray[i] + '" required><label>Зображення №' + (i + 1) + '</label></div>');
+        }
+        
+      }
+      $('#button_pictures').attr('item-id', id);
+    }
+
+    function savePictures() {
+      var id = $('#button_pictures').attr('item-id'); 
+      var valuesArray = $('.picture-item').map(function () {
+        return $(this).val();
+      }).get();
+
+      $('#input_pictures_' + id).val((valuesArray.toString()).replace('[', '').replace(']', '').replace(' ', ''));
+    }
+  </script>
 </body>
 
 </html>
