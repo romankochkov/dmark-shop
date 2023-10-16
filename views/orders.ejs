@@ -808,48 +808,51 @@
             </div>
             <% } %>
 
-              <div class="d-flex justify-content-between p-3 p-sm-3 p-md-3 p-lg-4 p-xl-4 order-box" 
-              <% if (order.status==0) { %>style="border-left: 6px solid #86868A;"<% } else if (order.status==1) { %>style="border-left: 6px solid #4BB543;"<% } else { %>style="border-left: 6px solid #CC0000;"<% } %>>
-                  <div id="status_box_<%= order.id %>" class="status-box d-none d-sm-none d-md-none d-lg-block"
-                    style="position: absolute; top: 50%; left: -95px; transform: translate(-50%, -50%); visibility: hidden;">
-                    <form method="post" action="/account/orders/<%= order.id %>/status">
-                      <div class="form-check">
-                        <input class="form-check-input" type="radio" name="status" value="1" onclick="$(this).parent().parent().submit();">
-                        <label class="form-check-label">
-                          Виконано
-                        </label>
+              <div class="d-flex justify-content-between p-3 p-sm-3 p-md-3 p-lg-4 p-xl-4 order-box" <% if
+                (order.status==0) { %>style="border-left: 6px solid #86868A;"<% } else if (order.status==1) { %>
+                  style="border-left: 6px solid #4BB543;"<% } else { %>style="border-left: 6px solid #CC0000;"<% } %>>
+                      <div id="status_box_<%= order.id %>" class="status-box d-none d-sm-none d-md-none d-lg-block"
+                        style="position: absolute; top: 50%; left: -95px; transform: translate(-50%, -50%); visibility: hidden;">
+                        <form method="post" action="/account/orders/<%= order.id %>/status">
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="status" value="1"
+                              onclick="$(this).parent().parent().submit();">
+                            <label class="form-check-label">
+                              Виконано
+                            </label>
+                          </div>
+                        </form>
+                        <form method="post" action="/account/orders/<%= order.id %>/status">
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="status"
+                              onclick="$(this).parent().parent().submit();" value="2">
+                            <label class="form-check-label">
+                              Скасовано
+                            </label>
+                          </div>
+                        </form>
                       </div>
-                    </form>
-                    <form method="post" action="/account/orders/<%= order.id %>/status">
-                      <div class="form-check">
-                        <input class="form-check-input" type="radio" name="status" onclick="$(this).parent().parent().submit();" value="2">
-                        <label class="form-check-label">
-                          Скасовано
-                        </label>
+                      <div>
+                        <p class="order-date">
+                          <%= order.date %>
+                        </p>
+                        <p class="order-title">ЗАМОВЛЕННЯ №<%= order.id %>
+                        </p>
                       </div>
-                    </form>
-                  </div>
-                  <div>
-                    <p class="order-date">
-                      <%= order.date %>
-                    </p>
-                    <p class="order-title">ЗАМОВЛЕННЯ №<%= order.id %>
-                    </p>
-                  </div>
-                  <div>
-                    <a class="btn btn-primary order-print d-none d-md-inline-block" href="<%= order.id %>/pdf/">
-                      <i class="fa-solid fa-file-pdf" style="font-size: 16px;"></i>
-                    </a>
-                    <a class="btn btn-primary order-edit d-none d-md-inline-block" href="<%= order.id %>">
-                      <i class="fa-solid fa-file-pen" style="font-size: 16px;"></i>
-                    </a>
-                    <a id="open_<%= order.id %>" class="btn btn-primary order-button" data-bs-toggle="collapse"
-                      href="#collapse_<%= order.id %>" role="button" aria-expanded="false"
-                      onclick="changeIcon('<%= order.id %>')">
-                      &nbsp;&nbsp;Відкрити&nbsp;&nbsp;<i id="open_icon_<%= order.id %>" class="fa-solid fa-caret-down"
-                        style="font-size: 14px;" type="down"></i>&nbsp;
-                    </a>
-                  </div>
+                      <div>
+                        <a class="btn btn-primary order-print d-none d-md-inline-block" href="<%= order.id %>/pdf/">
+                          <i class="fa-solid fa-file-pdf" style="font-size: 16px;"></i>
+                        </a>
+                        <a class="btn btn-primary order-edit d-none d-md-inline-block" href="<%= order.id %>">
+                          <i class="fa-solid fa-file-pen" style="font-size: 16px;"></i>
+                        </a>
+                        <a id="open_<%= order.id %>" class="btn btn-primary order-button" data-bs-toggle="collapse"
+                          href="#collapse_<%= order.id %>" role="button" aria-expanded="false"
+                          onclick="changeIcon('<%= order.id %>')">
+                          &nbsp;&nbsp;Відкрити&nbsp;&nbsp;<i id="open_icon_<%= order.id %>"
+                            class="fa-solid fa-caret-down" style="font-size: 14px;" type="down"></i>&nbsp;
+                        </a>
+                      </div>
               </div>
         </div>
         <div class="col-2"></div>
@@ -1007,6 +1010,22 @@
       </div>
     </div>
     <% }) %>
+
+      <div class="container" style="margin-top: 30px;">
+        <div class="d-flex justify-content-center">
+          <ul class="pagination" style="margin-bottom: 0;">
+            <li class="page-item <% if (page - 1 == 0) { %>disabled<% } %>">
+              <a class="page-link" href="?page=<%= page - 1 %>" style="color: rgb(0, 40, 120);"><i class="fa-solid fa-chevron-left"></i></a>
+            </li>
+            <li class="page-item" aria-current="page">
+              <p class="page-link" style="color: rgb(0, 40, 120); cursor: default; user-select: none; margin-bottom: 0;"><%= page %></p>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="?page=<%= page + 1 %>" style="color: rgb(0, 40, 120);"><i class="fa-solid fa-chevron-right"></i></a>
+            </li>
+          </ul>
+        </div>
+      </div>
 
       <footer>
         <div class="container">

@@ -14,6 +14,7 @@ const fs = require('fs');
 const uuid = require('uuid');
 const https = require('https');
 const { type } = require('os');
+const { isNumberObject } = require('util/types');
 
 const app = express();
 const port = 443;
@@ -458,7 +459,7 @@ app.get('/cart/del', (req, res) => {
 
 app.get('/account/orders', async (req, res) => {
   if (!req.session.isAuthenticated) return res.redirect('/authentication');
-  if (!req.originalUrl.endsWith('/')) return res.redirect(req.originalUrl + '/');
+  if (!req.originalUrl.endsWith('/') && !req.query.page) return res.redirect(req.originalUrl + '/');
 
   try {
     const isAdmin = await checkAdminUser(req.session.userId);
@@ -471,7 +472,9 @@ app.get('/account/orders', async (req, res) => {
   }
 
   try {
-    const orders = await pool.query('SELECT * FROM orders ORDER BY id DESC LIMIT 20');
+    var orders = await pool.query('SELECT * FROM orders ORDER BY id DESC LIMIT 20');
+
+    if (parseInt(req.query.page)) orders = await pool.query(`SELECT * FROM orders ORDER BY id DESC LIMIT 20 OFFSET $1`, [req.query.page * 20 - 20]);
 
     let rows = orders.rows;
     rows = rows.map((row) => {
@@ -517,7 +520,7 @@ app.get('/account/orders', async (req, res) => {
       allOrders.push(fullOrder);
     }
 
-    res.render('orders.ejs', { user: req.session.isAuthenticated, euro: euro_coefficient, url: req.originalUrl, orders: allOrders });
+    res.render('orders.ejs', { user: req.session.isAuthenticated, euro: euro_coefficient, url: req.originalUrl, orders: allOrders, page: parseInt(req.query.page) ? parseInt(req.query.page) : 1 });
   } catch (err) {
     console.error(err);
     res.sendStatus(500);
