@@ -6,6 +6,7 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
+const url = require('url');
 const pg = require('pg');
 const pgSession = require('connect-pg-simple')(session);
 const format = require('pg-format');
@@ -60,7 +61,32 @@ app.get('/favicon.ico', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  return res.redirect('/catalog');
+  if (!req.originalUrl.endsWith('/')) return res.redirect(req.originalUrl + '/');
+
+  if (req.query.search) {
+    const parsedUrl = url.parse(req.url, true);
+    const queryParameters = parsedUrl.query;
+    const targetUrl = `/catalog/?${Object.keys(queryParameters).map(key => `${key}=${queryParameters[key]}`).join('&')}`;
+
+    res.redirect(targetUrl);
+  } else {
+    // Если параметр "GET" не указан, выводим все записи
+    pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE visibility = true ORDER BY CASE WHEN exists = 1 THEN 1 WHEN exists = 2 THEN 2 WHEN exists = 0 THEN 3 END LIMIT 90`, (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('Internal Server Error');
+      }
+
+      let rows = result.rows;
+      rows = rows.map((row) => {
+        row.pictures = JSON.parse(row.pictures);
+        row.price_total = ((parseFloat(row.price_total) * euro_coefficient).toFixed(2)).replace('.', ',');
+        return row;
+      });
+
+      res.render('index', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+    });
+  }
 });
 
 app.get('/registration', (req, res) => {
