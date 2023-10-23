@@ -823,7 +823,8 @@
       </div>
       <div class="carousel-inner">
         <div class="carousel-item active">
-          <img src="https://dm.lviv.ua/media/banner-mivolis.jpg" class="d-block w-100" alt="" style="border-radius: 6px; cursor: pointer;" onclick="location.href='/catalog/mivolis';">
+          <img src="https://dm.lviv.ua/media/banner-mivolis.jpg" class="d-block w-100" alt=""
+            style="border-radius: 6px; cursor: pointer;" onclick="location.href='/catalog/mivolis';">
         </div>
       </div>
     </div>
@@ -841,24 +842,27 @@
               <div class="text-center card-img">
                 <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0;"
                   onclick="window.open('/catalog/product/<%= item.id %>', '_self');"></div>
-                <img
-                  src="https://media.dm-static.com/images/v1599975276/products/pim/eyecatcher_dmbrand_de/dmbrand_de.svg"
-                  class="card-img-brand-fix">
 
-                <% if (url==='/account/favorites/' ) { %>
-                  <button type="button" class="btn card-btn-favorite-fix del-from-favorites"
-                    data-item-id="<%= item.id %>">
-                    <i class="fa-solid fa-heart"></i>
-                  </button>
-                  <% } else { %>
-                    <button type="button" class="btn card-btn-favorite-fix <% if (user) { %>add-to-favorites<% } %>"
-                      data-item-id="<%= item.id %>" <% if (!user) { %>onclick="window.open('/authentication/',
-                      '_self');"
-                      <% } %>>
-                        <i id="favorites_icon_<%= item.id %>" class="fa-regular fa-heart"></i>
-                    </button>
-                    <% } %>
-                      <img src="<%= item.pictures[0] %>" class="card-img-top">
+                <% if (item.dm==true) { %>
+                  <img
+                    src="https://media.dm-static.com/images/v1599975276/products/pim/eyecatcher_dmbrand_de/dmbrand_de.svg"
+                    class="card-img-brand-fix">
+                  <% } %>
+
+                    <% if (url==='/account/favorites/' ) { %>
+                      <button type="button" class="btn card-btn-favorite-fix del-from-favorites"
+                        data-item-id="<%= item.id %>">
+                        <i class="fa-solid fa-heart"></i>
+                      </button>
+                      <% } else { %>
+                        <button type="button" class="btn card-btn-favorite-fix <% if (user) { %>add-to-favorites<% } %>"
+                          data-item-id="<%= item.id %>" <% if (!user) { %>onclick="window.open('/authentication/',
+                          '_self');"
+                          <% } %>>
+                            <i id="favorites_icon_<%= item.id %>" class="fa-regular fa-heart"></i>
+                        </button>
+                        <% } %>
+                          <img src="<%= item.pictures[0] %>" class="card-img-top">
               </div>
 
               <button type="button" class="btn card-btn-cart-fix <% if ( item.exists === 1 ) { %>add-to-cart<% } %>"

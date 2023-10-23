@@ -444,7 +444,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header px-4">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Новий товар</h1>
+                    <h1 class="modal-title fs-5">Новий товар</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body px-4 py-4">
@@ -467,25 +467,25 @@
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="floatingInputValue" placeholder=""
+                            <input type="text" class="form-control" placeholder=""
                                 name="title_original" required>
                             <label for="floatingInputValue">Назва</label>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="floatingInputValue" placeholder=""
+                            <input type="text" class="form-control" placeholder=""
                                 name="title_translation" required>
                             <label for="floatingInputValue">Назва (переклад)</label>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="floatingInputValue" placeholder="" name="type"
+                            <input type="text" class="form-control" placeholder="" name="type"
                                 required>
                             <label for="floatingInputValue">Категорія</label>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="floatingInputValue" placeholder=""
+                            <input type="text" class="form-control" placeholder=""
                                 name="pictures" required>
                             <label for="floatingInputValue">Зображення</label>
                         </div>
@@ -499,7 +499,7 @@
                         <div class="row g-3">
                             <div class="col-6">
                                 <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" id="floatingInputValue" placeholder=""
+                                    <input type="text" class="form-control" placeholder=""
                                         name="volume" required>
                                     <label for="floatingInputValue">Об'єм</label>
                                 </div>
@@ -507,7 +507,7 @@
 
                             <div class="col-6">
                                 <div class="form-floating mb-3">
-                                    <input type="number" class="form-control" id="floatingInputValue" placeholder="0"
+                                    <input type="number" class="form-control" placeholder="0"
                                         name="weight" value="0" min="0" required>
                                     <label for="floatingInputValue">Маса</label>
                                 </div>
@@ -517,7 +517,7 @@
                         <div class="row g-3">
                             <div class="col-6">
                                 <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" id="floatingInputValue" placeholder=""
+                                    <input type="text" class="form-control" placeholder=""
                                         name="price" required>
                                     <label for="floatingInputValue">Ціна</label>
                                 </div>
@@ -525,7 +525,7 @@
 
                             <div class="col-6">
                                 <div class="form-floating mb-3">
-                                    <input type="number" class="form-control" id="floatingInputValue" placeholder="35"
+                                    <input type="number" class="form-control" placeholder="35"
                                         name="price_factor" value="35" required>
                                     <label for="floatingInputValue">Коефіцієнт</label>
                                 </div>
@@ -534,7 +534,7 @@
 
                         <div class="row g-3">
                             <div class="col-6">
-                                <div class="form-floating">
+                                <div class="form-floating mb-4">
                                     <input type="number" class="form-control" id="input_amount" placeholder="10"
                                         name="amount" value="10" required>
                                     <label for="input_amount">Залишок</label>
@@ -542,12 +542,21 @@
                             </div>
 
                             <div class="col-6">
-                                <div class="form-floating">
+                                <div class="form-floating mb-4">
                                     <input type="number" class="form-control" id="input_case" placeholder="0" name="box"
                                         value="10" min="1" required>
                                     <label for="input_case">Кількість в ящику</label>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="form-check" style=" color: rgb(82, 82, 96);">
+                            <input class="form-check-input" type="checkbox" name="dm" unchecked>
+                            <label class="form-check-label" for="flexCheckChecked">
+                                Продукція основного постачальника (<img
+                                    src="https://upload.wikimedia.org/wikipedia/commons/5/50/Dm_Logo.svg" alt="Logo"
+                                    style="height: 17px;">)
+                            </label>
                         </div>
                     </form>
                 </div>

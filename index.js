@@ -16,6 +16,7 @@ const uuid = require('uuid');
 const https = require('https');
 const { type } = require('os');
 const { isNumberObject } = require('util/types');
+const { log } = require('console');
 
 const app = express();
 const port = 443;
@@ -869,7 +870,7 @@ app.post('/account/product/add', express.urlencoded({ extended: false }), async 
     return res.status(500).send('Сталася помилка під час перевірки прав адміністратора.');
   }
 
-  var { brand, title_original, title_translation, type, pictures, description, volume, weight, price, price_factor, amount, box } = req.body;
+  var { brand, title_original, title_translation, type, pictures, description, volume, weight, price, price_factor, amount, box, dm } = req.body;
 
   var brand_translation = null;
   if (brand === 'Denkmit') {
@@ -898,7 +899,9 @@ app.post('/account/product/add', express.urlencoded({ extended: false }), async 
 
   pictures = JSON.stringify(pictures.split("|"));
 
-  pool.query(`INSERT INTO products (brand_original, brand_translation, "type", title_original, title_translation, description, pictures, volume, price, price_factor, amount, weight, exists, "case", discount) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`, [brand, brand_translation, type, title_original, title_translation, description, pictures, volume, price.replace(',', '.'), price_factor, amount, weight, 1, box, 0], (err) => {
+  if (dm == 'on') { dm = true } else { dm = false }
+
+  pool.query(`INSERT INTO products (brand_original, brand_translation, "type", title_original, title_translation, description, pictures, volume, price, price_factor, amount, weight, exists, "case", dm, discount) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)`, [brand, brand_translation, type, title_original, title_translation, description, pictures, volume, price.replace(',', '.'), price_factor, amount, weight, 1, box, dm, 0], (err) => {
     if (err) {
       console.error(err);
       return res.status(500).send('Internal Server Error');

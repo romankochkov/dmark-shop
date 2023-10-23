@@ -537,8 +537,8 @@
         <div class="modal-footer px-4 pt-0 pb-4">
           <div class="d-flex justify-content-between mt-4" style="width: 100%;">
             <button type="button" class="btn btn-secondary button-cancel" data-bs-dismiss="modal">Скасувати</button>
-            <button id="button_pictures" type="button" class="btn btn-primary button-submit" data-bs-dismiss="modal" aria-label="Close"
-              onclick="savePictures();">Застосувати</button>
+            <button id="button_pictures" type="button" class="btn btn-primary button-submit" data-bs-dismiss="modal"
+              aria-label="Close" onclick="savePictures();">Застосувати</button>
           </div>
         </div>
       </div>
@@ -747,27 +747,32 @@
           <div class="col-6 col-sm-6 col-md-3 col-lg-3 col-xl-2 p-1 col-fix">
             <div class="card card-fix">
               <div class="text-center card-img">
-                <img
-                  src="https://media.dm-static.com/images/v1599975276/products/pim/eyecatcher_dmbrand_de/dmbrand_de.svg"
-                  class="card-img-brand-fix">
 
-                <% if (item.visibility==true) { %>
-                  <button type="button" class="btn card-btn-hidden add-to-hidden" data-item-id="<%= item.id %>">
-                    <i class="fa-solid fa-eye"></i>
-                  </button>
-                  <input id="input_visibility_<%= item.id %>" type="number" value="1" style="display: none;" readonly>
-                  <% } else { %>
-                    <button type="button" class="btn card-btn-hidden del-from-hidden" data-item-id="<%= item.id %>">
-                      <i class="fa-solid fa-eye-slash"></i>
-                    </button>
-                    <input id="input_visibility_<%= item.id %>" type="number" value="0" style="display: none;" readonly>
-                    <% } %>
+                <% if (item.dm==true) { %>
+                  <img
+                    src="https://media.dm-static.com/images/v1599975276/products/pim/eyecatcher_dmbrand_de/dmbrand_de.svg"
+                    class="card-img-brand-fix">
+                  <% } %>
 
-                      <img src="<%= item.pictures[0] %>" class="card-img-top"
-                        onclick="changePictures('<%= item.id %>');" data-bs-toggle="modal"
-                        data-bs-target="#exampleModal">
-                      <input id="input_pictures_<%= item.id %>" value="<%= item.pictures %>" style="display: none;"
-                        required>
+                    <% if (item.visibility==true) { %>
+                      <button type="button" class="btn card-btn-hidden add-to-hidden" data-item-id="<%= item.id %>">
+                        <i class="fa-solid fa-eye"></i>
+                      </button>
+                      <input id="input_visibility_<%= item.id %>" type="number" value="1" style="display: none;"
+                        readonly>
+                      <% } else { %>
+                        <button type="button" class="btn card-btn-hidden del-from-hidden" data-item-id="<%= item.id %>">
+                          <i class="fa-solid fa-eye-slash"></i>
+                        </button>
+                        <input id="input_visibility_<%= item.id %>" type="number" value="0" style="display: none;"
+                          readonly>
+                        <% } %>
+
+                          <img src="<%= item.pictures[0] %>" class="card-img-top"
+                            onclick="changePictures('<%= item.id %>');" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal">
+                          <input id="input_pictures_<%= item.id %>" value="<%= item.pictures %>" style="display: none;"
+                            required>
               </div>
 
               <button type="button" class="btn card-btn-cart-fix save-product" data-item-id="<%= item.id %>">
@@ -1001,13 +1006,13 @@
         } else {
           $('#modal_pictures').append('<div class="form-floating mb-3"><input type="text" class="form-control picture-item" placeholder="" value="' + resultArray[i] + '" required><label>Зображення №' + (i + 1) + '</label></div>');
         }
-        
+
       }
       $('#button_pictures').attr('item-id', id);
     }
 
     function savePictures() {
-      var id = $('#button_pictures').attr('item-id'); 
+      var id = $('#button_pictures').attr('item-id');
       var valuesArray = $('.picture-item').map(function () {
         return $(this).val();
       }).get();
