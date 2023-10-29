@@ -72,7 +72,7 @@ $('.add-to-cart').click(function (event) {
         url: '/cart/add?id=' + itemId,
         method: 'GET',
         success: function (response) {
-            if (response.message != 'DUPLICATE') {
+            if (response != 'DUPLICATE') {
                 if (($('#cart_length').text().trim()) === '') {
                     $('#cart_length').text('1');
                     $('#cart_length_mobile').text('1');

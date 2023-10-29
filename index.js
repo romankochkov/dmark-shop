@@ -85,7 +85,15 @@ app.get('/', (req, res) => {
         return row;
       });
 
-      res.render('index', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+      let cartLength;
+
+      if (req.cookies.cart) {
+        cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
+      } else {
+        cartLength = 0;
+      }
+
+      res.render('index', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows, cart: cartLength > 0 ? cartLength : null });
     });
   }
 });
@@ -318,12 +326,15 @@ app.get('/cart', (req, res) => {
     const cart = JSON.parse(req.cookies.cart);
     const cart_items = cart.items;
 
-    if (cart_items.length > 0) {
-      const placeholders = format('(%L)', cart_items);  // Форматируем массив cart_items в строку, чтобы использовать в запросе
+    if (Object.keys(cart_items).length > 0) {
+      const itemIds = Object.keys(cart_items);
+
+      const placeholders = format('(%L)', itemIds);  // Форматируем массив itemIds в строку, чтобы использовать в запросе
 
       pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE id IN ${placeholders}`, (err, result) => {
         if (err) {
           console.error(err);
+          res.clearCookie('cart');
           return res.status(500).send('Internal Server Error');
         }
 
@@ -331,6 +342,7 @@ app.get('/cart', (req, res) => {
         rows = rows.map((row) => {
           row.pictures = JSON.parse(row.pictures);
           row.price_total = (parseFloat(row.price_total).toFixed(2)).replace('.', ',');
+          row.quantity = cart_items[row.id]; // Добавляем количество товара из корзины в результат
           return row;
         });
 
@@ -349,13 +361,23 @@ app.post('/cart', express.urlencoded({ extended: false }), (req, res) => {
 
   const { first_name, last_name, phone_number, products, amount, region, address, comment } = req.body;
   const data = [];
-
-  for (let i = 0; i < products.length; i++) {
+  console.log(products + '\n' + amount);
+  console.log(typeof products);
+  
+  if (typeof products === 'string') {
     const product = {
-      id: products[i],
-      amount: amount[i]
+      id: products,
+      amount: amount
     };
     data.push(product);
+  } else {
+    for (let i = 0; i < products.length; i++) {
+      const product = {
+        id: products[i],
+        amount: amount[i]
+      };
+      data.push(product);
+    }
   }
 
   const jsonData = JSON.stringify(data);
@@ -444,23 +466,32 @@ app.get('/cart/data', async (req, res) => {
 app.get('/cart/add', (req, res) => {
   const itemId = req.query.id; // Получаем идентификатор товара из запроса
 
-  // Проверяем, есть ли уже корзина в cookie
-  if (req.cookies.cart) {
-    // Если корзина уже существует, добавляем товар в нее (если его там еще нет)
-    const cart = JSON.parse(req.cookies.cart);
 
-    // Проверяем, есть ли уже такой товар в корзине
-    if (!cart.items.includes(itemId)) {
-      cart.items.push(itemId);
-      res.cookie('cart', JSON.stringify(cart));
-      res.json({ message: 'Товар добавлен в корзину' });
+  if (req.cookies.cart) {  // Проверяем, есть ли уже корзина в cookie  
+    const cart = JSON.parse(req.cookies.cart);  // Если корзина уже существует, добавляем товар в нее (если его там еще нет)
+
+    if (cart.items[itemId]) {
+      if (req.query.quantity) {
+        cart.items[itemId] += Number(req.query.quantity);
+        res.cookie('cart', JSON.stringify(cart));  // Обновляем cookie с обновленной корзиной
+        return res.status(200).send('DUPLICATE');
+      } else {
+        cart.items[itemId] += 1;  // Если товар уже есть в корзине, увеличиваем количество на 1
+        res.cookie('cart', JSON.stringify(cart));
+        return res.status(200).send('DUPLICATE');
+      }
     } else {
-      res.json({ message: 'DUPLICATE' });
+      cart.items[itemId] = 1;  // Если товара с таким идентификатором ещё нет в корзине, добавляем его с количеством 1
     }
+
+    res.cookie('cart', JSON.stringify(cart));
+    res.json({ message: 'Товар добавлен в корзину' });
   } else {
-    // Если корзина не существует, создаем новую корзину и добавляем товар в нее
+    // Если корзина не существует, создаем новую корзину и добавляем товар в нее с количеством 1
     const cart = {
-      items: [itemId],
+      items: {
+        [itemId]: 1
+      }
     };
     res.cookie('cart', JSON.stringify(cart));
     res.json({ message: 'Товар добавлен в корзину' });
@@ -474,14 +505,16 @@ app.get('/cart/del', (req, res) => {
   if (req.cookies.cart) {
     const cart = JSON.parse(req.cookies.cart);
 
-    // Удаляем товар из корзины
-    cart.items = cart.items.filter((item) => item !== itemId);
-
-    // Обновляем cookie с обновленной корзиной
-    res.cookie('cart', JSON.stringify(cart));
+    if (req.query.quantity) {
+      cart.items[itemId] -= Number(req.query.quantity);
+      res.cookie('cart', JSON.stringify(cart));  // Обновляем cookie с обновленной корзиной
+      return res.status(200).send('OK');
+    } else {
+      delete cart.items[itemId];  // Удаляем товар из корзины
+      res.cookie('cart', JSON.stringify(cart));  // Обновляем cookie с обновленной корзиной
+      return res.redirect('/cart'); // Перенаправляем на страницу корзины
+    }
   }
-
-  res.redirect('/cart'); // Перенаправляем на страницу корзины
 });
 
 app.get('/account/orders', async (req, res) => {
@@ -950,7 +983,15 @@ app.get('/catalog', (req, res) => {
         return row;
       });
 
-      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, search: req.query.search.replace('/', ''), data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+      let cartLength;
+
+      if (req.cookies.cart) {
+        cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
+      } else {
+        cartLength = 0;
+      }
+
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, search: req.query.search.replace('/', ''), data: rows, cart: cartLength > 0 ? cartLength : null });
     });
   } else {
     // Если параметр "GET" не указан, выводим все записи
@@ -967,7 +1008,15 @@ app.get('/catalog', (req, res) => {
         return row;
       });
 
-      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+      let cartLength;
+
+      if (req.cookies.cart) {
+        cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
+      } else {
+        cartLength = 0;
+      }
+
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows, cart: cartLength > 0 ? cartLength : null });
     });
   }
 });
@@ -988,25 +1037,16 @@ app.get('/catalog/newest', (req, res) => {
       return row;
     });
 
-    res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
-  });
-});
+    let cartLength;
 
-app.get('/catalog/popular', (req, res) => {
-  if (!req.originalUrl.endsWith('/')) {
-    // Добавляем '/' в конец пути
-    return res.redirect(req.originalUrl + '/');
-  }
-
-  db.all('SELECT *, REPLACE(CEIL((price / 100) * (100 + price_factor) * 100) / 100, ".", ",") AS price_total FROM products WHERE brand LIKE ?', ['Denkmit' + '%'], (err, rows) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send('Internal Server Error');
+    if (req.cookies.cart) {
+      cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
+    } else {
+      cartLength = 0;
     }
 
-    res.render('catalog', { url: req.originalUrl, data: rows });
+    res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows, cart: cartLength > 0 ? cartLength : null });
   });
-
 });
 
 app.get('/catalog/denkmit', (req, res) => {
@@ -1016,7 +1056,15 @@ app.get('/catalog/denkmit', (req, res) => {
 
   getDataDB('Denkmit', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
-      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+      let cartLength;
+
+      if (req.cookies.cart) {
+        cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
+      } else {
+        cartLength = 0;
+      }
+
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
     })
     .catch(err => {
       console.log(err);
@@ -1031,7 +1079,15 @@ app.get('/catalog/denkmit/kitchen', (req, res) => {
 
   getDataDB('Denkmit', 'kitchen', query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
-      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+      let cartLength;
+
+      if (req.cookies.cart) {
+        cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
+      } else {
+        cartLength = 0;
+      }
+
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
     })
     .catch(err => {
       console.log(err);
@@ -1046,7 +1102,15 @@ app.get('/catalog/denkmit/washing', (req, res) => {
 
   getDataDB('Denkmit', 'washing', query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
-      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+      let cartLength;
+
+      if (req.cookies.cart) {
+        cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
+      } else {
+        cartLength = 0;
+      }
+
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
     })
     .catch(err => {
       console.log(err);
@@ -1061,7 +1125,15 @@ app.get('/catalog/denkmit/wc', (req, res) => {
 
   getDataDB('Denkmit', 'wc', query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
-      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+      let cartLength;
+
+      if (req.cookies.cart) {
+        cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
+      } else {
+        cartLength = 0;
+      }
+
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
     })
     .catch(err => {
       console.log(err);
@@ -1076,7 +1148,15 @@ app.get('/catalog/denkmit/cleaning', (req, res) => {
 
   getDataDB('Denkmit', 'cleaning', query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
-      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+      let cartLength;
+
+      if (req.cookies.cart) {
+        cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
+      } else {
+        cartLength = 0;
+      }
+
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
     })
     .catch(err => {
       console.log(err);
@@ -1091,7 +1171,15 @@ app.get('/catalog/denkmit/fresh', (req, res) => {
 
   getDataDB('Denkmit', 'fresh', query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
-      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+      let cartLength;
+
+      if (req.cookies.cart) {
+        cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
+      } else {
+        cartLength = 0;
+      }
+
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
     })
     .catch(err => {
       console.log(err);
@@ -1106,7 +1194,15 @@ app.get('/catalog/denkmit/other', (req, res) => {
 
   getDataDB('Denkmit', 'other', query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
-      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+      let cartLength;
+
+      if (req.cookies.cart) {
+        cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
+      } else {
+        cartLength = 0;
+      }
+
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
     })
     .catch(err => {
       console.log(err);
@@ -1121,7 +1217,15 @@ app.get('/catalog/balea', (req, res) => {
 
   getDataDB('Balea', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
-      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+      let cartLength;
+
+      if (req.cookies.cart) {
+        cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
+      } else {
+        cartLength = 0;
+      }
+
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
     })
     .catch(err => {
       return res.status(500).send('Internal Server Error');
@@ -1135,7 +1239,15 @@ app.get('/catalog/balea/hair', (req, res) => {
 
   getDataDB('Balea', 'hair', query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
-      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+      let cartLength;
+
+      if (req.cookies.cart) {
+        cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
+      } else {
+        cartLength = 0;
+      }
+
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
     })
     .catch(err => {
       console.log(err);
@@ -1150,7 +1262,15 @@ app.get('/catalog/balea/skin', (req, res) => {
 
   getDataDB('Balea', 'skin', query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
-      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+      let cartLength;
+
+      if (req.cookies.cart) {
+        cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
+      } else {
+        cartLength = 0;
+      }
+
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
     })
     .catch(err => {
       console.log(err);
@@ -1165,7 +1285,15 @@ app.get('/catalog/balea/body', (req, res) => {
 
   getDataDB('Balea', 'body', query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
-      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+      let cartLength;
+
+      if (req.cookies.cart) {
+        cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
+      } else {
+        cartLength = 0;
+      }
+
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
     })
     .catch(err => {
       console.log(err);
@@ -1180,7 +1308,15 @@ app.get('/catalog/balea/shave', (req, res) => {
 
   getDataDB('Balea', 'shave', query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
-      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+      let cartLength;
+
+      if (req.cookies.cart) {
+        cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
+      } else {
+        cartLength = 0;
+      }
+
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
     })
     .catch(err => {
       console.log(err);
@@ -1195,7 +1331,15 @@ app.get('/catalog/balea/hygiene', (req, res) => {
 
   getDataDB('Balea', 'hygiene', query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
-      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+      let cartLength;
+
+      if (req.cookies.cart) {
+        cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
+      } else {
+        cartLength = 0;
+      }
+
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
     })
     .catch(err => {
       console.log(err);
@@ -1210,7 +1354,15 @@ app.get('/catalog/alverde', (req, res) => {
 
   getDataDB('Alverde', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
-      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+      let cartLength;
+
+      if (req.cookies.cart) {
+        cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
+      } else {
+        cartLength = 0;
+      }
+
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
     })
     .catch(err => {
       return res.status(500).send('Internal Server Error');
@@ -1224,7 +1376,15 @@ app.get('/catalog/dontodent', (req, res) => {
 
   getDataDB('Dontodent', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
-      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+      let cartLength;
+
+      if (req.cookies.cart) {
+        cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
+      } else {
+        cartLength = 0;
+      }
+
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
     })
     .catch(err => {
       return res.status(500).send('Internal Server Error');
@@ -1238,7 +1398,15 @@ app.get('/catalog/mivolis', (req, res) => {
 
   getDataDB('Mivolis', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
-      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+      let cartLength;
+
+      if (req.cookies.cart) {
+        cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
+      } else {
+        cartLength = 0;
+      }
+
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
     })
     .catch(err => {
       return res.status(500).send('Internal Server Error');
@@ -1252,7 +1420,15 @@ app.get('/catalog/frosch', (req, res) => {
 
   getDataDB('Frosch', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
-      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+      let cartLength;
+
+      if (req.cookies.cart) {
+        cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
+      } else {
+        cartLength = 0;
+      }
+
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
     })
     .catch(err => {
       return res.status(500).send('Internal Server Error');
@@ -1266,7 +1442,15 @@ app.get('/catalog/profissimo', (req, res) => {
 
   getDataDB('Profissimo', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
-      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+      let cartLength;
+
+      if (req.cookies.cart) {
+        cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
+      } else {
+        cartLength = 0;
+      }
+
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
     })
     .catch(err => {
       return res.status(500).send('Internal Server Error');
@@ -1280,7 +1464,15 @@ app.get('/catalog/babylove', (req, res) => {
 
   getDataDB('Babylove', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
     .then(rows => {
-      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+      let cartLength;
+
+      if (req.cookies.cart) {
+        cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
+      } else {
+        cartLength = 0;
+      }
+
+      res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
     })
     .catch(err => {
       return res.status(500).send('Internal Server Error');
@@ -1303,7 +1495,15 @@ app.get('/catalog/other', (req, res) => {
       return row;
     });
 
-    res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+    let cartLength;
+
+    if (req.cookies.cart) {
+      cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
+    } else {
+      cartLength = 0;
+    }
+
+    res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows, cart: cartLength > 0 ? cartLength : null });
   });
 });
 

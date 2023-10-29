@@ -615,9 +615,8 @@
                   <span id="cart_length_mobile"
                     style="position: absolute; top: -8px; right: -8px; min-width: 18px; background: #dc3545; border-radius: 50px; color: #fff; font-size: 12px; padding-left: 5px; padding-right: 5px;">
                     <% if (cart) { %>
-                      <% if (cart.length !=0) { %>
-                        <%= cart.length %>
-                          <% }} %>
+                      <%= cart %>
+                        <% } %>
                   </span>
               </button>
               <button type="button" class="btn btn-panel-fix" data-bs-toggle="offcanvas"
@@ -724,9 +723,8 @@
                   <span id="cart_length"
                     style="position: absolute; top: -8px; right: -8px; min-width: 18px; background: #dc3545; border-radius: 50px; color: #fff; font-size: 12px; padding-left: 5px; padding-right: 5px;">
                     <% if (cart) { %>
-                      <% if (cart.length !=0) { %>
-                        <%= cart.length %>
-                          <% }} %>
+                      <%= cart %>
+                        <% } %>
                   </span>
               </button>
             </div>
@@ -747,7 +745,7 @@
           class="col-6 col-sm-3 col-lg col-panel-fix <% if (url.includes('/catalog/denkmit/')) { %>col-panel-fix-active<% } %> py-2"
           style="position: relative; z-index: 99999;">
           <a class="link-panel-fix" href="/catalog/denkmit/">&nbsp;Denkmit™</a>
-          <div class="link-panel-dropdown" id="dropdown_denkmit" style="top: 156px; left: 50%; display: none;">
+          <div class="link-panel-dropdown" id="dropdown_denkmit" style="top: 154px; left: 50%; display: none;">
             <p><a href="/catalog/denkmit/kitchen/">Засоби для кухні</a></p>
             <p><a href="/catalog/denkmit/washing/">Засоби для прання</a></p>
             <p><a href="/catalog/denkmit/wc/">Засоби для туалету</a></p>
@@ -761,7 +759,7 @@
           class="col-6 col-sm-3 col-lg col-panel-fix <% if (url.includes('/catalog/balea/')) { %>col-panel-fix-active<% } %> py-2"
           style="position: relative; z-index: 99999;">
           <a class="link-panel-fix" href="/catalog/balea/">&nbsp;Balea™</a>
-          <div class="link-panel-dropdown" id="dropdown_balea" style="top: 137.5px; left: 50%; display: none;">
+          <div class="link-panel-dropdown" id="dropdown_balea" style="top: 136px; left: 50%; display: none;">
             <p><a href="/catalog/balea/hair/">Засоби для волосся</a></p>
             <p><a href="/catalog/balea/skin/">Засоби для шкіри</a></p>
             <p><a href="/catalog/balea/body/">Засоби для тіла</a></p>
@@ -822,7 +820,7 @@
                 <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0;"
                   onclick="window.open('/catalog/product/<%= item.id %>', '_self');"></div>
 
-                <% if (item.dm == true) { %>
+                <% if (item.dm==true) { %>
                   <img
                     src="https://media.dm-static.com/images/v1599975276/products/pim/eyecatcher_dmbrand_de/dmbrand_de.svg"
                     class="card-img-brand-fix">

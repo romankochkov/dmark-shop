@@ -868,10 +868,10 @@
                                 onclick="location.href='/cart/del?id=<%= item.id %>';"></button>
                             </div>
 
-                            <p class="card-title card-subtitle-fix">
+                            <p class="card-title card-subtitle-fix" style="margin-top: -15px;">
                               <%= item.brand_original %>
                             </p>
-                            <h5 class="card-title card-title-fix" style="height: 70px;">
+                            <h5 class="card-title card-title-fix" style="height: 70px; margin-bottom: 13px;">
                               <%= item.title_translation %>, <%= item.volume %>
                             </h5>
                             <p class="card-case">Кількість в ящику: <%= item.case %> шт.</p>
@@ -879,13 +879,13 @@
                               <p class="card-title card-price-fix" style="width: 100%; margin-bottom: 0; user-select: none;"><i
                                   class="fa-solid fa-caret-left" style="color: #fff; background: rgb(0, 40, 120); border: 1.5px solid rgb(0, 40, 120); border-radius: 5px; padding-left: 6px; padding-right: 6px; padding-bottom: 2px; margin-right: 2px; cursor: pointer;"
                                   onclick="decreaseValue('<%= item.id %>')"></i> <span id="cart_count_<%= item.id %>"
-                                  style="user-select: none;">1</span> <i class="fa-solid fa-caret-right"
+                                  style="user-select: none;"><%= item.quantity %></span> <i class="fa-solid fa-caret-right"
                                   style="color: #fff; background: rgb(0, 40, 120); border: 1.5px solid rgb(0, 40, 120); border-radius: 5px; padding-left: 6px; padding-right: 6px; padding-bottom: 2px; margin-left: 2px; margin-right: 8px; cursor: pointer;" onclick="increaseValue('<%= item.id %>')"></i><span style="color: #fff; background: #999999; border-radius: 5px; padding-left: 7px; padding-right: 7px; cursor: pointer;" onclick="increaseCase('<%= item.id %>', '<%= item.case %>')">+<%= item.case %></span></p>
-                              <p id="cart_price_<%= item.id %>"
+                              <p id="cart_price_<%= item.id %>" hidden-id="<%= item.id %>"
                                 class="card-title card-price-fix d-flex justify-content-end price-element"
                                 style="width: 0%; margin-bottom: 0; opacity: 0; z-index: -1;"
                                 label="<%= item.brand_original %> <%= item.title_original %>, <%= item.volume %>"
-                                count="1">
+                                count="<%= item.quantity %>">
                                 <%= item.price_total %>&nbsp;€
                               </p>
                               <p id="cart_price_<%= item.id %>_hidden" style="display: none;">
@@ -894,7 +894,7 @@
                               <input style="display: none;" type="number" name="products" value="<%= item.id %>"
                                 readonly required>
                               <input id="cart_amount_<%= item.id %>_hidden" style="display: none;" type="number"
-                                name="amount" value="1" required>
+                                name="amount" value="<%= item.quantity %>" required>
                             </div>
                           </div>
                         </div>
@@ -1178,7 +1178,6 @@
     integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
     crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="/js/cart.js"></script>
   <script>
     function totalValue() {
       var elements = document.getElementsByClassName("price-element");
@@ -1248,8 +1247,7 @@
       }
     }
   </script>
-
-
+  <script src="/js/cart.js"></script>
 </body>
 
 </html>

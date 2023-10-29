@@ -1,4 +1,19 @@
+function initValues() {
+    $(".price-element").each(function (index, element) {
+        let id = $(element).attr('hidden-id');
+        var element_count = document.getElementById('cart_count_' + id);
+        var element_price = document.getElementById('cart_price_' + id);
+        var element_price_hidden = document.getElementById('cart_price_' + id + '_hidden');
+
+        var count = parseInt(element_count.innerText);
+        var price = parseFloat((element_price_hidden.innerText).replace(',', '.'));
+
+        element_price.innerText = (((price * count).toFixed(2)).toString()).replace('.', ',') + ' €';
+    });
+}
+
 document.addEventListener("DOMContentLoaded", function (event) {
+    initValues();
     totalValue();
 
     if ($('#input_region').val() !== '') $('#input_region').trigger('input');
@@ -34,7 +49,7 @@ function changeIconSidebar(element) {
     }
 }
 
-$('#input_region').on('input', function(event) {
+$('#input_region').on('input', function (event) {
     const value = event.target.value;
     if (value === '') {
         $('#select_branch').prop('disabled', true);
@@ -228,7 +243,7 @@ function increaseValue(id) {
 
     var count = parseInt(element_count.innerText);
     var price = parseFloat((element_price_hidden.innerText).replace(',', '.'));
-    count++;
+    count += 1;
 
     // Обновление содержимого элемента с новым значением
     element_count.innerText = count;
@@ -236,7 +251,16 @@ function increaseValue(id) {
     element_price.innerText = (((price * count).toFixed(2)).toString()).replace('.', ',') + ' €';
     element_price.setAttribute("count", count);
 
-    totalValue();
+    $.ajax({
+        url: '/cart/add?id=' + id,
+        method: 'GET',
+        success: function (response) {
+            totalValue();
+        },
+        error: function (error) {
+            console.error(error);
+        }
+    });
 }
 
 function decreaseValue(id) {
@@ -251,17 +275,24 @@ function decreaseValue(id) {
     if (count == 1) {
         return
     }
-
-    var count = parseInt(element_count.innerText);
-    var price = parseFloat((element_price_hidden.innerText).replace(',', '.'));
-    count--;
+    count -= 1;
 
     // Обновление содержимого элемента с новым значением
     element_count.innerText = count;
     element_price.innerText = (((price * count).toFixed(2)).toString()).replace('.', ',') + ' €';
+    element_price.setAttribute("count", count);
     element_amount_hidden.value = count;
 
-    totalValue();
+    $.ajax({
+        url: '/cart/del?id=' + id + '&quantity=1',
+        method: 'GET',
+        success: function (response) {
+            totalValue();
+        },
+        error: function (error) {
+            console.error(error);
+        }
+    });
 }
 
 function increaseCase(id, box) {
@@ -272,15 +303,24 @@ function increaseCase(id, box) {
 
     var count = parseInt(element_count.innerText);
     var price = parseFloat((element_price_hidden.innerText).replace(',', '.'));
-    count += parseInt(box);
+    count += Number(box);
 
     // Обновление содержимого элемента с новым значением
     element_count.innerText = count;
-    element_amount_hidden.value = count;
     element_price.innerText = (((price * count).toFixed(2)).toString()).replace('.', ',') + ' €';
     element_price.setAttribute("count", count);
+    element_amount_hidden.value = count;
 
-    totalValue();
+    $.ajax({
+        url: '/cart/add?id=' + id + '&quantity=' + box,
+        method: 'GET',
+        success: function (response) {
+            totalValue();
+        },
+        error: function (error) {
+            console.error(error);
+        }
+    });
 }
 
 function validateForm(event) {
