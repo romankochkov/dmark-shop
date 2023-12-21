@@ -926,6 +926,8 @@ app.post('/account/product/add', express.urlencoded({ extended: false }), async 
     brand_translation = 'Візіомакс';
   } else if (brand === 'Deluxe') {
     brand_translation = 'Делюкс';
+  } else if (brand === 'Theramed') {
+    brand_translation = 'Тхерамед';
   } else {
     return res.sendStatus(400);
   }
