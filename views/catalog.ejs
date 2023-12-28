@@ -627,13 +627,18 @@
               <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
                 aria-labelledby="offcanvasNavbarLabel">
                 <div class="offcanvas-header">
-                  <h5 class="offcanvas-title" id="offcanvasNavbarLabel">&nbsp;</h5>
+                  <h5 class="offcanvas-title">&nbsp;</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div class="offcanvas-body">
                   <ul class="navbar-nav justify-content-end flex-grow-1 text-start">
-                    <li class="nav-item py-2 px-3 d-flex justify-content-between"
-                      style="border-top: 2px solid rgb(229, 233, 241);">
+                    <li class="nav-item py-2 px-3 d-flex justify-content-between" style="border-top: 2px solid rgb(229, 233, 241);"
+                      onclick="window.open('/catalog/newest/', '_self');">
+                      <a class="nav-link d-inline-flex">Новинки</a>
+                      <i class="fa-solid fa-angle-right d-inline-flex"></i>
+                    </li>
+
+                    <li class="nav-item py-2 px-3 d-flex justify-content-between">
                       <a class="nav-link d-inline-flex" href="/catalog/denkmit/">Denkmit</a>
                       <i class="fa-solid fa-chevron-down" data-bs-toggle="collapse" href="#collapse_sidebar_denkmit"
                         role="button" aria-expanded="false" aria-controls="collapse_sidebar_denkmit"

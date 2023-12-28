@@ -667,8 +667,13 @@
                 </div>
                 <div class="offcanvas-body">
                   <ul class="navbar-nav justify-content-end flex-grow-1 text-start">
-                    <li class="nav-item py-2 px-3 d-flex justify-content-between"
-                      style="border-top: 2px solid rgb(229, 233, 241);">
+                    <li class="nav-item py-2 px-3 d-flex justify-content-between" style="border-top: 2px solid rgb(229, 233, 241);"
+                      onclick="window.open('/catalog/newest/', '_self');">
+                      <a class="nav-link d-inline-flex">Новинки</a>
+                      <i class="fa-solid fa-angle-right d-inline-flex"></i>
+                    </li>
+
+                    <li class="nav-item py-2 px-3 d-flex justify-content-between">
                       <a class="nav-link d-inline-flex" href="/catalog/denkmit/">Denkmit</a>
                       <i class="fa-solid fa-chevron-down" data-bs-toggle="collapse" href="#collapse_sidebar_denkmit"
                         role="button" aria-expanded="false" aria-controls="collapse_sidebar_denkmit"
@@ -876,11 +881,19 @@
                             </h5>
                             <p class="card-case">Кількість в ящику: <%= item.case %> шт.</p>
                             <div class="d-flex">
-                              <p class="card-title card-price-fix" style="width: 100%; margin-bottom: 0; user-select: none;"><i
-                                  class="fa-solid fa-caret-left" style="color: #fff; background: rgb(0, 40, 120); border: 1.5px solid rgb(0, 40, 120); border-radius: 5px; padding-left: 6px; padding-right: 6px; padding-bottom: 2px; margin-right: 2px; cursor: pointer;"
+                              <p class="card-title card-price-fix"
+                                style="width: 100%; margin-bottom: 0; user-select: none;"><i
+                                  class="fa-solid fa-caret-left"
+                                  style="color: #fff; background: rgb(0, 40, 120); border: 1.5px solid rgb(0, 40, 120); border-radius: 5px; padding-left: 6px; padding-right: 6px; padding-bottom: 2px; margin-right: 2px; cursor: pointer;"
                                   onclick="decreaseValue('<%= item.id %>')"></i> <span id="cart_count_<%= item.id %>"
-                                  style="user-select: none;"><%= item.quantity %></span> <i class="fa-solid fa-caret-right"
-                                  style="color: #fff; background: rgb(0, 40, 120); border: 1.5px solid rgb(0, 40, 120); border-radius: 5px; padding-left: 6px; padding-right: 6px; padding-bottom: 2px; margin-left: 2px; margin-right: 8px; cursor: pointer;" onclick="increaseValue('<%= item.id %>')"></i><span style="color: #fff; background: #999999; border-radius: 5px; padding-left: 7px; padding-right: 7px; cursor: pointer;" onclick="increaseCase('<%= item.id %>', '<%= item.case %>')">+<%= item.case %></span></p>
+                                  style="user-select: none;">
+                                  <%= item.quantity %>
+                                </span> <i class="fa-solid fa-caret-right"
+                                  style="color: #fff; background: rgb(0, 40, 120); border: 1.5px solid rgb(0, 40, 120); border-radius: 5px; padding-left: 6px; padding-right: 6px; padding-bottom: 2px; margin-left: 2px; margin-right: 8px; cursor: pointer;"
+                                  onclick="increaseValue('<%= item.id %>')"></i><span
+                                  style="color: #fff; background: #999999; border-radius: 5px; padding-left: 7px; padding-right: 7px; cursor: pointer;"
+                                  onclick="increaseCase('<%= item.id %>', '<%= item.case %>')">+<%= item.case %></span>
+                              </p>
                               <p id="cart_price_<%= item.id %>" hidden-id="<%= item.id %>"
                                 class="card-title card-price-fix d-flex justify-content-end price-element"
                                 style="width: 0%; margin-bottom: 0; opacity: 0; z-index: -1;"
