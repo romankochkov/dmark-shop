@@ -363,7 +363,7 @@ app.post('/cart', express.urlencoded({ extended: false }), (req, res) => {
   const data = [];
   console.log(products + '\n' + amount);
   console.log(typeof products);
-  
+
   if (typeof products === 'string') {
     const product = {
       id: products,
@@ -382,7 +382,7 @@ app.post('/cart', express.urlencoded({ extended: false }), (req, res) => {
 
   const jsonData = JSON.stringify(data);
 
-  pool.query(`INSERT INTO orders ("user", first_name, last_name, phone_number, products, region, address, comment, status, date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`, [req.session.isAuthenticated ? req.session.userId : null, first_name, last_name, phone_number.replace(/[^\w]/gi, ''), jsonData, region, address, comment || null, '0', (new Date())], (err) => {
+  pool.query(`INSERT INTO orders ("user", first_name, last_name, phone_number, products, region, address, comment, status, date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id`, [req.session.isAuthenticated ? req.session.userId : null, first_name, last_name, phone_number.replace(/[^\w]/gi, ''), jsonData, region, address, comment || null, '0', (new Date())], async (err, result) => {
     if (err) {
       console.error(req.body);
       console.error(err);
@@ -390,6 +390,25 @@ app.post('/cart', express.urlencoded({ extended: false }), (req, res) => {
     } else {
       res.clearCookie('cart');
       res.redirect('/catalog?order=success');
+
+      const order_id = result.rows[0].id;
+
+      try {
+        const response = await axios.post(
+          `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`,
+          {
+            chat_id: process.env.TELEGRAM_CHAT_ID,
+            text: `Надійшло нове замовлення №${order_id}\nhttps://dm.lviv.ua/account/orders/`,
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+      } catch (error) {
+        console.error('Ошибка при отправке уведомления в Telegram:', error);
+      }
     }
   });
 });
