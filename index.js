@@ -28,8 +28,8 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 const pool = new pg.Pool({
-  user: 'global',
-  host: 'dm.lviv.ua',
+  user: process.env.DB_USER,
+  host: 'dmark.com.ua',
   database: 'dm',
   password: process.env.DB_PASSWORD,
   port: 5432,
