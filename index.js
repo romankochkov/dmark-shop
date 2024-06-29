@@ -13,13 +13,13 @@ const format = require('pg-format');
 const path = require('path');
 const fs = require('fs');
 const uuid = require('uuid');
+const http = require('http');
 const https = require('https');
 const { type } = require('os');
 const { isNumberObject } = require('util/types');
 const { log } = require('console');
 
 const app = express();
-const port = 443;
 
 app.use(express.static(path.join(__dirname, 'assets'))); // Установка статического каталога для файлов HTML
 app.use(cookieParser());
@@ -1624,8 +1624,14 @@ const options = {
   key: fs.readFileSync('config/private.key'),
   cert: fs.readFileSync('config/certificate.crt')
 };
+let port = 80;
 
-const server = https.createServer(options, app);
+let server = http.createServer(app);
+
+if (process.argv[2] && process.argv[2] === '-https') {
+  port = 443;
+  server = https.createServer(options, app);
+}
 
 server.listen(port, () => {
   console.log(`[${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}] > The server is running on port ${port}`.toUpperCase());
