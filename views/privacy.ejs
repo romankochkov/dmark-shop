@@ -1,0 +1,978 @@
+<!doctype html>
+<html lang="uk">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DM Deutsche Chemie | Побутова хімія з Німеччини</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+  <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&family=Roboto:wght@100;300;400;500;700;900&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <style>
+    .toast-body {
+      font-family: 'Roboto Condensed', sans-serif;
+      font-weight: 500;
+    }
+
+    .under-nav {
+      position: relative;
+      height: 40px;
+      background: rgb(245, 245, 245);
+      border-bottom: 1px solid rgb(229, 233, 241);
+      z-index: 999;
+    }
+
+    nav {
+      position: relative;
+      background: #fff;
+      border-bottom: 1px solid rgb(229, 233, 241);
+      margin-bottom: 30px;
+      z-index: 999;
+    }
+
+    nav .nav-fix {
+      position: inherit;
+      border-bottom: 1px solid rgb(229, 233, 241);
+    }
+
+    .nav-fix .container {
+      position: inherit;
+      padding-top: 25px;
+      padding-bottom: 28px;
+    }
+
+    .navbar-brand {
+      position: relative;
+      color: rgb(0, 40, 120);
+      font-size: 20px;
+      font-family: 'Roboto Condensed', sans-serif;
+      font-weight: 700;
+    }
+
+    .navbar-brand img {
+      height: 38px;
+    }
+
+    .form-control-fix {
+      color: rgb(0, 40, 120);
+      font-family: 'Roboto Condensed', sans-serif;
+      font-weight: 500;
+
+      padding-top: 4px;
+      padding-left: 20px;
+      padding-right: 50px;
+
+      border: 0;
+    }
+
+    .form-control-fix:focus {
+      box-shadow: 0 0 0 0.2rem rgb(0, 40, 120);
+      border: 0;
+    }
+
+    .btn-search-fix {
+      position: absolute;
+      right: 5px;
+
+      width: 50px;
+      height: 100%;
+    }
+
+    .btn-search-fix:focus {
+      box-shadow: none;
+      border: 0;
+    }
+
+    .btn-search-fix i {
+      position: absolute;
+      top: 48%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 18px;
+      color: rgb(0, 40, 120);
+    }
+
+    .btn-search-fix:focus i {
+      color: #3BB143;
+    }
+
+    .btn-panel-fix {
+      position: relative;
+      width: 30px;
+      height: 100%;
+      padding: 0;
+      margin-left: 12px;
+    }
+
+    .btn-panel-fix:focus {
+      border: 0;
+      box-shadow: 0;
+    }
+
+    .btn-panel-fix i {
+      font-size: 18px;
+      color: rgb(0, 40, 120);
+    }
+
+    .btn-panel-fix:hover #icon_favorites {
+      color: #FF0800;
+    }
+
+    .btn-panel-fix:hover #icon_user {
+      color: #3BB143;
+    }
+
+    .btn-panel-fix:hover #icon_cart {
+      color: #FF5E0E;
+    }
+
+    .nav-item {
+      color: rgb(0, 40, 120);
+      text-decoration: none;
+      font-size: 22px;
+      font-family: 'Roboto Condensed', sans-serif;
+      font-weight: 700;
+      border-bottom: 2px solid rgb(229, 233, 241);
+    }
+
+    .nav-item i {
+      height: 100%;
+      font-size: 17px;
+      padding-left: 15px;
+      margin-top: auto;
+      margin-bottom: auto;
+    }
+
+    .navbar-nav .collapse {
+      border-bottom: 2px solid rgb(229, 233, 241);
+    }
+
+    .navbar-nav .collapse p {
+      margin-bottom: 15px;
+    }
+
+    .navbar-nav .collapse p a {
+      font-size: 18px;
+      font-family: 'Roboto Condensed', sans-serif;
+      color: rgb(82, 82, 96);
+    }
+
+    .col-panel-fix {
+      position: relative;
+      border: 3px solid transparent;
+      padding-top: 6px;
+      padding-left: 18px;
+      padding-right: 18px;
+      padding-bottom: 6px;
+      z-index: 99999;
+    }
+
+    .col-panel-fix:hover {
+      border-bottom: 3px solid rgb(0, 40, 120);
+    }
+
+    .col-panel-fix-active {
+      border: 3px solid rgb(0, 40, 120);
+    }
+
+    .link-panel-fix {
+      position: inherit;
+      color: rgb(0, 40, 120);
+      text-decoration: none;
+      font-size: 17px;
+      font-family: 'Roboto Condensed', sans-serif;
+      font-weight: 700;
+      z-index: 99999;
+    }
+
+    .link-panel-dropdown {
+      width: 190px;
+      position: absolute;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      border: 1px solid rgb(240, 240, 240);
+      border-top: 1px solid rgb(240, 240, 240);
+      border-radius: 0 0 6px 6px;
+      text-align: left;
+      padding-top: 2px;
+      padding-left: 18px;
+      padding-right: 18px;
+      z-index: 99999;
+    }
+
+    .link-panel-dropdown p {
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 15px;
+      color: rgb(82, 82, 96);
+      border-top: 1px solid transparent;
+      border-bottom: 1px solid rgb(240, 240, 240);
+      padding-top: 4px;
+      padding-bottom: 8px;
+      margin: 0;
+    }
+
+    .link-panel-dropdown p a {
+      color: rgb(82, 82, 96);
+      text-decoration: none;
+    }
+
+    #nav_overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.1);
+      z-index: 998;
+      display: none;
+    }
+
+    .terms {
+      background: rgb(229, 233, 241);
+      border-radius: 5px;
+      border: 1px solid rgb(240, 240, 240);
+      font-size: 16px;
+      font-weight: 700;
+      font-family: 'Roboto Condensed', sans-serif;
+      padding: 40px;
+    }
+
+    .terms .list {
+      background: #fff;
+      padding-top: 30px;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-bottom: 50px;
+    }
+
+    .terms .list .title {
+      font-size: 20px;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 600;
+      color: rgb(53, 53, 54);
+      margin-top: 30px;
+      margin-bottom: 15px;
+    }
+
+    .terms .list .text {
+      font-size: 16px;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 500;
+      color: rgb(82, 82, 96);
+      margin-bottom: 15px;
+    }
+
+    .modal {
+      font-family: 'Roboto Condensed', sans-serif;
+    }
+
+    .modal p {
+      margin-bottom: 20px;
+    }
+
+    .modal i {
+      font-size: 15px;
+    }
+
+    .modal-content {
+      border: 0;
+    }
+
+    .footer-review {
+      border-bottom: 1px solid rgb(229, 233, 241);
+    }
+
+    .footer-review .text {
+      color: rgb(82, 82, 96);
+      font-size: 24px;
+      font-weight: 500;
+      font-family: 'Roboto Condensed', sans-serif;
+      margin-right: 10px;
+    }
+
+    .footer-review p a {
+      font-size: 36px;
+      margin-left: 20px;
+    }
+
+    .footer-review p a:hover {
+      color: #FF0800 !important;
+      cursor: pointer;
+    }
+
+    footer {
+      background: rgb(245, 245, 245);
+      border-top: 1px solid rgb(229, 233, 241);
+      border-bottom: 1px solid transparent;
+      margin-top: 30px;
+    }
+
+    footer p {
+      color: rgb(0, 40, 120);
+      font-size: 17px;
+      font-weight: 500;
+      font-family: 'Roboto', sans-serif;
+      margin-bottom: 14px;
+    }
+
+    footer a {
+      color: rgb(82, 82, 96);
+      font-size: 14px;
+      font-family: 'Roboto', sans-serif;
+      text-decoration: none;
+      margin-bottom: 14px;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    .copyright {
+      width: 100%;
+      height: 72px;
+      background: rgb(245, 245, 245);
+      border-top: 1px solid rgb(229, 233, 241);
+      padding-top: 17px;
+    }
+
+    .copyright p {
+      font-weight: 400;
+      font-size: 14px !important;
+    }
+
+    @media (max-width: 576px) {
+      .nav-fix .container {
+        padding-top: 15px;
+        padding-left: 16px;
+        padding-right: 16px;
+        padding-bottom: 16px;
+      }
+
+      .navbar-brand img {
+        height: 28px;
+        margin-top: -3px;
+        margin-left: 4px;
+      }
+
+      .col-fix {
+        padding: 2px !important;
+      }
+
+      .terms {
+        padding: 10px;
+      }
+
+      .terms .list {
+        padding-top: 10px;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-bottom: 30px;
+      }
+
+      .terms .list .title {
+        font-size: 18px;
+      }
+
+      .terms .list .text {
+        font-size: 14px;
+      }
+
+      footer a {
+        line-height: 35px;
+      }
+
+      .copyright p {
+        text-align: center;
+        font-size: 10px !important;
+      }
+    }
+  </style>
+
+  <div class="toast-container position-fixed bottom-0 end-0 p-4">
+    <div id="review_toast" class="toast align-items-center px-1" role="alert" aria-live="assertive" aria-atomic="true"
+      style="width: 170px; background: rgb(0, 40, 120); color: #fff; font-size: 15px;">
+      <div class="d-flex">
+        <div class="toast-body">
+          Дякуємо за відгук&nbsp;&nbsp;<i class="fa-solid fa-hand-peace"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="under-nav d-none d-lg-block">
+    <div class="container">
+      <p
+        style="color: rgb(0, 40, 120); font-family: 'Roboto Condensed', sans-serif; font-size: 0.95rem; font-weight: 500; text-align: right;padding-top: 7px;">
+        <i class="fa-solid fa-location-dot" style="font-size: 0.90rem;"></i>&nbsp;&nbsp;Львів,
+        Сокільники&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-phone"
+          style="font-size: 1rem;"></i>&nbsp;&nbsp;+38 (067) 676-67-39
+      </p>
+    </div>
+  </div>
+
+  <nav>
+    <div class="nav-fix">
+      <div class="container">
+        <div class="row">
+
+          <div class="col-4 col-sm-6 col-md-6 col-lg-3 col-xl-3">
+            <a class="navbar-brand" href="/">
+              <img src="/img/logo.svg" alt="Logo" class="d-inline-block align-text-top">
+              <!--DM Deutsche Chemie-->
+            </a>
+          </div>
+
+          <div class="col-8 col-sm-6 col-md-6 d-lg-none">
+            <div style="height: 100%; position: relative; text-align: right;">
+              <button type="button" class="btn btn-panel-fix" onclick="window.open('/account/favorites/', '_self');">
+                <i class="fas fa-heart"></i>
+              </button>
+              <button type="button" class="btn btn-panel-fix" <% if (user) { %>onclick="window.open('/account/',
+                '_self');"<% } else { %>onclick="window.open('/authentication/', '_self');"<% } %>>
+                    <% if (user) { %><i class="fa-solid fa-user-check"></i>
+                      <% } else { %><i class="fas fa-user"></i>
+                        <% } %>
+              </button>
+              <button <% if (user) { %>style="margin-left: 4px;"<% } %> type="button" class="btn btn-panel-fix"
+                  onclick="window.open('/cart/', '_self');">
+                  <i class="fas fa-shopping-cart"></i>
+                  <span id="cart_length_mobile"
+                    style="position: absolute; top: -8px; right: -8px; min-width: 18px; background: #dc3545; border-radius: 50px; color: #fff; font-size: 12px; padding-left: 5px; padding-right: 5px;">
+                    <% if (cart) { %>
+                      <%= cart %>
+                        <% } %>
+                  </span>
+              </button>
+              <button type="button" class="btn btn-panel-fix" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                <i class="fa-solid fa-bars"></i>
+              </button>
+
+              <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
+                aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-header">
+                  <h5 class="offcanvas-title" id="offcanvasNavbarLabel">&nbsp;</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                  <ul class="navbar-nav justify-content-end flex-grow-1 text-start">
+                    <li class="nav-item py-2 px-3 d-flex justify-content-between"
+                      style="border-top: 2px solid rgb(229, 233, 241);">
+                      <a class="nav-link d-inline-flex" href="/catalog/denkmit/">Denkmit</a>
+                      <i class="fa-solid fa-chevron-down" data-bs-toggle="collapse" href="#collapse_sidebar_denkmit"
+                        role="button" aria-expanded="false" aria-controls="collapse_sidebar_denkmit"
+                        onclick="changeIconSidebar(this);"></i>
+                    </li>
+
+                    <div class="collapse px-3 py-2" id="collapse_sidebar_denkmit">
+                      <p style="margin-top: 10px;"><a href="/catalog/denkmit/kitchen/">Засоби для кухні</a></p>
+                      <p><a href="/catalog/denkmit/washing/">Засоби для прання</a></p>
+                      <p><a href="/catalog/denkmit/wc/">Засоби для туалету</a></p>
+                      <p><a href="/catalog/denkmit/cleaning/">Засоби для прибирання</a></p>
+                      <p><a href="/catalog/denkmit/fresh/">Освіжувачі повітря</a></p>
+                      <p style="margin-bottom: 10px;"><a href="/catalog/denkmit/other/">Інше</a></p>
+                    </div>
+
+                    <li class="nav-item py-2 px-3 d-flex justify-content-between">
+                      <a class="nav-link d-inline-flex" href="/catalog/balea/">Balea</a>
+                      <i class="fa-solid fa-chevron-down" data-bs-toggle="collapse" href="#collapse_sidebar_balea"
+                        role="button" aria-expanded="false" aria-controls="collapse_sidebar_balea"
+                        onclick="changeIconSidebar(this);"></i>
+                    </li>
+
+                    <div class="collapse px-3 py-2" id="collapse_sidebar_balea">
+                      <p style="margin-top: 10px;"><a href="/catalog/balea/hair/">Засоби для волосся</a></p>
+                      <p><a href="/catalog/balea/skin/">Засоби для шкіри</a></p>
+                      <p><a href="/catalog/balea/body/">Засоби для тіла</a></p>
+                      <p><a href="/catalog/balea/shave/">Засоби для гоління</a></p>
+                      <p style="margin-bottom: 10px;"><a href="/catalog/balea/hygiene/">Засоби для гігієни</a></p>
+                    </div>
+
+                    <li class="nav-item py-2 px-3 d-flex justify-content-between">
+                      <a class="nav-link d-inline-flex" href="/catalog/alverde/">Alverde</a>
+                      <i class="fa-solid fa-angle-right d-inline-flex"></i>
+                    </li>
+                    <li class="nav-item py-2 px-3 d-flex justify-content-between">
+                      <a class="nav-link d-inline-flex" href="/catalog/dontodent/">Dontodent</a>
+                      <i class="fa-solid fa-angle-right d-inline-flex"></i>
+                    </li>
+                    <li class="nav-item py-2 px-3 d-flex justify-content-between">
+                      <a class="nav-link d-inline-flex" href="/catalog/mivolis/">Mivolis</a>
+                      <i class="fa-solid fa-angle-right d-inline-flex"></i>
+                    </li>
+                    <li class="nav-item py-2 px-3 d-flex justify-content-between">
+                      <a class="nav-link d-inline-flex" href="/catalog/frosch/">Frosch</a>
+                      <i class="fa-solid fa-angle-right d-inline-flex"></i>
+                    </li>
+                    <li class="nav-item py-2 px-3 d-flex justify-content-between">
+                      <a class="nav-link d-inline-flex" href="/catalog/profissimo/">Profissimo</a>
+                      <i class="fa-solid fa-angle-right d-inline-flex"></i>
+                    </li>
+                    <li class="nav-item py-2 px-3 d-flex justify-content-between">
+                      <a class="nav-link d-inline-flex" href="/catalog/babylove/">Babylove</a>
+                      <i class="fa-solid fa-angle-right d-inline-flex"></i>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="col-12 col-sm-12 col-lg-6 col-xl-6 mt-3 mt-sm-3 mt-md-3 mt-lg-0 mt-xl-0">
+            <form class="d-flex" role="search" style="position: relative;" method="get">
+              <input class="form-control form-control-fix" type="search" placeholder="Пошук" aria-label="Search"
+                name="search" style="height: 44px; border-radius: 44px; background: rgb(229, 233, 241);"
+                value="<% if (typeof search !== 'undefined') { %><%= search %><% } %>">
+              <button type="submit" class="btn btn-search-fix">
+                <i class="fas fa-search"></i>
+              </button>
+            </form>
+          </div>
+
+          <div class="d-none d-lg-block col-md-3 col-lg-3 col-xl-3">
+            <div style="height: 100%; position: relative; text-align: right;">
+              <button type="button" class="btn btn-panel-fix" onclick="window.open('/account/favorites/', '_self');">
+                <i id="icon_favorites" class="fas fa-heart"></i>
+              </button>
+              <button type="button" class="btn btn-panel-fix" <% if (user) { %>onclick="window.open('/account/',
+                '_self');"<% } else { %>onclick="window.open('/authentication/', '_self');"<% } %>>
+                    <% if (user) { %><i id="icon_user" class="fa-solid fa-user-check"></i>
+                      <% } else { %><i id="icon_user" class="fas fa-user"></i>
+                        <% } %>
+              </button>
+              <button <% if (user) { %>style="margin-left: 5px;"<% } %> type="button" class="btn btn-panel-fix"
+                  onclick="location.href='/cart/';">
+                  <i id="icon_cart" class="fas fa-shopping-cart"></i>
+                  <span id="cart_length"
+                    style="position: absolute; top: -8px; right: -8px; min-width: 18px; background: #dc3545; border-radius: 50px; color: #fff; font-size: 12px; padding-left: 5px; padding-right: 5px;">
+                    <% if (cart) { %>
+                      <%= cart %>
+                        <% } %>
+                  </span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="container text-center d-none d-lg-block">
+      <div class="row">
+        <div class="col col-panel-fix <% if (url === '/catalog/newest/') { %>col-panel-fix-active<% } %> py-2">
+          <a class="link-panel-fix" href="/catalog/newest/">Новинки</a>
+        </div>
+
+        <div id="link_denkmit"
+          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url.includes('/catalog/denkmit/')) { %>col-panel-fix-active<% } %> py-2"
+          style="position: relative; z-index: 99999;">
+          <a class="link-panel-fix" href="/catalog/denkmit/">&nbsp;Denkmit™</a>
+          <div class="link-panel-dropdown" id="dropdown_denkmit" style="top: 154px; left: 50%; display: none;">
+            <p><a href="/catalog/denkmit/kitchen/">Засоби для кухні</a></p>
+            <p><a href="/catalog/denkmit/washing/">Засоби для прання</a></p>
+            <p><a href="/catalog/denkmit/wc/">Засоби для туалету</a></p>
+            <p><a href="/catalog/denkmit/cleaning/">Засоби для прибирання</a></p>
+            <p><a href="/catalog/denkmit/fresh/">Освіжувачі повітря</a></p>
+            <p style="border-bottom: 1px solid transparent;"><a href="/catalog/denkmit/other/">Інше</a></p>
+          </div>
+        </div>
+
+        <div id="link_balea"
+          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url.includes('/catalog/balea/')) { %>col-panel-fix-active<% } %> py-2"
+          style="position: relative; z-index: 99999;">
+          <a class="link-panel-fix" href="/catalog/balea/">&nbsp;Balea™</a>
+          <div class="link-panel-dropdown" id="dropdown_balea" style="top: 136px; left: 50%; display: none;">
+            <p><a href="/catalog/balea/hair/">Засоби для волосся</a></p>
+            <p><a href="/catalog/balea/skin/">Засоби для шкіри</a></p>
+            <p><a href="/catalog/balea/body/">Засоби для тіла</a></p>
+            <p><a href="/catalog/balea/shave/">Засоби для гоління</a></p>
+            <p style="border-bottom: 1px solid transparent;"><a href="/catalog/balea/hygiene/">Засоби для гігієни</a>
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/alverde/') { %>col-panel-fix-active<% } %> py-2">
+          <a class="link-panel-fix" href="/catalog/alverde/">&nbsp;Alverde™</a>
+        </div>
+
+        <div
+          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/dontodent/') { %>col-panel-fix-active<% } %> py-2">
+          <a class="link-panel-fix" href="/catalog/dontodent/">&nbsp;Dontodent™</a>
+        </div>
+
+        <div
+          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/mivolis/') { %>col-panel-fix-active<% } %> py-2">
+          <a class="link-panel-fix" href="/catalog/mivolis/">&nbsp;Mivolis™</a>
+        </div>
+
+        <div
+          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/frosch/') { %>col-panel-fix-active<% } %> py-2">
+          <a class="link-panel-fix" href="/catalog/frosch/">&nbsp;Frosch™</a>
+        </div>
+
+        <div
+          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/profissimo/') { %>col-panel-fix-active<% } %> py-2">
+          <a class="link-panel-fix" href="/catalog/profissimo/">&nbsp;Profissimo™</a>
+        </div>
+
+        <div
+          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/babylove/') { %>col-panel-fix-active<% } %> py-2">
+          <a class="link-panel-fix" href="/catalog/babylove/">&nbsp;Babylove™</a>
+        </div>
+
+        <div class="col col-panel-fix <% if (url === '/catalog/other/') { %>col-panel-fix-active<% } %> py-2">
+          <a class="link-panel-fix" href="/catalog/other/">Інше</a>
+        </div>
+      </div>
+    </div>
+
+  </nav>
+
+  <div id="nav_overlay"></div>
+
+  <div class="container">
+    <div class="row">
+      <div class="d-none d-md-block col-md-1 col-lg-2"></div>
+      <div class="col-12 col-sm-12 col-md-10 col-lg-8">
+        <div class="terms">
+          <div class="list">
+            <p class="title">Політика конфіденційності вебсайту dmark.com.ua</p>
+
+            <p class="title">1. Загальні положення</p>
+            <p class="text">Ця Політика конфіденційності визначає, як "DM Deutsche Chemie" (далі - "Магазин") збирає,
+              використовує, зберігає та захищає персональні дані користувачів нашого сайту dmark.com.ua. Використовуючи
+              наш сайт, ви погоджуєтесь з умовами цієї Політики конфіденційності.</p>
+
+            <p class="title">2. Збір персональних даних</p>
+            <p class="text">Ми можемо збирати наступні персональні дані:</p>
+            <p class="text">- Ім'я та прізвище</p>
+            <p class="text">- Контактну інформацію, включаючи електронну адресу та номер телефону</p>
+            <p class="text">- Адресу для доставки товарів</p>
+            <p class="text">- Іншу інформацію, яка може бути необхідна для обробки замовлень або надання послуг</p>
+
+            <p class="title">3. Використання персональних даних</p>
+            <p class="text">Зібрані дані можуть використовуватись для:</p>
+            <p class="text">- Обробки та виконання ваших замовлень</p>
+            <p class="text">- Покращення якості обслуговування клієнтів</p>
+            <p class="text">- Надання інформації про нові продукти, акції та спеціальні пропозиції</p>
+            <p class="text">- Відправки рекламних та інформаційних матеріалів за вашою згодою</p>
+
+            <p class="title">4. Захист персональних даних</p>
+            <p class="text">Ми застосовуємо відповідні технічні та організаційні заходи для захисту ваших персональних
+              даних від несанкціонованого доступу, зміни, розкриття або знищення.</p>
+
+            <p class="title">5. Розкриття даних третім особам</p>
+            <p class="text">Ми не продаємо, не обмінюємо та не передаємо ваші персональні дані третім особам без вашої
+              згоди, за винятком випадків, передбачених законом, або коли це необхідно для виконання замовлення
+              (наприклад, служби доставки).</p>
+
+            <p class="title">6. Використання файлів cookie</p>
+            <p class="text">Наш сайт може використовувати файли cookie для покращення користувацького досвіду. Файли
+              cookie допомагають нам зрозуміти ваші вподобання та надавати кращі послуги. Ви можете налаштувати ваш
+              браузер так, щоб відмовитись від файлів cookie, але це може вплинути на функціональність сайту.</p>
+
+            <p class="title">7. Посилання на інші сайти</p>
+            <p class="text">Наш сайт може містити посилання на інші сайти. Ми не несемо відповідальності за політику
+              конфіденційності або зміст таких сайтів.</p>
+
+            <p class="title">8. Зміни до Політики конфіденційності</p>
+            <p class="text">Ми залишаємо за собою право вносити зміни до цієї Політики конфіденційності в будь-який час.
+              Про будь-які зміни ми повідомимо на цій сторінці.</p>
+
+            <p class="title">9. Контактна інформація</p>
+            <p class="text">Якщо у вас виникли питання щодо цієї Політики конфіденційності, будь ласка, зв'яжіться з
+              нами за допомогою наступної контактної інформації:</p>
+            <p class="text">- Електронна адреса: dm.deutschechemie@gmail.com</p>
+            <p class="text">- Телефон: +38 (093) 608-62-87</p>
+          </div>
+        </div>
+      </div>
+      <div class="d-none d-md-block col-md-1 col-lg-2"></div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="payment" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header px-4">
+          <h1 class="modal-title fs-5" id="paymentModalLabel">Способи оплати</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4 py-4">
+          <div class="row g-0 px-4" style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
+            <div class="col-12">
+              <p style="color: rgb(0, 40, 120); margin-bottom: 10px;">
+                -&nbsp;&nbsp;
+                <i class="fa-solid fa-credit-card"></i>
+                &nbsp;&nbsp;Оплата за реквізитами
+              <p style="font-size: 15px; color: rgb(82, 82, 96); margin-left: 10px; margin-bottom: 0px;">Вказаний вид
+                оплати передбачає повну плату за товар перед його відправленням средвами інтернет-банкінгу. Переказ
+                відбувається на ФОП-рахунок за наданими реквізитами.</p>
+              </p>
+              <p style="color: rgb(0, 40, 120); margin-top: 30px; margin-bottom: 10px;">
+                -&nbsp;&nbsp;
+                <i class="fa-solid fa-money-bills"></i>
+                &nbsp;&nbsp;Оплата готівкою
+              <p style="font-size: 15px; color: rgb(82, 82, 96); margin-left: 10px; margin-bottom: -10px;">Цей вид
+                оплати здійснюється при самовивезенні товару зі складу та оплаті готівкою за фактом вчинення
+                правочину.
+              </p>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="delivery" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header px-4">
+          <h1 class="modal-title fs-5" id="deliveryModalLabel">Способи доставки</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4 py-4">
+          <div class="row g-0 px-4" style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
+            <div class="col-12">
+              <p style="color: rgb(0, 40, 120); margin-bottom: 10px;">
+                -&nbsp;&nbsp;
+                <img width="20" height="20"
+                  src="https://uaprom-static.c.evo.dev/image/cabinet_mobileapp/delivery/nova_poshta-hca41cde541c00d7655d6774a77ad4480d.png">
+                &nbsp;&nbsp;Нова Пошта
+              </p>
+              <p style="color: rgb(0, 40, 120); margin-top: 20px; margin-bottom: 30px;">
+                -&nbsp;&nbsp;
+                <img width="20" height="20" src="https://www.svgrepo.com/show/351962/dolly.svg">
+                &nbsp;&nbsp;Самовивіз
+              </p>
+              <p style="font-size: 15px; color: rgb(82, 82, 96); margin-bottom: 7px;">Перелік способів доставки може
+                змінюватись без повідомлення користувачів сайту. Докладніше про умови і способи доставки дізнавайтесь
+                по
+                телефону.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="refund" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header px-4">
+          <h1 class="modal-title fs-5" id="refundModalLabel">Обмін та повернення</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4 py-4">
+          <div class="row g-0 px-5" style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
+            <div class="col-12">
+              <p style="color: rgb(82, 82, 96); margin-bottom: 10px;">Компанія здійснює повернення відповідно до
+                Закону
+                <a href="https://zakon.rada.gov.ua/laws/show/1023-12" target="_blank">«Про захист прав
+                  споживачів»</a><br>
+                Статтею 9 чинного Закону України <a href="https://zakon.rada.gov.ua/laws/show/1023-12"
+                  target="_blank">«Про захист прав споживачів»</a> передбачено право споживача обміняти непродовольчий
+                товар належної якості на аналогічний, якщо куплений товар не підійшов за формою, габаритами, фасоном,
+                кольором, розміром або з інших причин не може бути використаний за призначенням, якщо даний товар не
+                використовувався і якщо збережено його товарний вигляд, споживчі властивості, пломби, ярлики та
+                розрахунковий документ, виданий продавцем разом з товаром.<br><br>
+                Продавець не має права відмовити в обміні (поверненні) товару, що не включений до переліку, якщо він
+                відповідає всім вимогам, передбаченим ст. 9 Закону (збережений товарний вигляд, ярлики, пломби, є
+                розрахунковий документ і т. ін.).<br><br>
+                <b>Виключення</b><br>
+                Кабінетом Міністрів України затверджено перелік товарів належної якості, що не підлягають обміну або
+                поверненню (Постанова КМУ від 19 березня 1994 № 172).<br><br>
+                З актуальним вичерпним Переліком можна ознайомитися за <a
+                  href="https://zakon.rada.gov.ua/laws/show/172-94-%D0%BF" target="_blank">посиланням</a>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="schedule" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header px-4">
+          <h1 class="modal-title fs-5" id="scheduleModalLabel">Графік роботи</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4 py-4">
+          <div class="row">
+            <div class="col-6 g-0" style="border-right: 1px solid #dee2e6;">
+              <div class="d-flex justify-content-center">
+                <div class="d-flex align-items-start flex-column" style="color: rgb(82, 82, 96);">
+                  <p>Понеділок</p>
+                  <p>Вівторок</p>
+                  <p>Середа</p>
+                  <p>Четвер</p>
+                  <p>П'ятниця</p>
+                  <p>Субота</p>
+                  <p style="margin-bottom: 10px;">Неділя</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 g-0">
+              <div class="d-flex justify-content-center">
+                <div class="d-flex align-items-start flex-column" style="color: rgb(0, 40, 120);">
+                  <p><i class="fa-regular fa-clock"></i>&nbsp;&nbsp;з 09:00 по 18:00</p>
+                  <p><i class="fa-regular fa-clock"></i>&nbsp;&nbsp;з 09:00 по 18:00</p>
+                  <p><i class="fa-regular fa-clock"></i>&nbsp;&nbsp;з 09:00 по 18:00</p>
+                  <p><i class="fa-regular fa-clock"></i>&nbsp;&nbsp;з 09:00 по 18:00</p>
+                  <p><i class="fa-regular fa-clock"></i>&nbsp;&nbsp;з 09:00 по 18:00</p>
+                  <p>Вихідний</p>
+                  <p style="margin-bottom: 10px;">Вихідний</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-review d-flex align-items-center py-4">
+        <div class="d-inline-flex text">Будь ласка, оцініть наш вебсайт&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;—</div>
+        <div class="d-inline-flex">
+          <p style="margin-bottom: 0;">
+            <a onclick="addReview(1);"><i class="fa-regular fa-face-tired"></i></a>
+            <a onclick="addReview(2);"><i class="fa-regular fa-face-frown"></i></a>
+            <a onclick="addReview(3);"><i class="fa-regular fa-face-meh"></i></a>
+            <a onclick="addReview(4);"><i class="fa-regular fa-face-smile"></i></a>
+            <a onclick="addReview(5);"><i class="fa-regular fa-face-laugh-beam"></i></a>
+          </p>
+        </div>
+      </div>
+      <div class="d-none d-md-block">
+        <div class="d-flex justify-content-between py-5">
+          <div class="d-inline-flex">
+            <div class="d-flex flex-column">
+              <p>Інформація</p>
+              <a data-bs-toggle="modal" data-bs-target="#schedule" href="#schedule">Графік роботи</a>
+              <a href="/info/terms/">Умови використання</a>
+              <a style="margin-bottom: 0;" href="/info/privacy/">Політика конфіденційності</a>
+            </div>
+          </div>
+
+          <div class="d-inline-flex">
+            <div class="d-flex flex-column">
+              <p>Категорії</p>
+              <a href="/catalog/newest/">Новинки та акції</a>
+              <a href="/catalog/popular/">Популярні товари</a>
+              <a style="margin-bottom: 0;" href="/catalog/other/">Товари інших брендів</a>
+            </div>
+          </div>
+
+          <div class="d-inline-flex">
+            <div class="d-flex flex-column">
+              <p>Покупцю</p>
+              <a data-bs-toggle="modal" data-bs-target="#payment" href="#payment">Способи оплати</a>
+              <a data-bs-toggle="modal" data-bs-target="#delivery" href="#delivery">Способи доставки</a>
+              <a style="margin-bottom: 0;" data-bs-toggle="modal" data-bs-target="#refund" href="#refund">Обмін та
+                повернення</a>
+            </div>
+          </div>
+
+          <div class="d-inline-flex">
+            <div class="d-flex flex-column">
+              <p>Додатково</p>
+              <a href="/info/partners/">Партнерські програми</a>
+              <a href="https://lviv.prom.ua/c3757257-deutsche-chemie.html">Наша сторінка на Prom.ua</a>
+              <a
+                href="https://docs.google.com/spreadsheets/d/185Di7O7DBnpfkO-SR58t5DoJpewBSjnRbuDp93RmsyI/edit?usp=sharing">Наш
+                прайс у форматі Excel</a>
+            </div>
+          </div>
+
+          <div class="d-inline-flex">
+            <div class="d-flex flex-column">
+              <p>Контакти</p>
+              <a>+38 (067) 676-67-39</a>
+              <a>+38 (093) 608-62-87</a>
+              <a>dm.deutschechemie@gmail.com</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-block d-md-none">
+        <div class="row pt-3 px-1">
+          <div class="col-6 mb-4">
+            <p>Категорії</p>
+            <a href="/catalog/newest/">Новинки та акції</a><br>
+            <a href="/catalog/popular/">Популярні товари</a><br>
+            <a style="margin-bottom: 0;" href="/catalog/other/">Товари інших брендів</a>
+          </div>
+
+          <div class="col-6 mb-4">
+            <p>Покупцю</p>
+            <a data-bs-toggle="modal" data-bs-target="#payment" href="#payment">Способи оплати</a><br>
+            <a data-bs-toggle="modal" data-bs-target="#delivery" href="#delivery">Способи доставки</a><br>
+            <a style="margin-bottom: 0;" data-bs-toggle="modal" data-bs-target="#refund" href="#refund">Обмін та
+              повернення</a>
+          </div>
+
+          <div class="col-6 mb-4">
+            <p>Інформація</p>
+            <a data-bs-toggle="modal" data-bs-target="#schedule" href="#schedule">Графік роботи</a><br>
+            <a href="/info/terms/">Умови використання</a><br>
+            <a style="margin-bottom: 0;" href="/info/policy/">Політика конфіденційності</a>
+          </div>
+
+          <div class="col-6 mb-4">
+            <p>Додатково</p>
+            <a href="/info/partners/">Партнерські програми</a>
+            <a href="https://lviv.prom.ua/c3757257-deutsche-chemie.html">Наша сторінка на Prom.ua</a><br>
+            <a
+              href="https://docs.google.com/spreadsheets/d/185Di7O7DBnpfkO-SR58t5DoJpewBSjnRbuDp93RmsyI/edit?usp=sharing">Наш
+              прайс у форматі Excel</a>
+          </div>
+
+          <div class="col-12 pt-3 mb-3 text-center" style="border-top: 1px solid rgb(229, 233, 241);">
+            <p>Контакти</p>
+            <a href="tel:380676766739">+38 (067) 676-67-39</a><br>
+            <a href="tel:380936086287">+38 (093) 608-62-87</a><br>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="copyright">
+      <div class="container">
+        <p style="color: rgb(82, 82, 96); font-size: 13px; font-family: 'Roboto', sans-serif; padding-top: 9px;">
+          2023-2024,
+          DM Deutsche Chemie, ФОП (Горгут Т. С.)</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/js/catalog.js"></script>
+
+
+</body>
+
+</html>
