@@ -444,7 +444,7 @@ app.get('/cart/data', async (req, res) => {
         modelName: 'Address',
         calledMethod: 'getCities',
         methodProperties: {},
-        apiKey: '64c8642d4bde514f871f7c14ba4c33ef'
+        apiKey: process.env.NOVAPOSHTA_TOKEN
       });
 
       if (response.data.success) {
@@ -459,6 +459,7 @@ app.get('/cart/data', async (req, res) => {
         res.send(cities)
       }
       else {
+        console.log(response);
         throw new Error('Ошибка при получении списка городов');
       }
     }
@@ -476,7 +477,7 @@ app.get('/cart/data', async (req, res) => {
           CityName: req.query.branch,
           Language: 'ua',
         },
-        apiKey: '64c8642d4bde514f871f7c14ba4c33ef'
+        apiKey: process.env.NOVAPOSHTA_TOKEN
       });
 
       if (response.data.success) {
