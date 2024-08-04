@@ -52,6 +52,9 @@ app.use('/cart', cartRouter);
 const catalogRouter = require('./routes/catalog');
 app.use('/catalog', catalogRouter);
 
+const infoRouter = require('./routes/info');
+app.use('/info', infoRouter);
+
 app.get('/favicon.ico', (req, res) => {
   const faviconPath = path.join(__dirname, 'assets', 'img', 'favicon.ico');
   res.sendFile(faviconPath);
@@ -182,30 +185,6 @@ app.get('/logout', (req, res) => {
     }
     res.redirect('/catalog');
   });
-});
-
-app.get('/info/terms', (req, res) => {
-  if (!req.originalUrl.endsWith('/')) return res.redirect(req.originalUrl + '/');
-
-  if (req.cookies.cart) {
-    cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
-  } else {
-    cartLength = 0;
-  }
-
-  res.render('terms', { user: (req.session.isAuthenticated) ? true : false, url: req.path, cart: cartLength > 0 ? cartLength : null });
-});
-
-app.get('/info/privacy/', (req, res) => {
-  if (!req.originalUrl.endsWith('/')) return res.redirect(req.originalUrl + '/');
-
-  if (req.cookies.cart) {
-    cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
-  } else {
-    cartLength = 0;
-  }
-
-  res.render('privacy', { user: (req.session.isAuthenticated) ? true : false, url: req.path, cart: cartLength > 0 ? cartLength : null });
 });
 
 app.get('/media/:uuid', (req, res) => {
