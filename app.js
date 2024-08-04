@@ -7,16 +7,11 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const url = require('url');
-const pg = require('pg');
 const pgSession = require('connect-pg-simple')(session);
 const path = require('path');
 const fs = require('fs');
-const uuid = require('uuid');
 const http = require('http');
 const https = require('https');
-const { type } = require('os');
-const { isNumberObject } = require('util/types');
-const { log } = require('console');
 const pool = require('./database/init');
 
 
