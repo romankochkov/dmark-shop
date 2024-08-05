@@ -176,10 +176,7 @@
       padding-right: 18px;
       padding-bottom: 6px;
       z-index: 99999;
-    }
-
-    .col-panel-fix:hover {
-      border-bottom: 3px solid rgb(0, 40, 120);
+      cursor: pointer;
     }
 
     .col-panel-fix-active {
@@ -741,10 +738,10 @@
           <a class="link-panel-fix" href="/catalog/newest/">Новинки</a>
         </div>
 
-        <div id="link_denkmit"
+        <div id="link_denkmit" onclick="window.location = '/catalog/denkmit/';" onmouseenter="$('#link_denkmit_text').css('display', 'none'); $('#link_denkmit_mark').css('display', 'block');" onmouseleave="$('#link_denkmit_text').css('display', 'block'); $('#link_denkmit_mark').css('display', 'none');"
           class="col-6 col-sm-3 col-lg col-panel-fix <% if (url.includes('/catalog/denkmit/')) { %>col-panel-fix-active<% } %> py-2"
           style="position: relative; border-left: 1px solid rgb(229, 233, 241); z-index: 99999;">
-          <a class="link-panel-fix" href="/catalog/denkmit/">&nbsp;Denkmit™</a>
+          <a id="link_denkmit_text" class="link-panel-fix" href="/catalog/denkmit/">&nbsp;Denkmit™</a>
           <div class="link-panel-dropdown" id="dropdown_denkmit" style="top: 154px; left: 50%; display: none;">
             <p><a href="/catalog/denkmit/kitchen/">Засоби для кухні</a></p>
             <p><a href="/catalog/denkmit/washing/">Засоби для прання</a></p>
@@ -753,12 +750,13 @@
             <p><a href="/catalog/denkmit/fresh/">Освіжувачі повітря</a></p>
             <p style="border-bottom: 1px solid transparent;"><a href="/catalog/denkmit/other/">Інше</a></p>
           </div>
+          <img id="link_denkmit_mark" src="https://svitassorti.com.ua/files/resized/brands/55555.330x330.png" style="width: auto; height: 60%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none;">
         </div>
 
-        <div id="link_balea"
+        <div id="link_balea" onclick="window.location = '/catalog/balea/';" onmouseenter="$('#link_balea_text').css('display', 'none'); $('#link_balea_mark').css('display', 'block');" onmouseleave="$('#link_balea_text').css('display', 'block'); $('#link_balea_mark').css('display', 'none');"
           class="col-6 col-sm-3 col-lg col-panel-fix <% if (url.includes('/catalog/balea/')) { %>col-panel-fix-active<% } %> py-2"
           style="position: relative; border-left: 1px solid rgb(229, 233, 241); z-index: 99999;">
-          <a class="link-panel-fix" href="/catalog/balea/">&nbsp;Balea™</a>
+          <a id="link_balea_text" class="link-panel-fix" href="/catalog/balea/">&nbsp;Balea™</a>
           <div class="link-panel-dropdown" id="dropdown_balea" style="top: 136px; left: 50%; display: none;">
             <p><a href="/catalog/balea/hair/">Засоби для волосся</a></p>
             <p><a href="/catalog/balea/skin/">Засоби для шкіри</a></p>
@@ -767,6 +765,7 @@
             <p style="border-bottom: 1px solid transparent;"><a href="/catalog/balea/hygiene/">Засоби для гігієни</a>
             </p>
           </div>
+          <img id="link_balea_mark" src="https://media.dm-static.com/image/upload/q_auto:eco,f_auto/content/rootpage-dm-shop-it-it/resource/blob/1022362/1e6727a268bbe9d95211fe5628638100/balea-logo-klein-data.png" style="width: auto; height: 60%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none;">
         </div>
 
         <div
