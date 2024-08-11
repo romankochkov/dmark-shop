@@ -224,6 +224,10 @@
       text-decoration: none;
     }
 
+    .link-panel-dropdown p:hover a {
+      text-decoration: underline;
+    }
+
     #nav_overlay {
       position: fixed;
       top: 0;
@@ -589,8 +593,7 @@
 
           <div class="col-4 col-sm-6 col-md-6 col-lg-3 col-xl-3">
             <a class="navbar-brand" href="/">
-              <img src="/img/logo.png" alt="Logo"
-                class="d-inline-block align-text-top">
+              <img src="/img/logo.png" alt="Logo" class="d-inline-block align-text-top">
               <!--DM Deutsche Chemie-->
             </a>
           </div>
@@ -734,11 +737,14 @@
 
     <div class="container text-center d-none d-lg-block">
       <div class="row">
-        <div class="col col-panel-fix <% if (url === '/catalog/newest/') { %>col-panel-fix-active<% } %>py-2" style="border-left: 1px solid rgb(229, 233, 241);">
+        <div class="col col-panel-fix <% if (url === '/catalog/newest/') { %>col-panel-fix-active<% } %>py-2"
+          style="border-left: 1px solid rgb(229, 233, 241);">
           <a class="link-panel-fix" href="/catalog/newest/">Новинки</a>
         </div>
 
-        <div id="link_denkmit" onclick="window.location = '/catalog/denkmit/';" onmouseenter="$('#link_denkmit_text').css('display', 'none'); $('#link_denkmit_mark').css('display', 'block');" onmouseleave="$('#link_denkmit_text').css('display', 'block'); $('#link_denkmit_mark').css('display', 'none');"
+        <div id="link_denkmit" onclick="window.location = '/catalog/denkmit/';"
+          onmouseenter="$('#link_denkmit_text').css('display', 'none'); $('#link_denkmit_mark').css('display', 'block');"
+          onmouseleave="$('#link_denkmit_text').css('display', 'block'); $('#link_denkmit_mark').css('display', 'none');"
           class="col-6 col-sm-3 col-lg col-panel-fix <% if (url.includes('/catalog/denkmit/')) { %>col-panel-fix-active<% } %> py-2"
           style="position: relative; border-left: 1px solid rgb(229, 233, 241); z-index: 99999;">
           <a id="link_denkmit_text" class="link-panel-fix" href="/catalog/denkmit/">&nbsp;Denkmit™</a>
@@ -750,10 +756,13 @@
             <p><a href="/catalog/denkmit/fresh/">Освіжувачі повітря</a></p>
             <p style="border-bottom: 1px solid transparent;"><a href="/catalog/denkmit/other/">Інше</a></p>
           </div>
-          <img id="link_denkmit_mark" src="https://svitassorti.com.ua/files/resized/brands/55555.330x330.png" style="width: auto; height: 60%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none;">
+          <img id="link_denkmit_mark" src="https://svitassorti.com.ua/files/resized/brands/55555.330x330.png"
+            style="width: auto; height: 60%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none;">
         </div>
 
-        <div id="link_balea" onclick="window.location = '/catalog/balea/';" onmouseenter="$('#link_balea_text').css('display', 'none'); $('#link_balea_mark').css('display', 'block');" onmouseleave="$('#link_balea_text').css('display', 'block'); $('#link_balea_mark').css('display', 'none');"
+        <div id="link_balea" onclick="window.location = '/catalog/balea/';"
+          onmouseenter="$('#link_balea_text').css('display', 'none'); $('#link_balea_mark').css('display', 'block');"
+          onmouseleave="$('#link_balea_text').css('display', 'block'); $('#link_balea_mark').css('display', 'none');"
           class="col-6 col-sm-3 col-lg col-panel-fix <% if (url.includes('/catalog/balea/')) { %>col-panel-fix-active<% } %> py-2"
           style="position: relative; border-left: 1px solid rgb(229, 233, 241); z-index: 99999;">
           <a id="link_balea_text" class="link-panel-fix" href="/catalog/balea/">&nbsp;Balea™</a>
@@ -765,40 +774,78 @@
             <p style="border-bottom: 1px solid transparent;"><a href="/catalog/balea/hygiene/">Засоби для гігієни</a>
             </p>
           </div>
-          <img id="link_balea_mark" src="https://media.dm-static.com/image/upload/q_auto:eco,f_auto/content/rootpage-dm-shop-it-it/resource/blob/1022362/1e6727a268bbe9d95211fe5628638100/balea-logo-klein-data.png" style="width: auto; height: 60%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none;">
+          <img id="link_balea_mark"
+            src="https://media.dm-static.com/image/upload/q_auto:eco,f_auto/content/rootpage-dm-shop-it-it/resource/blob/1022362/1e6727a268bbe9d95211fe5628638100/balea-logo-klein-data.png"
+            style="width: auto; height: 60%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none;">
         </div>
 
-        <div
-          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/alverde/') { %>col-panel-fix-active<% } %> py-2" style="border-left: 1px solid rgb(229, 233, 241);">
-          <a class="link-panel-fix" href="/catalog/alverde/">&nbsp;Alverde™</a>
+        <div id="link_alverde" onclick="window.location = '/catalog/alverde/';"
+          onmouseenter="$('#link_alverde_text').css('display', 'none'); $('#link_alverde_mark').css('display', 'block');"
+          onmouseleave="$('#link_alverde_text').css('display', 'block'); $('#link_alverde_mark').css('display', 'none');"
+          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/alverde/') { %>col-panel-fix-active<% } %> py-2"
+          style="position: relative; border-left: 1px solid rgb(229, 233, 241); z-index: 99999;">
+          <a id="link_alverde_text" class="link-panel-fix" href="/catalog/alverde/">&nbsp;Alverde™</a>
+          <img id="link_alverde_mark"
+            src="https://media.dm-static.com/image/upload/q_auto:eco,f_auto/content/rootpage-dm-shop-sk-sk/resource/blob/298842/b7d544d776da20b48e69c109eafd5e90/alverde-naturkosmetik-logo-data.png"
+            style="width: auto; height: 60%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none;">
         </div>
 
-        <div
-          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/dontodent/') { %>col-panel-fix-active<% } %> py-2" style="border-left: 1px solid rgb(229, 233, 241);">
-          <a class="link-panel-fix" href="/catalog/dontodent/">&nbsp;Dontodent™</a>
+        <div id="link_dontodent" onclick="window.location = '/catalog/dontodent/';"
+          onmouseenter="$('#link_dontodent_text').css('display', 'none'); $('#link_dontodent_mark').css('display', 'block');"
+          onmouseleave="$('#link_dontodent_text').css('display', 'block'); $('#link_dontodent_mark').css('display', 'none');"
+          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/dontodent/') { %>col-panel-fix-active<% } %> py-2"
+          style="position: relative; border-left: 1px solid rgb(229, 233, 241); z-index: 99999;">
+          <a id="link_dontodent_text" class="link-panel-fix" href="/catalog/dontodent/">&nbsp;Dontodent™</a>
+          <img id="link_dontodent_mark"
+            src="https://media.dm-static.com/image/upload/q_auto:eco,f_auto/content/rootpage-dm-shop-de-de/resource/blob/72116/fc7e8311bea9018823dcae2b12194885/dontodent-logo-bild-data.png"
+            style="width: auto; height: 60%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none;">
         </div>
 
-        <div
-          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/mivolis/') { %>col-panel-fix-active<% } %> py-2" style="border-left: 1px solid rgb(229, 233, 241);">
-          <a class="link-panel-fix" href="/catalog/mivolis/">&nbsp;Mivolis™</a>
+        <div id="link_mivolis" onclick="window.location = '/catalog/mivolis/';"
+          onmouseenter="$('#link_mivolis_text').css('display', 'none'); $('#link_mivolis_mark').css('display', 'block');"
+          onmouseleave="$('#link_mivolis_text').css('display', 'block'); $('#link_mivolis_mark').css('display', 'none');"
+          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/mivolis/') { %>col-panel-fix-active<% } %> py-2"
+          style="position: relative; border-left: 1px solid rgb(229, 233, 241); z-index: 99999;">
+          <a id="link_mivolis_text" class="link-panel-fix" href="/catalog/mivolis/">&nbsp;Mivolis™</a>
+          <img id="link_mivolis_mark"
+            src="https://media.dm-static.com/image/upload/q_auto:eco,f_auto/content/rootpage-dm-shop-de-de/resource/blob/42490/6fa1441af460911afe5be7d837b34b21/mivolis-logo-data.jpg"
+            style="width: auto; height: 86%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none;">
         </div>
 
-        <div
-          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/frosch/') { %>col-panel-fix-active<% } %> py-2" style="border-left: 1px solid rgb(229, 233, 241);">
-          <a class="link-panel-fix" href="/catalog/frosch/">&nbsp;Frosch™</a>
+        <div id="link_frosch" onclick="window.location = '/catalog/frosch/';"
+          onmouseenter="$('#link_frosch_text').css('display', 'none'); $('#link_frosch_mark').css('display', 'block');"
+          onmouseleave="$('#link_frosch_text').css('display', 'block'); $('#link_frosch_mark').css('display', 'none');"
+          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/frosch/') { %>col-panel-fix-active<% } %> py-2"
+          style="position: relative; border-left: 1px solid rgb(229, 233, 241); z-index: 99999;">
+          <a id="link_frosch_text" class="link-panel-fix" href="/catalog/frosch/">&nbsp;Frosch™</a>
+          <img id="link_frosch_mark" src="https://www.mall.cz/i/22908302/100/100"
+            style="width: auto; height: 60%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none;">
         </div>
 
-        <div
-          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/profissimo/') { %>col-panel-fix-active<% } %> py-2" style="border-left: 1px solid rgb(229, 233, 241);">
-          <a class="link-panel-fix" href="/catalog/profissimo/">&nbsp;Profissimo™</a>
+        <div id="link_profissimo" onclick="window.location = '/catalog/profissimo/';"
+          onmouseenter="$('#link_profissimo_text').css('display', 'none'); $('#link_profissimo_mark').css('display', 'block');"
+          onmouseleave="$('#link_profissimo_text').css('display', 'block'); $('#link_profissimo_mark').css('display', 'none');"
+          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/profissimo/') { %>col-panel-fix-active<% } %> py-2"
+          style="position: relative; border-left: 1px solid rgb(229, 233, 241); z-index: 99999;">
+          <a id="link_profissimo_text" class="link-panel-fix" href="/catalog/profissimo/">&nbsp;Profissimo™</a>
+          <img id="link_profissimo_mark"
+            src="https://media.dm-static.com/image/upload/q_auto:eco,f_auto/content/rootpage-dm-shop-de-de/resource/blob/60292/e74d62a064513f8efa6fd4ecfd59160a/profissimo-logo-data.jpg"
+            style="width: auto; height: 100%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none;">
         </div>
 
-        <div
-          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/babylove/') { %>col-panel-fix-active<% } %> py-2" style="border-left: 1px solid rgb(229, 233, 241);">
-          <a class="link-panel-fix" href="/catalog/babylove/">&nbsp;Babylove™</a>
+        <div id="link_babylove" onclick="window.location = '/catalog/babylove/';"
+          onmouseenter="$('#link_babylove_text').css('display', 'none'); $('#link_babylove_mark').css('display', 'block');"
+          onmouseleave="$('#link_babylove_text').css('display', 'block'); $('#link_babylove_mark').css('display', 'none');"
+          class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/babylove/') { %>col-panel-fix-active<% } %> py-2"
+          style="position: relative; border-left: 1px solid rgb(229, 233, 241); z-index: 99999;">
+          <a id="link_babylove_text" class="link-panel-fix" href="/catalog/babylove/">&nbsp;Babylove™</a>
+          <img id="link_babylove_mark"
+            src="https://seeklogo.com/images/B/babylove-logo-86B80A0D8F-seeklogo.com.png"
+            style="width: auto; height: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none;">
         </div>
 
-        <div class="col col-panel-fix <% if (url === '/catalog/other/') { %>col-panel-fix-active<% } %> py-2" style="border-left: 1px solid rgb(229, 233, 241); border-right: 1px solid rgb(229, 233, 241);">
+        <div class="col col-panel-fix <% if (url === '/catalog/other/') { %>col-panel-fix-active<% } %> py-2"
+          style="border-left: 1px solid rgb(229, 233, 241); border-right: 1px solid rgb(229, 233, 241);">
           <a class="link-panel-fix" href="/catalog/other/">Інше</a>
         </div>
       </div>
@@ -841,9 +888,7 @@
                   onclick="window.open('/catalog/product/<%= item.id %>', '_self');"></div>
 
                 <% if (item.dm==true) { %>
-                  <img
-                    src="/img/mark.svg"
-                    class="card-img-brand-fix">
+                  <img src="/img/mark.svg" class="card-img-brand-fix">
                   <% } %>
 
                     <% if (url==='/account/favorites/' ) { %>
