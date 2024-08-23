@@ -396,68 +396,6 @@
       border: 0;
     }
 
-    .footer-review {
-      border-bottom: 1px solid rgb(229, 233, 241);
-    }
-
-    .footer-review .text {
-      color: rgb(82, 82, 96);
-      font-size: 24px;
-      font-weight: 500;
-      font-family: 'Roboto Condensed', sans-serif;
-      margin-right: 10px;
-    }
-
-    .footer-review p a {
-      font-size: 36px;
-      margin-left: 20px;
-    }
-
-    .footer-review p a:hover {
-      color: #FF0800 !important;
-      cursor: pointer;
-    }
-
-    footer {
-      background: rgb(245, 245, 245);
-      border-top: 1px solid rgb(229, 233, 241);
-      border-bottom: 1px solid transparent;
-      margin-top: 30px;
-    }
-
-    footer p {
-      color: rgb(0, 40, 120);
-      font-size: 17px;
-      font-weight: 500;
-      font-family: 'Roboto', sans-serif;
-      margin-bottom: 14px;
-    }
-
-    footer a {
-      color: rgb(82, 82, 96);
-      font-size: 14px;
-      font-family: 'Roboto', sans-serif;
-      text-decoration: none;
-      margin-bottom: 14px;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
-
-    .copyright {
-      width: 100%;
-      height: 72px;
-      background: rgb(245, 245, 245);
-      border-top: 1px solid rgb(229, 233, 241);
-      padding-top: 17px;
-    }
-
-    .copyright p {
-      font-weight: 400;
-      font-size: 14px !important;
-    }
-
     @media (max-width: 576px) {
       .nav-fix .container {
         padding-top: 15px;
@@ -484,15 +422,6 @@
       .card-btn-cart-fix {
         top: 177px;
         right: 15px;
-      }
-
-      footer a {
-        line-height: 35px;
-      }
-
-      .copyright p {
-        text-align: center;
-        font-size: 10px !important;
       }
     }
   </style>
@@ -839,8 +768,7 @@
           class="col-6 col-sm-3 col-lg col-panel-fix <% if (url === '/catalog/babylove/') { %>col-panel-fix-active<% } %> py-2"
           style="position: relative; border-left: 1px solid rgb(229, 233, 241); z-index: 99999;">
           <a id="link_babylove_text" class="link-panel-fix" href="/catalog/babylove/">&nbsp;Babylove™</a>
-          <img id="link_babylove_mark"
-            src="https://seeklogo.com/images/B/babylove-logo-86B80A0D8F-seeklogo.com.png"
+          <img id="link_babylove_mark" src="https://seeklogo.com/images/B/babylove-logo-86B80A0D8F-seeklogo.com.png"
             style="width: auto; height: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none;">
         </div>
 
@@ -1102,11 +1030,11 @@
 
   <%- include('footer') %>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
-    crossorigin="anonymous"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="/js/catalog.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+      crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/catalog.js"></script>
 
 
 </body>
