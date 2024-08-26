@@ -25,6 +25,16 @@ $('#link_balea').mouseleave(function () {
     $('#dropdown_balea').css('display', 'none');
 });
 
+$('#brand').on('change', function () {
+    if (this.value == 'Denkmit') {
+        $('#type').html('<select class="form-select" name="type" required><option selected>kitchen</option><option>washing</option><option>wc</option><option>cleaning</option><option>fresh</option><option>other</option></select><label>Категорія</label>');
+    } else if (this.value == 'Balea') {
+        $('#type').html('<select class="form-select" name="type" required><option selected>hair</option><option>skin</option><option>body</option><option>shave</option><option>hygiene</option></select><label>Категорія</label>');
+    } else {
+        $('#type').html('<input type="text" class="form-control" placeholder="" name="type" value="none" required><label>Категорія</label>');
+    }
+});
+
 function changeIconSidebar(element) {
     if ($(element).hasClass('fa-chevron-down')) {
         $(element).removeClass('fa-chevron-down');

@@ -532,7 +532,7 @@ router.post('/product/add', express.urlencoded({ extended: false }), async (req,
     }
 
     var { brand, title_original, title_translation, type, pictures, description, volume, weight, price, price_factor, amount, box, dm } = req.body;
-
+    
     var brand_translation = null;
     if (brand === 'Denkmit') {
         brand_translation = 'Денкміт';

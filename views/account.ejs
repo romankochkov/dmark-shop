@@ -401,36 +401,55 @@
                 <div class="modal-body px-4 py-4">
                     <form id="form_add_product" class="needs-validation" action="/account/product/add" method="post"
                         onsubmit="validateForm(event)" novalidate>
-                        <div class="form-floating mb-3">
-                            <select class="form-select" id="floatingSelect" name="brand" required>
-                                <option selected>Denkmit</option>
-                                <option>Balea</option>
-                                <option>Alverde</option>
-                                <option>Dontodent</option>
-                                <option>Mivolis</option>
-                                <option>Frosch</option>
-                                <option>Profissimo</option>
-                                <option>Babylove</option>
-                                <option>Visiomax</option>
-                                <option>Deluxe</option>
-                                <option>Theramed</option>
-                            </select>
-                            <label for="floatingSelect">Бренд</label>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="form-floating mb-3">
+                                    <select class="form-select" id="brand" name="brand" required>
+                                        <option selected>Denkmit</option>
+                                        <option>Balea</option>
+                                        <option>Alverde</option>
+                                        <option>Dontodent</option>
+                                        <option>Mivolis</option>
+                                        <option>Frosch</option>
+                                        <option>Profissimo</option>
+                                        <option>Babylove</option>
+                                        <option>Visiomax</option>
+                                        <option>Deluxe</option>
+                                        <option>Theramed</option>
+                                    </select>
+                                    <label>Бренд</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div id="type" class="form-floating mb-3">
+                                    <select class="form-select" name="type" required>
+                                        <option selected>kitchen</option>
+                                        <option>washing</option>
+                                        <option>wc</option>
+                                        <option>cleaning</option>
+                                        <option>fresh</option>
+                                        <option>other</option>
+                                    </select>
+                                    <label>Категорія</label>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" placeholder="" name="title_original" required>
-                            <label for="floatingInputValue">Назва</label>
-                        </div>
-
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" placeholder="" name="title_translation" required>
-                            <label for="floatingInputValue">Назва (переклад)</label>
-                        </div>
-
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" placeholder="" name="type" required>
-                            <label for="floatingInputValue">Категорія</label>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" placeholder="" name="title_original"
+                                        required>
+                                    <label for="floatingInputValue">Назва</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" placeholder="" name="title_translation"
+                                        required>
+                                    <label for="floatingInputValue">Назва (переклад)</label>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="form-floating mb-3">
@@ -859,10 +878,11 @@
 
     <%- include('footer') %>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
-        crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="/js/account.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+            crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="/js/account.js"></script>
 </body>
+
 </html>
