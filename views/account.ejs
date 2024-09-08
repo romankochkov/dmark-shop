@@ -45,6 +45,56 @@
             border: 0;
         }
 
+        .modal .form-floating .add-picture {
+            width: 26px;
+            height: 26px;
+            position: absolute;
+            background-color: rgba(0, 40, 120, 0.5);
+            border-radius: 6px;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+
+        .modal .form-floating .add-picture:hover {
+            background-color: rgba(0, 40, 120, 1);
+        }
+
+        .modal .form-floating .add-picture i {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .modal .form-floating .remove-picture {
+            width: 26px;
+            height: 26px;
+            position: absolute;
+            background-color: rgba(220, 20, 60, 0.5);
+            border-radius: 6px;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+
+        .modal .form-floating .remove-picture:hover {
+            background-color: rgba(220, 20, 60, 1);
+        }
+
+        .modal .form-floating .remove-picture i {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffffff;
+            font-size: 14px;
+        }
+
         .modal .button-cancel {
             width: 120px;
             height: 38px;
@@ -452,9 +502,12 @@
                             </div>
                         </div>
 
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" placeholder="" name="pictures" required>
-                            <label for="floatingInputValue">Зображення</label>
+                        <div id="add_pictures">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" placeholder="" name="pictures" required>
+                                <label>Зображення</label>
+                                <div class="add-picture" onclick="addPicture();"><i class="fa-solid fa-plus"></i></div>
+                            </div>
                         </div>
 
                         <div class="form-floating mb-3">

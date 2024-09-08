@@ -3,6 +3,7 @@ const ini = require('ini');
 const express = require('express');
 const router = express.Router();
 const pool = require('../database/init');
+const { string } = require('pg-format');
 
 
 async function checkAdminUser(userId) {
@@ -532,7 +533,7 @@ router.post('/product/add', express.urlencoded({ extended: false }), async (req,
     }
 
     var { brand, title_original, title_translation, type, pictures, description, volume, weight, price, price_factor, amount, box, dm } = req.body;
-    
+
     var brand_translation = null;
     if (brand === 'Denkmit') {
         brand_translation = 'Денкміт';
@@ -560,8 +561,7 @@ router.post('/product/add', express.urlencoded({ extended: false }), async (req,
         return res.sendStatus(400);
     }
 
-    pictures = JSON.stringify(pictures.split("|"));
-
+    if (typeof pictures == "string") { pictures = JSON.stringify([pictures]) } else { pictures = JSON.stringify(pictures); }
     if (dm == 'on') { dm = true } else { dm = false }
 
     pool.query(`INSERT INTO products (brand_original, brand_translation, "type", title_original, title_translation, description, pictures, volume, price, price_factor, amount, weight, exists, "case", dm, discount) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)`, [brand, brand_translation, type, title_original, title_translation, description, pictures, volume, price.replace(',', '.'), price_factor, amount, weight, 1, box, dm, 0], (err) => {

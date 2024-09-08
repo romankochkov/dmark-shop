@@ -57,3 +57,9 @@ function validateForm(event) {
 
     form.classList.add('was-validated');
 }
+
+function addPicture() {
+    console.log('sfdsf');
+    $('#add_pictures').append('<div class="form-floating mb-3"><input type="text" class="form-control" placeholder="" name="pictures" required><label>Додаткове зображення</label><div class="remove-picture" onclick="$(this).parent().remove();"><i class="fa-solid fa-xmark"></i></div></div>');
+    
+}
