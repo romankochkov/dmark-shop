@@ -538,6 +538,28 @@ router.get('/babylove', (req, res) => {
         });
 });
 
+router.get('/beckmann', (req, res) => {
+    if (!req.originalUrl.endsWith('/')) {
+        return res.redirect(req.originalUrl + '/');
+    }
+
+    getDataDB('Dr.Beckmann', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
+        .then(rows => {
+            let cartLength;
+
+            if (req.cookies.cart) {
+                cartLength = Object.keys(JSON.parse(req.cookies.cart).items).length;
+            } else {
+                cartLength = 0;
+            }
+
+            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
+        })
+        .catch(err => {
+            return res.status(500).send('Internal Server Error');
+        });
+});
+
 router.get('/other', (req, res) => {
     if (!req.originalUrl.endsWith('/')) return res.redirect(req.originalUrl + '/');
 

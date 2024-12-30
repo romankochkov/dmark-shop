@@ -551,6 +551,8 @@ router.post('/product/add', express.urlencoded({ extended: false }), async (req,
         brand_translation = 'Профісімо';
     } else if (brand === 'Babylove') {
         brand_translation = 'Бейбілав';
+    } else if (brand === 'Dr.Beckmann') {
+        brand_translation = 'Доктор Бекманн';
     } else if (brand === 'Visiomax') {
         brand_translation = 'Візіомакс';
     } else if (brand === 'Deluxe') {
