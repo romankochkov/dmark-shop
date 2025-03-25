@@ -555,6 +555,16 @@ router.post('/product/add', express.urlencoded({ extended: false }), async (req,
         brand_translation = 'Бейбілав';
     } else if (brand === 'Dr.Beckmann') {
         brand_translation = 'Доктор Бекманн';
+    } else if (brand === 'Dentalux') {
+        brand_translation = 'Денталюкс';
+    } else if (brand === 'Cien') {
+        brand_translation = 'Сієн';
+    } else if (brand === 'ECO VER') {
+        brand_translation = 'ЕКО ВЕР';
+    } else if (brand === 'Swiffer') {
+        brand_translation = 'Свіффер';
+    } else if (brand === 'Heitmann') {
+        brand_translation = 'Хайтманн';
     } else if (brand === 'Visiomax') {
         brand_translation = 'Візіомакс';
     } else if (brand === 'Deluxe') {
