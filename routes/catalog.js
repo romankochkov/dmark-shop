@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
     if (req.query.search) {
         const filter = `%${req.query.search.toLowerCase().replace('/', '')}%`;
 
-        pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE (LOWER(title_original) LIKE $1 OR LOWER(title_translation) LIKE $2) AND visibility = true ORDER BY CASE WHEN exists = 1 THEN 1 WHEN exists = 2 THEN 2 WHEN exists = 0 THEN 3 END LIMIT 90`, [filter, filter], (err, result) => {
+        pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE (LOWER(title_original) LIKE $1 OR LOWER(title_translation) LIKE $2) AND visibility = true ORDER BY CASE WHEN exists = 1 THEN 1 WHEN exists = 2 THEN 2 WHEN exists = 0 THEN 3 END LIMIT 90`, [filter, filter], async (err, result) => {
             if (err) {
                 console.error(err);
                 return res.status(500).send('Internal Server Error');
@@ -30,11 +30,13 @@ router.get('/', (req, res) => {
                 cartLength = 0;
             }
 
-            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, search: req.query.search.replace('/', ''), data: rows, cart: cartLength > 0 ? cartLength : null });
+            const max = await pool.query('SELECT COUNT(*) AS count FROM products;');
+
+            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, search: req.query.search.replace('/', ''), data: rows, cart: cartLength > 0 ? cartLength : null, max: max.rows[0].count });
         });
     } else {
         // Если параметр "GET" не указан, выводим все записи
-        pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE visibility = true ORDER BY CASE WHEN exists = 1 THEN 1 WHEN exists = 2 THEN 2 WHEN exists = 0 THEN 3 END LIMIT 90`, (err, result) => {
+        pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE visibility = true ORDER BY CASE WHEN exists = 1 THEN 1 WHEN exists = 2 THEN 2 WHEN exists = 0 THEN 3 END LIMIT 90`, async (err, result) => {
             if (err) {
                 console.error(err);
                 return res.status(500).send('Internal Server Error');
@@ -55,7 +57,9 @@ router.get('/', (req, res) => {
                 cartLength = 0;
             }
 
-            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows, cart: cartLength > 0 ? cartLength : null });
+            const max = await pool.query('SELECT COUNT(*) AS count FROM products;');
+
+            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows, cart: cartLength > 0 ? cartLength : null, max: max.rows[0].count });
         });
     }
 });
@@ -83,7 +87,7 @@ router.get('/product/:id', (req, res) => {
 router.get('/newest', (req, res) => {
     if (!req.originalUrl.endsWith('/')) return res.redirect(req.originalUrl + '/');
 
-    pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE visibility = true ORDER BY id DESC LIMIT 30`, (err, result) => {
+    pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE visibility = true ORDER BY id DESC LIMIT 30`, async (err, result) => {
         if (err) {
             console.error(err);
             return res.status(500).send('Internal Server Error');
@@ -104,7 +108,9 @@ router.get('/newest', (req, res) => {
             cartLength = 0;
         }
 
-        res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows, cart: cartLength > 0 ? cartLength : null });
+        const max = await pool.query('SELECT COUNT(*) AS count FROM products;');
+
+        res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows, cart: cartLength > 0 ? cartLength : null, max: max.rows[0].count });
     });
 });
 
@@ -114,7 +120,7 @@ router.get('/denkmit', (req, res) => {
     }
 
     getDataDB('Denkmit', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
-        .then(rows => {
+        .then(async rows => {
             let cartLength;
 
             if (req.cookies.cart) {
@@ -123,7 +129,9 @@ router.get('/denkmit', (req, res) => {
                 cartLength = 0;
             }
 
-            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
+            let max = await pool.query('SELECT COUNT(*) AS count FROM products;');
+
+            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null, max: max.rows[0].count });
         })
         .catch(err => {
             console.log(err);
@@ -137,7 +145,7 @@ router.get('/denkmit/kitchen', (req, res) => {
     }
 
     getDataDB('Denkmit', 'kitchen', query = (req.query.search) ? req.query.search.replace('/', '') : null)
-        .then(rows => {
+        .then(async rows => {
             let cartLength;
 
             if (req.cookies.cart) {
@@ -146,7 +154,9 @@ router.get('/denkmit/kitchen', (req, res) => {
                 cartLength = 0;
             }
 
-            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
+            let max = await pool.query('SELECT COUNT(*) AS count FROM products;');
+
+            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null, max: max.rows[0].count });
         })
         .catch(err => {
             console.log(err);
@@ -160,7 +170,7 @@ router.get('/denkmit/washing', (req, res) => {
     }
 
     getDataDB('Denkmit', 'washing', query = (req.query.search) ? req.query.search.replace('/', '') : null)
-        .then(rows => {
+        .then(async rows => {
             let cartLength;
 
             if (req.cookies.cart) {
@@ -169,7 +179,9 @@ router.get('/denkmit/washing', (req, res) => {
                 cartLength = 0;
             }
 
-            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
+            let max = await pool.query('SELECT COUNT(*) AS count FROM products;');
+
+            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null, max: max.rows[0].count });
         })
         .catch(err => {
             console.log(err);
@@ -183,7 +195,7 @@ router.get('/denkmit/wc', (req, res) => {
     }
 
     getDataDB('Denkmit', 'wc', query = (req.query.search) ? req.query.search.replace('/', '') : null)
-        .then(rows => {
+        .then(async rows => {
             let cartLength;
 
             if (req.cookies.cart) {
@@ -192,7 +204,9 @@ router.get('/denkmit/wc', (req, res) => {
                 cartLength = 0;
             }
 
-            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
+            let max = await pool.query('SELECT COUNT(*) AS count FROM products;');
+            
+            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null, max: max.rows[0].count });
         })
         .catch(err => {
             console.log(err);
@@ -206,7 +220,7 @@ router.get('/denkmit/cleaning', (req, res) => {
     }
 
     getDataDB('Denkmit', 'cleaning', query = (req.query.search) ? req.query.search.replace('/', '') : null)
-        .then(rows => {
+        .then(async rows => {
             let cartLength;
 
             if (req.cookies.cart) {
@@ -215,7 +229,9 @@ router.get('/denkmit/cleaning', (req, res) => {
                 cartLength = 0;
             }
 
-            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
+            let max = await pool.query('SELECT COUNT(*) AS count FROM products;');
+            
+            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null, max: max.rows[0].count });
         })
         .catch(err => {
             console.log(err);
@@ -229,7 +245,7 @@ router.get('/denkmit/fresh', (req, res) => {
     }
 
     getDataDB('Denkmit', 'fresh', query = (req.query.search) ? req.query.search.replace('/', '') : null)
-        .then(rows => {
+        .then(async rows => {
             let cartLength;
 
             if (req.cookies.cart) {
@@ -238,7 +254,9 @@ router.get('/denkmit/fresh', (req, res) => {
                 cartLength = 0;
             }
 
-            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
+            let max = await pool.query('SELECT COUNT(*) AS count FROM products;');
+
+            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null, max: max.rows[0].count });
         })
         .catch(err => {
             console.log(err);
@@ -252,7 +270,7 @@ router.get('/denkmit/other', (req, res) => {
     }
 
     getDataDB('Denkmit', 'other', query = (req.query.search) ? req.query.search.replace('/', '') : null)
-        .then(rows => {
+        .then(async rows => {
             let cartLength;
 
             if (req.cookies.cart) {
@@ -261,7 +279,9 @@ router.get('/denkmit/other', (req, res) => {
                 cartLength = 0;
             }
 
-            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
+            let max = await pool.query('SELECT COUNT(*) AS count FROM products;');
+
+            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null, max: max.rows[0].count });
         })
         .catch(err => {
             console.log(err);
@@ -275,7 +295,7 @@ router.get('/balea', (req, res) => {
     }
 
     getDataDB('Balea', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
-        .then(rows => {
+        .then(async rows => {
             let cartLength;
 
             if (req.cookies.cart) {
@@ -284,7 +304,9 @@ router.get('/balea', (req, res) => {
                 cartLength = 0;
             }
 
-            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
+            let max = await pool.query('SELECT COUNT(*) AS count FROM products;');
+
+            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null, max: max.rows[0].count });
         })
         .catch(err => {
             return res.status(500).send('Internal Server Error');
@@ -297,7 +319,7 @@ router.get('/balea/hair', (req, res) => {
     }
 
     getDataDB('Balea', 'hair', query = (req.query.search) ? req.query.search.replace('/', '') : null)
-        .then(rows => {
+        .then(async rows => {
             let cartLength;
 
             if (req.cookies.cart) {
@@ -306,7 +328,9 @@ router.get('/balea/hair', (req, res) => {
                 cartLength = 0;
             }
 
-            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
+            let max = await pool.query('SELECT COUNT(*) AS count FROM products;');
+
+            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null, max: max.rows[0].count });
         })
         .catch(err => {
             console.log(err);
@@ -320,7 +344,7 @@ router.get('/balea/skin', (req, res) => {
     }
 
     getDataDB('Balea', 'skin', query = (req.query.search) ? req.query.search.replace('/', '') : null)
-        .then(rows => {
+        .then(async rows => {
             let cartLength;
 
             if (req.cookies.cart) {
@@ -329,7 +353,9 @@ router.get('/balea/skin', (req, res) => {
                 cartLength = 0;
             }
 
-            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
+            let max = await pool.query('SELECT COUNT(*) AS count FROM products;');
+
+            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null, max: max.rows[0].count });
         })
         .catch(err => {
             console.log(err);
@@ -343,7 +369,7 @@ router.get('/balea/body', (req, res) => {
     }
 
     getDataDB('Balea', 'body', query = (req.query.search) ? req.query.search.replace('/', '') : null)
-        .then(rows => {
+        .then(async rows => {
             let cartLength;
 
             if (req.cookies.cart) {
@@ -352,7 +378,9 @@ router.get('/balea/body', (req, res) => {
                 cartLength = 0;
             }
 
-            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
+            let max = await pool.query('SELECT COUNT(*) AS count FROM products;');
+
+            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null, max: max.rows[0].count });
         })
         .catch(err => {
             console.log(err);
@@ -366,7 +394,7 @@ router.get('/balea/shave', (req, res) => {
     }
 
     getDataDB('Balea', 'shave', query = (req.query.search) ? req.query.search.replace('/', '') : null)
-        .then(rows => {
+        .then(async rows => {
             let cartLength;
 
             if (req.cookies.cart) {
@@ -375,7 +403,9 @@ router.get('/balea/shave', (req, res) => {
                 cartLength = 0;
             }
 
-            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
+            let max = await pool.query('SELECT COUNT(*) AS count FROM products;');
+
+            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null, max: max.rows[0].count });
         })
         .catch(err => {
             console.log(err);
@@ -389,7 +419,7 @@ router.get('/balea/hygiene', (req, res) => {
     }
 
     getDataDB('Balea', 'hygiene', query = (req.query.search) ? req.query.search.replace('/', '') : null)
-        .then(rows => {
+        .then(async rows => {
             let cartLength;
 
             if (req.cookies.cart) {
@@ -398,7 +428,9 @@ router.get('/balea/hygiene', (req, res) => {
                 cartLength = 0;
             }
 
-            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
+            let max = await pool.query('SELECT COUNT(*) AS count FROM products;');
+
+            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null, max: max.rows[0].count });
         })
         .catch(err => {
             console.log(err);
@@ -412,7 +444,7 @@ router.get('/alverde', (req, res) => {
     }
 
     getDataDB('Alverde', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
-        .then(rows => {
+        .then(async rows => {
             let cartLength;
 
             if (req.cookies.cart) {
@@ -421,7 +453,9 @@ router.get('/alverde', (req, res) => {
                 cartLength = 0;
             }
 
-            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
+            let max = await pool.query('SELECT COUNT(*) AS count FROM products;');
+
+            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null, max: max.rows[0].count });
         })
         .catch(err => {
             return res.status(500).send('Internal Server Error');
@@ -434,7 +468,7 @@ router.get('/dontodent', (req, res) => {
     }
 
     getDataDB('Dontodent', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
-        .then(rows => {
+        .then(async rows => {
             let cartLength;
 
             if (req.cookies.cart) {
@@ -443,7 +477,9 @@ router.get('/dontodent', (req, res) => {
                 cartLength = 0;
             }
 
-            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
+            let max = await pool.query('SELECT COUNT(*) AS count FROM products;');
+
+            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null, max: max.rows[0].count });
         })
         .catch(err => {
             return res.status(500).send('Internal Server Error');
@@ -456,7 +492,7 @@ router.get('/mivolis', (req, res) => {
     }
 
     getDataDB('Mivolis', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
-        .then(rows => {
+        .then(async rows => {
             let cartLength;
 
             if (req.cookies.cart) {
@@ -465,7 +501,9 @@ router.get('/mivolis', (req, res) => {
                 cartLength = 0;
             }
 
-            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
+            let max = await pool.query('SELECT COUNT(*) AS count FROM products;');
+
+            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null, max: max.rows[0].count });
         })
         .catch(err => {
             return res.status(500).send('Internal Server Error');
@@ -478,7 +516,7 @@ router.get('/frosch', (req, res) => {
     }
 
     getDataDB('Frosch', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
-        .then(rows => {
+        .then(async rows => {
             let cartLength;
 
             if (req.cookies.cart) {
@@ -487,7 +525,9 @@ router.get('/frosch', (req, res) => {
                 cartLength = 0;
             }
 
-            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
+            let max = await pool.query('SELECT COUNT(*) AS count FROM products;');
+
+            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null, max: max.rows[0].count });
         })
         .catch(err => {
             return res.status(500).send('Internal Server Error');
@@ -500,7 +540,7 @@ router.get('/profissimo', (req, res) => {
     }
 
     getDataDB('Profissimo', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
-        .then(rows => {
+        .then(async rows => {
             let cartLength;
 
             if (req.cookies.cart) {
@@ -509,7 +549,9 @@ router.get('/profissimo', (req, res) => {
                 cartLength = 0;
             }
 
-            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
+            let max = await pool.query('SELECT COUNT(*) AS count FROM products;');
+
+            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null, max: max.rows[0].count });
         })
         .catch(err => {
             return res.status(500).send('Internal Server Error');
@@ -522,7 +564,7 @@ router.get('/babylove', (req, res) => {
     }
 
     getDataDB('Babylove', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
-        .then(rows => {
+        .then(async rows => {
             let cartLength;
 
             if (req.cookies.cart) {
@@ -531,7 +573,9 @@ router.get('/babylove', (req, res) => {
                 cartLength = 0;
             }
 
-            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
+            let max = await pool.query('SELECT COUNT(*) AS count FROM products;');
+
+            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null, max: max.rows[0].count });
         })
         .catch(err => {
             return res.status(500).send('Internal Server Error');
@@ -544,7 +588,7 @@ router.get('/beckmann', (req, res) => {
     }
 
     getDataDB('Dr.Beckmann', null, query = (req.query.search) ? req.query.search.replace('/', '') : null)
-        .then(rows => {
+        .then(async rows => {
             let cartLength;
 
             if (req.cookies.cart) {
@@ -553,7 +597,9 @@ router.get('/beckmann', (req, res) => {
                 cartLength = 0;
             }
 
-            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null });
+            let max = await pool.query('SELECT COUNT(*) AS count FROM products;');
+
+            res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.path, search: (req.query.search) ? req.query.search.replace('/', '') : null, data: rows, cart: cartLength > 0 ? cartLength : null, max: max.rows[0].count });
         })
         .catch(err => {
             return res.status(500).send('Internal Server Error');
@@ -563,7 +609,7 @@ router.get('/beckmann', (req, res) => {
 router.get('/other', (req, res) => {
     if (!req.originalUrl.endsWith('/')) return res.redirect(req.originalUrl + '/');
 
-    pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE visibility = true AND brand_original != 'Denkmit' AND brand_original != 'Balea' AND brand_original != 'Balea MEN' AND brand_original != 'Balea MED' AND brand_original != 'Alverde' AND brand_original != 'Dontodent' AND brand_original != 'Mivolis' AND brand_original != 'Frosch' AND brand_original != 'Profissimo' AND brand_original != 'Babylove' ORDER BY id DESC`, (err, result) => {
+    pool.query(`SELECT *, CEIL((price / 100) * (100 + price_factor) * 100) / 100 AS price_total FROM products WHERE visibility = true AND brand_original != 'Denkmit' AND brand_original != 'Balea' AND brand_original != 'Balea MEN' AND brand_original != 'Balea MED' AND brand_original != 'Alverde' AND brand_original != 'Dontodent' AND brand_original != 'Mivolis' AND brand_original != 'Frosch' AND brand_original != 'Profissimo' AND brand_original != 'Babylove' ORDER BY id DESC`, async (err, result) => {
         if (err) {
             console.error(err);
             return res.status(500).send('Internal Server Error');
@@ -584,7 +630,9 @@ router.get('/other', (req, res) => {
             cartLength = 0;
         }
 
-        res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows, cart: cartLength > 0 ? cartLength : null });
+        let max = await pool.query('SELECT COUNT(*) AS count FROM products;');
+        
+        res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows, cart: cartLength > 0 ? cartLength : null, max: max.rows[0].count });
     });
 });
 

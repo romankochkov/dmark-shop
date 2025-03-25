@@ -63,7 +63,7 @@ router.get('/favorites', (req, res) => {
     if (!req.session.isAuthenticated) return res.redirect('/authentication');
     if (!req.originalUrl.endsWith('/')) return res.redirect(req.originalUrl + '/');
 
-    pool.query(`SELECT products.*, CEIL((products.price / 100) * (100 + products.price_factor) * 100) / 100 AS price_total FROM favorites INNER JOIN products ON favorites.product = products.id WHERE favorites.user = $1`, [req.session.userId], (err, result) => {
+    pool.query(`SELECT products.*, CEIL((products.price / 100) * (100 + products.price_factor) * 100) / 100 AS price_total FROM favorites INNER JOIN products ON favorites.product = products.id WHERE favorites.user = $1`, [req.session.userId], async (err, result) => {
         if (err) {
             console.error(err);
             return res.status(500).send('Internal Server Error');
@@ -76,7 +76,9 @@ router.get('/favorites', (req, res) => {
             return row;
         });
 
-        res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null });
+        let max = await pool.query('SELECT COUNT(*) AS count FROM products;');
+
+        res.render('catalog', { user: (req.session.isAuthenticated) ? true : false, url: req.originalUrl, data: rows, cart: req.cookies.cart ? (JSON.parse(req.cookies.cart)).items : null, max: max.rows[0].count });
     });
 });
 

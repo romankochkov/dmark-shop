@@ -252,6 +252,28 @@
       width: 80px;
     }
 
+    .card-icon-new {
+      position: absolute;
+      background-color: #FF0800;
+      border-radius: 4px;
+      color: #ffffff;
+      font-family: 'Roboto Condensed', sans-serif;
+      text-transform: uppercase;
+      font-size: 9.5px;
+      font-weight: 700;
+      padding-top: 1.5px;
+      padding-left: 6px;
+      padding-right: 6px;
+      padding-bottom: 2px;
+      top: 35px;
+      left: 10px;
+    }
+
+    .card-icon-new i {
+      font-size: 9px;
+      margin-left: 4px;
+    }
+
     .card-btn-favorite-fix {
       position: absolute;
       top: 0px;
@@ -765,6 +787,10 @@
                   <img
                     src="/img/mark.svg"
                     class="card-img-brand-fix">
+                  <% } %>
+
+                  <% if (max-item.id<=30) { %>
+                  <div class="card-icon-new">Новинка<i class="fa-solid fa-fire"></i></div>
                   <% } %>
 
                     <% if (url==='/account/favorites/' ) { %>
