@@ -571,6 +571,14 @@ router.post('/product/add', express.urlencoded({ extended: false }), async (req,
         brand_translation = 'Делюкс';
     } else if (brand === 'Theramed') {
         brand_translation = 'Тхерамед';
+    } else if (brand === 'Profline') {
+        brand_translation = 'Профлайн';
+    } else if (brand === 'Finish') {
+        brand_translation = 'Фініш';
+    } else if (brand === 'Ebelin') {
+        brand_translation = 'Ебелін';
+    } else if (brand === 'Bic') {
+        brand_translation = 'Бiк';
     } else {
         return res.sendStatus(400);
     }
