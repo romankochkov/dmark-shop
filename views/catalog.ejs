@@ -806,7 +806,7 @@
                             <i id="favorites_icon_<%= item.id %>" class="fa-regular fa-heart"></i>
                         </button>
                         <% } %>
-                          <img src="<%= item.pictures[0] %>" class="card-img-top" loading="lazy" onerror="this.src='/img/logo.png'; this.onerror=null;">>
+                          <img src="<%= item.pictures[0] %>" class="card-img-top" loading="lazy" onerror="this.src='/img/logo.png'; this.onerror=null;">
               </div>
 
               <button type="button" class="btn card-btn-cart-fix <% if ( item.exists === 1 ) { %>add-to-cart<% } %>"
