@@ -16,12 +16,6 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&family=Roboto:wght@100;300;400;500;700;900&display=swap"
     rel="stylesheet">
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
-    crossorigin="anonymous"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="/js/catalog.js"></script>
 </head>
 
 <body>
@@ -588,8 +582,7 @@
                 </div>
                 <div class="offcanvas-body">
                   <ul class="navbar-nav justify-content-end flex-grow-1 text-start">
-                    <li class="nav-item py-2 px-3 d-flex justify-content-between"
-                      style="border-top: 2px solid rgb(229, 233, 241);"
+                    <li class="nav-item py-2 px-3 d-flex justify-content-between" style="border-top: 2px solid rgb(229, 233, 241);"
                       onclick="window.open('/catalog/newest/', '_self');">
                       <a class="nav-link d-inline-flex">Новинки</a>
                       <i class="fa-solid fa-angle-right d-inline-flex"></i>
@@ -791,28 +784,29 @@
                   onclick="window.open('/catalog/product/<%= item.id %>', '_self');"></div>
 
                 <% if (item.dm==true) { %>
-                  <img src="/img/mark.svg" class="card-img-brand-fix">
+                  <img
+                    src="/img/mark.svg"
+                    class="card-img-brand-fix">
                   <% } %>
 
-                    <% if (max-item.id<=30) { %>
-                      <div class="card-icon-new">Новинка<i class="fa-solid fa-fire"></i></div>
-                      <% } %>
+                  <% if (max-item.id<=30) { %>
+                  <div class="card-icon-new">Новинка<i class="fa-solid fa-fire"></i></div>
+                  <% } %>
 
-                        <% if (url==='/account/favorites/' ) { %>
-                          <button type="button" class="btn card-btn-favorite-fix del-from-favorites"
-                            data-item-id="<%= item.id %>">
-                            <i class="fa-solid fa-heart"></i>
-                          </button>
-                          <% } else { %>
-                            <button type="button"
-                              class="btn card-btn-favorite-fix <% if (user) { %>add-to-favorites<% } %>"
-                              data-item-id="<%= item.id %>" <% if (!user) { %>onclick="window.open('/authentication/',
-                              '_self');"
-                              <% } %>>
-                                <i id="favorites_icon_<%= item.id %>" class="fa-regular fa-heart"></i>
-                            </button>
-                            <% } %>
-                              <img src="<%= item.pictures[0] %>" class="card-img-top">
+                    <% if (url==='/account/favorites/' ) { %>
+                      <button type="button" class="btn card-btn-favorite-fix del-from-favorites"
+                        data-item-id="<%= item.id %>">
+                        <i class="fa-solid fa-heart"></i>
+                      </button>
+                      <% } else { %>
+                        <button type="button" class="btn card-btn-favorite-fix <% if (user) { %>add-to-favorites<% } %>"
+                          data-item-id="<%= item.id %>" <% if (!user) { %>onclick="window.open('/authentication/',
+                          '_self');"
+                          <% } %>>
+                            <i id="favorites_icon_<%= item.id %>" class="fa-regular fa-heart"></i>
+                        </button>
+                        <% } %>
+                          <img src="<%= item.pictures[0] %>" class="card-img-top">
               </div>
 
               <button type="button" class="btn card-btn-cart-fix <% if ( item.exists === 1 ) { %>add-to-cart<% } %>"
@@ -1009,6 +1003,14 @@
   </div>
 
   <%- include('footer') %>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/js/catalog.js"></script>
+
+
 </body>
 
 </html>
