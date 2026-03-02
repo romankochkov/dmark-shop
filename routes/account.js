@@ -577,6 +577,8 @@ router.post('/product/add', express.urlencoded({ extended: false }), async (req,
         brand_translation = 'Фініш';
     } else if (brand === 'Ebelin') {
         brand_translation = 'Ебелін';
+    } else if (brand === 'Nivea') {
+        brand_translation = 'Нівеа';
     } else if (brand === 'Bic') {
         brand_translation = 'Бiк';
     } else {
