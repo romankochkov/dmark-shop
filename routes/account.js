@@ -1,6 +1,7 @@
 const fs = require('fs');
 const ini = require('ini');
 const express = require('express');
+const whois = require('whois');
 const router = express.Router();
 const pool = require('../database/init');
 const { string } = require('pg-format');
@@ -28,8 +29,7 @@ router.get('/', async (req, res) => {
                 res.render('account', {
                     user: req.session.isAuthenticated ? true : false,
                     euro: euro_coefficient,
-                    url: req.originalUrl,
-                    domainPayment: process.env.DOMAIN_PAYMENT || '01012025'
+                    url: req.originalUrl
                 });
             } else {
                 res.send('Ласкаво просимо на захищену сторінку!');
@@ -62,6 +62,66 @@ router.post('/euro', async (req, res) => {
     fs.writeFileSync('exchange.ini', ini.stringify(config_ini), 'utf-8');
 
     res.redirect('/account');
+});
+
+router.get('/domain-status', async (req, res) => {
+    if (!req.session.isAuthenticated) return res.sendStatus(401);
+
+    try {
+        const isAdmin = await checkAdminUser(req.session.userId);
+        if (!isAdmin) return res.sendStatus(403);
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+
+    const domain = process.env.DOMAIN_NAME;
+
+    whois.lookup(domain, { server: 'whois.ua', follow: 3 }, (err, data) => {
+        if (err) {
+            console.error('WHOIS error:', err);
+            return res.json({ error: 'Помилка запиту WHOIS' });
+        }
+
+        const patterns = [
+            /expires:\s*(.+)/i,
+            /expiry date:\s*(.+)/i,
+            /paid-till:\s*(.+)/i,
+            /renewal date:\s*(.+)/i,
+            /free-date:\s*(.+)/i,
+        ];
+
+        let expiryRaw = null;
+        for (const pattern of patterns) {
+            const match = data.match(pattern);
+            if (match) {
+                expiryRaw = match[1].trim();
+                break;
+            }
+        }
+
+        if (!expiryRaw) {
+            console.error('WHOIS parsed data:', data);
+            return res.json({ error: 'Не вдалося знайти дату закінчення' });
+        }
+
+        const expiryDate = new Date(expiryRaw);
+
+        if (isNaN(expiryDate.getTime())) {
+            return res.json({ error: `Не вдалося розпарсити дату: ${expiryRaw}` });
+        }
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        expiryDate.setHours(0, 0, 0, 0);
+
+        const daysLeft = Math.round((expiryDate - today) / (1000 * 60 * 60 * 24));
+
+        res.json({
+            domain,
+            expiryDate: expiryDate.toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', year: 'numeric' }),
+            daysLeft
+        });
+    });
 });
 
 router.get('/favorites', (req, res) => {
