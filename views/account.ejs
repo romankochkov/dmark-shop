@@ -961,6 +961,24 @@
                                 style="font-family: 'Roboto Condensed', sans-serif; font-size: 16px; font-weight: 700;">
                             </div>
                         </div>
+
+                        <!-- SSL Сертифікат -->
+                        <div class="d-flex justify-content-between align-items-center py-2 px-1 mt-1"
+                            style="border-top: 1px solid rgb(210, 214, 224);">
+                            <div
+                                style="font-family: 'Roboto Condensed', sans-serif; font-size: 16px; color: rgb(82, 82, 96);">
+                                <i class="fa-solid fa-lock" style="color: rgb(0, 40, 120); margin-right: 8px;"></i>SSL
+                                сертифікат
+                                <span id="cert_domain_name"
+                                    style="color: rgb(0, 40, 120); font-size: 13px; margin-left: 4px;"></span>
+                            </div>
+                            <div id="cert_counter"
+                                style="font-family: 'Roboto Condensed', sans-serif; font-size: 16px; font-weight: 700;">
+                                <span style="color: rgb(82, 82, 96); font-weight: 400; font-size: 14px;">
+                                    <i class="fa-solid fa-circle-notch fa-spin"></i> Перевірка...
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1026,10 +1044,48 @@
                             color = 'rgb(0, 40, 120)';
                         }
 
-                        el.innerHTML = `<span style="color:${color};" title="Дійсний до: ${data.expiryDate}">${icon}${text}</span>`;
+                        el.innerHTML = `<span style="color:${color};" title="${data.expiryDate}">${icon}${text}</span>`;
                     })
                     .catch(() => {
                         document.getElementById('domain_counter').innerHTML =
+                            '<span style="color:#dc143c;">⚠ Не вдалося перевірити</span>';
+                    });
+
+                // --- SSL Сертифікат ---
+                fetch('/account/cert-status')
+                    .then(r => r.json())
+                    .then(data => {
+                        const el = document.getElementById('cert_counter');
+                        const nameEl = document.getElementById('cert_domain_name');
+
+                        if (data.error) {
+                            el.innerHTML = `<span style="color:#dc143c;">⚠ ${data.error}</span>`;
+                            return;
+                        }
+
+                        if (nameEl) nameEl.textContent = `(${data.domain})`;
+
+                        const d = data.daysLeft;
+                        let text, color;
+
+                        if (d < 0) {
+                            text = `🚨 Сертифікат прострочений ${Math.abs(d)} ${pluralDays(Math.abs(d))} тому!`;
+                            color = '#dc143c';
+                        } else if (d <= 1) {
+                            text = '🚨 Потрібно оновити сьогодні!';
+                            color = '#dc143c';
+                        } else if (d <= 2) {
+                            text = `⚠️ ${pluralDays(d)}!`;
+                            color = '#dc143c';
+                        } else {
+                            text = `${d} ${pluralDays(d)}`;
+                            color = 'rgb(0, 40, 120)';
+                        }
+
+                        el.innerHTML = `<span style="color:${color};" title="${data.expiryDate}">${text}</span>`;
+                    })
+                    .catch(() => {
+                        document.getElementById('cert_counter').innerHTML =
                             '<span style="color:#dc143c;">⚠ Не вдалося перевірити</span>';
                     });
 

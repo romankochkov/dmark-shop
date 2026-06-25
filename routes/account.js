@@ -2,6 +2,7 @@ const fs = require('fs');
 const ini = require('ini');
 const express = require('express');
 const whois = require('whois');
+const tls = require('tls');
 const router = express.Router();
 const pool = require('../database/init');
 const { string } = require('pg-format');
@@ -122,6 +123,55 @@ router.get('/domain-status', async (req, res) => {
             daysLeft
         });
     });
+});
+
+router.get('/cert-status', async (req, res) => {
+    if (!req.session.isAuthenticated) return res.sendStatus(401);
+
+    try {
+        const isAdmin = await checkAdminUser(req.session.userId);
+        if (!isAdmin) return res.sendStatus(403);
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+
+    const domain = process.env.DOMAIN_NAME;
+
+    function getCertExpiry(host) {
+        return new Promise((resolve, reject) => {
+            const socket = tls.connect(443, host, { servername: host }, () => {
+                const cert = socket.getPeerCertificate();
+                socket.end();
+                if (cert && cert.valid_to) {
+                    resolve(new Date(cert.valid_to));
+                } else {
+                    reject(new Error('Не вдалося отримати сертифікат'));
+                }
+            });
+            socket.setTimeout(8000);
+            socket.on('timeout', () => { socket.destroy(); reject(new Error('Timeout')); });
+            socket.on('error', reject);
+        });
+    }
+
+    try {
+        const expiryDate = await getCertExpiry(domain);
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        expiryDate.setHours(0, 0, 0, 0);
+
+        const daysLeft = Math.round((expiryDate - today) / (1000 * 60 * 60 * 24));
+
+        res.json({
+            domain,
+            expiryDate: expiryDate.toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', year: 'numeric' }),
+            daysLeft
+        });
+    } catch (err) {
+        console.error('TLS cert error:', err);
+        res.json({ error: 'Не вдалося перевірити сертифікат' });
+    }
 });
 
 router.get('/favorites', (req, res) => {
