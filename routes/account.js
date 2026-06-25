@@ -25,15 +25,20 @@ router.get('/', async (req, res) => {
             const isAdmin = await checkAdminUser(req.session.userId);
 
             if (isAdmin) {
-                res.render('account', { user: (req.session.isAuthenticated) ? true : false, euro: euro_coefficient, url: req.originalUrl });
+                res.render('account', {
+                    user: req.session.isAuthenticated ? true : false,
+                    euro: euro_coefficient,
+                    url: req.originalUrl,
+                    domainPayment: process.env.DOMAIN_PAYMENT || '01012025'
+                });
             } else {
-                res.send('Добро пожаловать на защищенную страницу!');
+                res.send('Ласкаво просимо на захищену сторінку!');
             }
         } catch (error) {
             res.status(500).send('Сталася помилка під час перевірки прав адміністратора.');
         }
     } else {
-        res.redirect('/authentication'); // If the user is not authenticated, redirect them to the login page
+        res.redirect('/authentication');
     }
 });
 
